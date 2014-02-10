@@ -7,18 +7,20 @@
  */
 
 //マップ管理クラス
-World = tm.createClass({
-//    superClass: tm.app.Sprite,
-
-    //戦力
-    HP: 0,
-
-    //属性（0:中立 1:プレイヤー 2:エネミー）
-    alignment: 0,
+tiger.World = tm.createClass({
     
+    //惑星リスト
+    planets: null,
+
+    //ユニットリスト    
+    units: null,
+
     init: function() {
-        this.superInit("planet", 32, 32);
+        this.planets = [];
+        this.units = [];
     },
-    update: function() {
+    
+    build: function(num) {
     },
+
 });

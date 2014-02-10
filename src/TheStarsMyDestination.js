@@ -20,9 +20,17 @@ tiger = {
 
 tiger.CanvasApp = tm.createClass({
     superClass: tm.app.CanvasApp,
+
+    //オンライン対戦フラグ
+    online: false,
+
+    //オンライン対戦ＩＤ
+    onlineID: false,
+
+    //スコア
     score: 0,
-    highScore: 0,       //ハイスコア
-    highScoreStage: 0,  //ハイスコア時ステージ
+
+    //メインシーン
     mainScene: null,
 
     init: function(id) {
