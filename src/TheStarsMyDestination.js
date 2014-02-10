@@ -33,6 +33,9 @@ tiger.CanvasApp = tm.createClass({
     //メインシーン
     mainScene: null,
 
+    //難易度
+    difficulty: 0,
+
     init: function(id) {
         this.superInit(id);
 

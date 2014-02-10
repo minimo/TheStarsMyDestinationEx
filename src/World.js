@@ -8,6 +8,15 @@
 
 //マップ管理クラス
 tiger.World = tm.createClass({
+
+    //親シーン
+    scene: null,
+
+    //マップの一辺のサイズ
+    size: 640*5,
+
+    //最大惑星数
+    maxPlanets: 64,
     
     //惑星リスト
     planets: null,
@@ -15,12 +24,39 @@ tiger.World = tm.createClass({
     //ユニットリスト    
     units: null,
 
-    init: function() {
+    init: function(scene) {
+        this.scene = scene;
         this.planets = [];
         this.units = [];
     },
-    
-    build: function(num) {
+
+    build: function() {
+        //プレイヤー主星
+        this.addPlanet(32, 32, TYPE_PLAYER, 100, 1);
+
+        //エネミー主星
+        this.addPlanet(this.size-32, this.size-32, TYPE_ENEMY, 100, 1);
+
+        for (var i = 0; i < this.maxPlanets; i++) {
+            var x = rand(32, WORLD_SIZE-32);
+            var y = rand(32, WORLD_SIZE-32);
+            this.addPlanet(x, y);
+        }
     },
 
+    //惑星の追加
+    addPlanet: function(x, y, alignment, HP, power) {
+        alignment = alignment || TYPE_NUTRAL;
+        HP = HP || rand(30, 300);
+        power = power || rand(0, 200)/100+0.5;
+
+        var p = tiger.Planet();
+        p.x = x;
+        p.y = y;
+        p.alignment = alignment;
+        p.HP = HP;
+        p.power = power;
+
+        this.parentScene.addChild(p);
+    },
 });

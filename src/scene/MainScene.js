@@ -12,7 +12,7 @@ tiger.MainScene = tm.createClass({
 
     //ポーズフラグ
     pause: false,
-    
+
     init: function() {
         this.superInit();
 
@@ -36,31 +36,6 @@ tiger.MainScene = tm.createClass({
         if (layer > LAYER_SYSTEM)return false;
         this.layer[layer].addChild(obj);
         return true;
-    },
-
-    //マップ構築
-    buildMap: function(val) {
-        //プレイヤー主星
-        this.addPlanet( TYPE_PLAYER, 32, 32);
-
-        //エネミー主星
-        this.addPlanet( TYPE_ENEMY, WORLD_SIZE-32, WORLD_SIZE-32);
-
-        for (var i = 0; i < NUM_MAXPLANETS; i++) {
-            var x = rand(32, WORLD_SIZE-32);
-            var y = rand(32, WORLD_SIZE-32);
-            this.addPlanet( TYPE_NUTRAL, x, y);
-        }
-    },
-
-    //マップへ惑星を追加
-    addPlanet: function(alignment, x, y) {
-        var p = tiger.Planet();
-        p.x = x;
-        p.y = y;
-        p.alignment = alignment;
-        p.HP = rand(10, 300);
-        this.addChild(p);
     },
 
     //addChildオーバーロード
