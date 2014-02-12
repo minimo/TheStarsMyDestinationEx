@@ -10,7 +10,7 @@ var ASSETS = {
     //images
     "planet":       "assets/planet.png",
     "planet_mono":  "assets/planet_mono.png",
-    "frigate":      "assets/frigate.png",
+    "frigate":      "assets/frigate1.png",
 }
 
 //namespace tiger
@@ -45,6 +45,7 @@ tiger.CanvasApp = tm.createClass({
         this.background = "rgba(0, 0, 0, 0)";
 
         this.keyboard = tm.input.Keyboard(window);
+        this.mainScene = tiger.MainScene();
 
         //ローディングシーンを投入
         this.replaceScene(tm.app.LoadingScene({
@@ -52,7 +53,7 @@ tiger.CanvasApp = tm.createClass({
             nextScene: function() {
                 this._onLoadAssets();
 //                return tiger.TitleScene();    //次シーンはタイトル
-                return tiger.MainScene();
+                return app.mainScene;
             }.bind(this),
         }));
     },

@@ -13,16 +13,19 @@ tiger.MainScene = tm.createClass({
     //ポーズフラグ
     pause: false,
 
+    //スプライトレイヤー
+    layer: null,
+
     init: function() {
         this.superInit();
 
         this.base = tm.app.Object2D().addChildTo(this);
 
-        //通常表示レイヤー（数字が大きい程優先度が高い）
+        //表示レイヤー構築（数字が大きい程優先度が高い）
         this.layer = [];
         for (var i = 0; i < LAYER_SYSTEM+1; i++) {
             var gr = tm.app.Object2D().addChildTo(this.base);
-            this.layer.push(gr);
+            this.layer[i] = gr;
         }
     },
 
@@ -39,7 +42,7 @@ tiger.MainScene = tm.createClass({
     },
 
     //addChildオーバーロード
-    addChild: function(child) {
+    addLayer: function(child) {
         if (child instanceof tiger.Unit) {
             //ユニットレイヤ
             this.layer[LAYER_UNIT].addChild(child);
@@ -51,7 +54,7 @@ tiger.MainScene = tm.createClass({
                 //エフェクト用レイヤ
                 this.layer[LAYER_EFFECT_UPPER].addChild(child);
             } else {
-                this.layer[LAYER_EFFECT_BACKGROUND].addChild(child);
+                this.layer[LAYER_BACKGROUND].addChild(child);
 //                this.superClass.prototype.addChild.apply(this, arguments);
             }
         }
