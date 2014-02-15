@@ -41,8 +41,19 @@ tiger.GameScene = tm.createClass({
 
     update: function() {
         if (!this.ready) {
+            //ゲームスタート準備
             this.world.build();
+
+            //準備完了
             this.ready = true;
+            return;
+        }
+        var p = app.pointing;
+        if (p.getPointing()) {
+            var dx = p.position.x - p.prevPosition.x;
+            var dy = p.position.y - p.prevPosition.y;
+            this.world.base.x += dx;
+            this.world.base.y += dy;
         }
     },
 });

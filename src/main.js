@@ -25,7 +25,7 @@ SC_H = 640;
 //ユニット、惑星タイプ
 TYPE_NUTRAL = 0;
 TYPE_PLAYER = 1;
-TYPE_ENEMY = 2;
+TYPE_ENEMY  = 2;
 
 //レイヤー区分
 LAYER_SYSTEM = 6;           //システム表示

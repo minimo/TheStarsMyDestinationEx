@@ -13,13 +13,13 @@ tiger.World = tm.createClass({
     scene: null,
 
     //マップの一辺のサイズ
-    size: 640*5,
+    size: 640*2,
 
     //レイヤーベース
     base: null,
 
     //最大惑星数
-    maxPlanets: 64,
+    maxPlanets: 16,
     
     //惑星リスト
     planets: null,
@@ -47,7 +47,7 @@ tiger.World = tm.createClass({
 
     build: function() {
         //バックグラウンドの追加
-        var bg = tm.display.Sprite("bg1", SC_W, SC_H).addChildTo(this);
+        var bg = tm.display.Sprite("bg1", 1024, 698).addChildTo(this);
 
         //プレイヤー主星
         this.addPlanet(32, 32, TYPE_PLAYER, 100, 1);
@@ -55,28 +55,21 @@ tiger.World = tm.createClass({
         //エネミー主星
         this.addPlanet(this.size-32, this.size-32, TYPE_ENEMY, 100, 1);
 
-/*
         for (var i = 0; i < this.maxPlanets; i++) {
-            var x = rand(32, WORLD_SIZE-32);
-            var y = rand(32, WORLD_SIZE-32);
+            var x = rand(32, this.size-32);
+            var y = rand(32, this.size-32);
             this.addPlanet(x, y);
         }
-*/
     },
 
     //惑星の追加
-    addPlanet: function(x, y, alignment, HP, power) {
+    addPlanet: function(x, y, alignment, HP, power, type) {
         alignment = alignment || TYPE_NUTRAL;
         HP = HP || rand(30, 300);
         power = power || rand(0, 200)/100+0.5;
+        type = type || rand(0, 5);
 
-        var p = tiger.Planet();
-        p.x = x;
-        p.y = y;
-        p.alignment = alignment;
-        p.HP = HP;
-        p.power = power;
-
+        var p = tiger.Planet(x, y, alignment, HP, power, type);
         this.addChild(p);
     },
 
