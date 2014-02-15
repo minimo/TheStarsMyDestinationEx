@@ -8,7 +8,7 @@
  
 //ユニット管理クラス
 tiger.Unit = tm.createClass({
-    superClass: tm.app.Sprite,
+    superClass: tm.display.Sprite,
 
     //戦力
     HP: 0,

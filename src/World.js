@@ -15,6 +15,9 @@ tiger.World = tm.createClass({
     //マップの一辺のサイズ
     size: 640*5,
 
+    //レイヤーベース
+    base: null,
+
     //最大惑星数
     maxPlanets: 64,
     
@@ -24,24 +27,41 @@ tiger.World = tm.createClass({
     //ユニットリスト    
     units: null,
 
+    //スプライトレイヤー
+    layer: null,
+
     init: function(scene) {
         this.scene = scene;
         this.planets = [];
         this.units = [];
+
+        this.base = tm.app.Object2D();
+
+        //表示レイヤー構築（数字が大きい程優先度が高い）
+        this.layer = [];
+        for (var i = 0; i < LAYER_SYSTEM+1; i++) {
+            var gr = tm.app.Object2D().addChildTo(this.base);
+            this.layer[i] = gr;
+        }
     },
 
     build: function() {
+        //バックグラウンドの追加
+        var bg = tm.display.Sprite("bg1", SC_W, SC_H).addChildTo(this);
+
         //プレイヤー主星
         this.addPlanet(32, 32, TYPE_PLAYER, 100, 1);
 
         //エネミー主星
         this.addPlanet(this.size-32, this.size-32, TYPE_ENEMY, 100, 1);
 
+/*
         for (var i = 0; i < this.maxPlanets; i++) {
             var x = rand(32, WORLD_SIZE-32);
             var y = rand(32, WORLD_SIZE-32);
             this.addPlanet(x, y);
         }
+*/
     },
 
     //惑星の追加
@@ -57,6 +77,27 @@ tiger.World = tm.createClass({
         p.HP = HP;
         p.power = power;
 
-        this.parentScene.addChild(p);
+        this.addChild(p);
+    },
+
+    //オブジェクトを表示レイヤーに追加
+    addChild: function(child) {
+        if (child instanceof tiger.Unit) {
+            //ユニットレイヤ
+            this.layer[LAYER_UNIT].addChild(child);
+            this.units[this.units.length] = child;
+        } else if (child instanceof tiger.Planet) {
+            //マップレイヤ
+            this.layer[LAYER_PLANET].addChild(child);
+            this.planets[this.planets.length] = child;
+        } else {
+            if (child.isEffect) {
+                //エフェクト用レイヤ
+                this.layer[LAYER_EFFECT_UPPER].addChild(child);
+            } else {
+                this.layer[LAYER_BACKGROUND].addChild(child);
+//                this.superClass.prototype.addChild.apply(this, arguments);
+            }
+        }
     },
 });

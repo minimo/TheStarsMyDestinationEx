@@ -8,8 +8,8 @@
 
 //惑星管理クラス
 tiger.Planet = tm.createClass({
-    superClass: tm.app.Sprite,
-    
+    superClass: tm.display.Sprite,    
+
     //惑星タイプ
     type: 0,
     
@@ -18,7 +18,6 @@ tiger.Planet = tm.createClass({
 
     //戦力
     HP: 0,
-
     //属性（0:中立 1:プレイヤー 2:エネミー）
     alignment: 0,
 

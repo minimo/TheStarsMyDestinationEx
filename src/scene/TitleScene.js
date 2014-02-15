@@ -13,8 +13,8 @@ tiger.TitleScene = tm.createClass({
     init: function() {
         this.superInit({
             title: "Tiger!Tiger!",
-            width: SCREEN_WIDTH,
-            height: SCREEN_HEIGHT
+            width: SC_W,
+            height: SC_H
         });
         this.time = 0;
         app.background = "rgba(0,0,0,0.2)";
@@ -24,7 +24,7 @@ tiger.TitleScene = tm.createClass({
     },
     onnextscene: function() {
         app.background = "rgba(0, 0, 16, 0.8)";
-        app.replaceScene(tiger.MainScene());
+        app.replaceScene(app.gameScene);
     }
 });
 
