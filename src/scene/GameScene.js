@@ -24,19 +24,21 @@ tiger.GameScene = tm.createClass({
 
         this.world = tiger.World();
         this.addChild(this.world.base);
-/*
+
         //スコア表示
-        var sc = tm.app.Label("SCORE: 0");
+        var sc = tm.app.Label("");
         sc.fillStyle = "white";
         sc.fontSize = 15;
         sc.x = 0;
         sc.y = 13;
         sc.width = 200;
+        var that = this;
         sc.update = function() {
-            this.text = "SCORE :"+app.score;
+            var p = app.pointing;
+            this.text = "x:"+p.position.x+" y:"+p.position.y+" size:"+that.world.size;
+//            this.text = "x:"+that.world.base.x+" y:"+that.world.base.y+" size:"+that.world.size;
         }
         this.addChild(sc);
-*/
     },
 
     update: function() {
@@ -54,6 +56,10 @@ tiger.GameScene = tm.createClass({
             var dy = p.position.y - p.prevPosition.y;
             this.world.base.x += dx;
             this.world.base.y += dy;
+            if (this.world.base.x > 0)this.world.base.x = 0;
+            if (this.world.base.y > 0)this.world.base.y = 0;
+            if (this.world.base.x < -this.world.size+SC_W)this.world.base.x = -this.world.size+SC_W;
+            if (this.world.base.y < -this.world.size+SC_H)this.world.base.y = -this.world.size+SC_H;
         }
     },
 });

@@ -22,6 +22,9 @@ tiger.Planet = tm.createClass({
     //属性（0:中立 1:プレイヤー 2:エネミー）
     alignment: 0,
 
+    //選択中フラグ
+    select: false,
+
     init: function(x, y, alignment, HP, power, type) {
         this.alignment = alignment || 0;
         if (this.alignment == TYPE_NUTRAL) {
@@ -39,11 +42,12 @@ tiger.Planet = tm.createClass({
         this.setFrameIndex(this.type, 64, 64);
         this.setScale(this.power);
 
+        var that = this;
+        //HP表示
         this.label = tm.display.Label("", 30).addChildTo(this);
         this.label.align     = "center";
         this.label.baseline  = "middle";
         this.label.fontSize = 20;
-        var that = this;
         this.label.update = function() {
             this.text = ""+that.HP;
             switch (that.alignment) {
@@ -57,6 +61,24 @@ tiger.Planet = tm.createClass({
                     this.fillStyle = "red";
                     break;
             }
+        };
+
+        //選択カーソル
+        this.cursol = tm.display.CircleShape(70, 70, {
+            fillStyle: "rgba(0,0,0,0)",
+            strokeStyle: tm.graphics.LinearGradient(0,0,0,80).addColorStopList([
+                { offset:0.0, color:"rgba(0,255,0,0.0)" },
+                { offset:0.1, color:"rgba(0,255,0,0.3)" },
+                { offset:0.5, color:"rgba(0,255,0,1.0)" },
+                { offset:0.9, color:"rgba(0,255,0,0.3)" },
+                { offset:1.0, color:"rgba(0,255,0,0.0)" },
+            ]).toStyle(),
+            lineWidth: 5.0,
+        }).addChildTo(this);
+        this.cursol.blendMode = "lighter";
+        this.cursol.update = function() {
+            this.rotation++;
+//            this.visible = that.select;
         };
     },
 
