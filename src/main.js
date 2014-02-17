@@ -10,13 +10,8 @@
 var mt = new MersenneTwister(0);
 
 //定数
-//デバッグ
-var _DEBUG = true;
-if (_DEBUG) {
-    DISP_DATA = true;
-    DISP_COLLISION = false;
-    DISP_ADVANCE = false;
-}
+//デバッグフラグ
+var debug = true;
 
 //スクリーンサイズ
 SC_W = 640;

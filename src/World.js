@@ -100,7 +100,7 @@ tiger.World = tm.createClass({
     addPlanet: function(x, y, alignment, HP, power, type) {
         alignment = alignment || TYPE_NUTRAL;
         HP = HP || rand(30, 300);
-        power = power || rand(0, 200)/100+0.5;
+        power = power || rand(0, 150)/100+0.5;
         type = type || rand(0, 5);
 
         var p = tiger.Planet(x, y, alignment, HP, power, type);

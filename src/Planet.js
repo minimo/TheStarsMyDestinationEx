@@ -66,14 +66,14 @@ tiger.Planet = tm.createClass({
         //選択カーソル
         this.cursol = tm.display.CircleShape(70, 70, {
             fillStyle: "rgba(0,0,0,0)",
-            strokeStyle: tm.graphics.LinearGradient(0,0,0,80).addColorStopList([
+            strokeStyle: tm.graphics.LinearGradient(0,0,0,70).addColorStopList([
                 { offset:0.0, color:"rgba(0,255,0,0.0)" },
                 { offset:0.1, color:"rgba(0,255,0,0.3)" },
                 { offset:0.5, color:"rgba(0,255,0,1.0)" },
                 { offset:0.9, color:"rgba(0,255,0,0.3)" },
                 { offset:1.0, color:"rgba(0,255,0,0.0)" },
             ]).toStyle(),
-            lineWidth: 5.0,
+            lineWidth: 6.0,
         }).addChildTo(this);
         this.cursol.blendMode = "lighter";
         this.cursol.update = function() {
