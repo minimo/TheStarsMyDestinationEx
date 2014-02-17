@@ -6,11 +6,12 @@
  */
 
 //アセット登録
-var ASSETS = {
+var assets = {
     //images
     "planet":       "assets/planet.png",
     "planet_mono":  "assets/planet_mono.png",
     "frigate":      "assets/frigate1.png",
+    "bg1":          "assets/background.jpg",
 }
 
 //namespace tiger
@@ -30,8 +31,8 @@ tiger.CanvasApp = tm.createClass({
     //スコア
     score: 0,
 
-    //メインシーン
-    mainScene: null,
+    //ゲームシーン
+    gameScene: null,
 
     //難易度
     difficulty: 0,
@@ -40,23 +41,25 @@ tiger.CanvasApp = tm.createClass({
         this.superInit(id);
 
         tiger.core = this;
-        this.resize(SCREEN_WIDTH, SCREEN_HEIGHT).fitWindow();
+        this.resize(SC_W, SC_H).fitWindow();
         this.fps = 60;
         this.background = "rgba(0, 0, 0, 0)";
 
         this.keyboard = tm.input.Keyboard(window);
-        this.mainScene = tiger.MainScene();
+        this.gameScene = tiger.GameScene();
 
-        //ローディングシーンを投入
-        this.replaceScene(tm.app.LoadingScene({
-            assets:ASSETS,
+        var loadingScene = tm.ui["LoadingScene"]({
+            assets: assets,
+            width: SC_W,
+            height: SC_H,
             nextScene: function() {
                 this._onLoadAssets();
-//                return tiger.TitleScene();    //次シーンはタイトル
-                return app.mainScene;
+                return tiger.TitleScene();
             }.bind(this),
-        }));
-    },
+        });
+        loadingScene.bg.canvas.clearColor("black");
+        this.replaceScene(loadingScene);
+   },
 
     _onLoadAssets: function() {
     },
