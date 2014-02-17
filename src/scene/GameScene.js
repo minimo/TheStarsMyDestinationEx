@@ -37,7 +37,12 @@ tiger.GameScene = tm.createClass({
     selectObject: null,
     
     //前フレームポインティングデバイス情報
-    beforePointing: null,
+    beforePointing: {
+        x: 0,
+        y: 0,
+        click: false,
+        drag: false,
+    },
 
     init: function() {
         this.superInit();
@@ -73,6 +78,7 @@ tiger.GameScene = tm.createClass({
 
         var p = app.pointing;
         if (p.getPointing()) {
+        } else {
         }
 
         if (this.control == CTRL_MAP) {
@@ -85,8 +91,10 @@ tiger.GameScene = tm.createClass({
             if (this.world.base.x < -this.world.size+SC_W)this.world.base.x = -this.world.size+SC_W;
             if (this.world.base.y < -this.world.size+SC_H)this.world.base.y = -this.world.size+SC_H;
         }
-        
-        this.beforePointing = p;
+
+        this.beforePointing.x = p.position.x;
+        this.beforePointing.y = p.position.y;
+        this.beforePointing.click = p.getPointing();
     },
 });
 
