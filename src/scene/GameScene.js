@@ -44,8 +44,14 @@ tiger.GameScene = tm.createClass({
         drag: false,
     },
     
+    //クリック間隔
+    clickInterval: 0,
+    
     //矢印的なアレ
     arrow: null,
+    
+    //経過フレーム
+    frame: 0,
 
     init: function() {
         this.superInit();
@@ -95,16 +101,10 @@ tiger.GameScene = tm.createClass({
 
                 //選択矢印作成
                 var that = this;
-                this.arrow = tm.display.TriangleShape(32, pl.distance, {
-                    fillStyle: "rgba(0,0,0,0)",
-                    strokeStyle: tm.graphics.LinearGradient(0,0,0,80).addColorStopList([
-                        { offset:0.0, color:"rgba(0,255,0,0.0)" },
-                        { offset:0.3, color:"rgba(0,255,0,0.5)" },
-                        { offset:1.0, color:"rgba(0,255,0,1.0)" },
-                    ]).toStyle(),
-                    lineWidth: 3.0,
-                }).addChildTo(this.world);
-                this.arrow.x = {x: pl.planet.x, y: pl.planet.y};
+                this.arrow = tm.display.TriangleShape(64, pl.distance);
+                this.arrow.setPosition(pl.planet.x, pl.planet.y);
+                this.arrow.foreground = true;
+                this.arrow.addChildTo(this.world);
                 this.arrow.from = {x: pl.planet.x, y: pl.planet.y};
                 this.arrow.to =   {x: pl.planet.x, y: pl.planet.y};
             } else {
@@ -120,14 +120,19 @@ tiger.GameScene = tm.createClass({
         //クリック終了
         if (!click && this.beforePointing.click) {
             this.control = CTRL_NOTHING;
+            
+            //選択中オブジェクト解放
             if (this.selectObject) {
                 if (this.selectObject instanceof tiger.Planet) {
                     this.selectObject.select = false;
                     this.selectObject = null;
                 }
             }
+
+            //選択矢印解放            
             if (this.arrow) {
                 this.arrow.remove();
+                this.arrow = null;
             }
         }
 
@@ -149,6 +154,8 @@ tiger.GameScene = tm.createClass({
         }
 
         this.beforePointing = {x: 0, y: 0, click: click, drag: drag};
+        
+        this.frame++;
     },
 });
 

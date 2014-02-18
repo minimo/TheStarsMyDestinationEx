@@ -103,8 +103,8 @@ tiger.World = tm.createClass({
     //惑星の追加
     addPlanet: function(x, y, alignment, HP, power, type) {
         alignment = alignment || TYPE_NUTRAL;
-        HP = HP || rand(30, 300);
-        power = power || rand(0, 150)/100+0.5;
+        power = power || rand(80, 150)/100;
+        HP = HP || ~~(rand(50, 100)*power);
         type = type || rand(0, 5);
 
         var p = tiger.Planet(x, y, alignment, HP, power, type);
@@ -125,6 +125,8 @@ tiger.World = tm.createClass({
             if (child.isEffect) {
                 //エフェクト用レイヤ
                 this.layer[LAYER_EFFECT_UPPER].addChild(child);
+            } if (child.foreground) {
+                this.layer[LAYER_FOREGROUND].addChild(child);
             } else {
                 this.layer[LAYER_BACKGROUND].addChild(child);
 //                this.superClass.prototype.addChild.apply(this, arguments);
