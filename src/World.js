@@ -13,7 +13,7 @@ tiger.World = tm.createClass({
     scene: null,
 
     //マップの一辺のサイズ
-    size: 640*1,
+    size: 640*2,
 
     //マップの現在スケール
     scale: 1,
@@ -21,18 +21,18 @@ tiger.World = tm.createClass({
     //ベースレイヤー
     base: null,
 
+    //スプライトレイヤー
+    layer: null,
+
     //最大惑星数
-    maxPlanets: 5,
+    maxPlanets: 20,
     
     //惑星リスト
     planets: null,
 
     //ユニットリスト    
     units: null,
-
-    //スプライトレイヤー
-    layer: null,
-
+    
     init: function(scene) {
         this.scene = scene;
         this.planets = [];
@@ -71,29 +71,33 @@ tiger.World = tm.createClass({
             for (var j = 0; j < this.planets.length; j++) {
                 var p = this.planets[j];
                 var dx = p.x-x, dy = p.y-y;
-                var dis = Math.sqrt(dx*dx+dy*dy);
-                if (dis < 132){ok = false;break;}
+                var dis = dx*dx+dy*dy;
+                if (dis < 132*132){ok = false;break;}
             }
             if (!ok) {i--;continue;}
             this.addPlanet(x, y);
         }
     },
 
-    //指定座標から一番近い惑星を取得
-    getPlanet: function(x, y){
+    //指定スクリーン座標から一番近い惑星を取得
+    getPlanet: function(screenX, screenY){
+        //スクリーン座標からマップ座標へ変換
+        screenX -= this.base.x;
+        screenY -= this.base.y;
+
         var bd = 99999999;
         var pl = null;
         for (var i = 0; i < this.planets.length; i++) {
             var p = this.planets[i];
-            var dx = p.x-x;
-            var dy = p.y-y;
+            var dx = p.x-screenX;
+            var dy = p.y-screenY;
             var dis = dx*dx+dy*dy;
             if (dis < bd){
                 pl = p;
                 bd = dis;
             }
         }
-        return pl;
+        return {planet: pl, distance: Math.sqrt(bd)};
     },
 
     //惑星の追加
