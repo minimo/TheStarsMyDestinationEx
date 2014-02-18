@@ -101,8 +101,16 @@ tiger.GameScene = tm.createClass({
 
                 //選択矢印作成
                 var that = this;
-                this.arrow = tm.display.TriangleShape(64, pl.distance);
+                this.arrow = tm.display.RectangleShape(32, pl.distance, {
+                    fillStyle: "rgba(0, 255, 0, 1.0)",
+                    strokeStyle: tm.graphics.LinearGradient(0,0,0,80).addColorStopList([
+                        { offset:0.0, color:"rgba(0, 255, 0, 0.0)" },
+                        { offset:1.0, color:"rgba(0, 255, 0, 1.0)" },
+                    ]).toStyle(),
+                    lineWidth: 6.0,
+                });
                 this.arrow.setPosition(pl.planet.x, pl.planet.y);
+                this.arrow.originY = 1;
                 this.arrow.foreground = true;
                 this.arrow.addChildTo(this.world);
                 this.arrow.from = {x: pl.planet.x, y: pl.planet.y};
