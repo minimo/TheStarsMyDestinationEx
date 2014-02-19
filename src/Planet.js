@@ -78,8 +78,8 @@ tiger.Planet = tm.createClass({
         this.cursol.blendMode = "lighter";
         this.cursol.alpha = 0;
         this.cursol.update = function() {
-            this.rotation++;
             if (that.select) {
+                this.rotation++;
                 this.alpha+=0.05;
                 if (this.alpha > 1.0)this.alpha = 1.0;
             } else {
