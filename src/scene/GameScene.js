@@ -12,7 +12,6 @@ CTRL_MAP = 1;
 CTRL_PLANET = 2;
 CTRL_FRIGATE = 3;
 
-
 //ゲームシーン
 tiger.GameScene = tm.createClass({
     superClass: tm.app.Scene,
@@ -33,9 +32,12 @@ tiger.GameScene = tm.createClass({
     //3:艦隊選択中
     control: 0,
 
-    //選択中オブジェクト
-    selectObject: null,
-    
+    //起点選択オブジェクト
+    selectFrom: null,
+
+    //終点選択オブジェクト
+    selectTo: null,
+
     //前フレームポインティングデバイス情報
     beforePointing: {
         x: 0,
@@ -43,13 +45,13 @@ tiger.GameScene = tm.createClass({
         click: false,
         drag: false,
     },
-    
+
     //クリック間隔
     clickInterval: 0,
     
     //矢印的なアレ
     arrow: null,
-    
+
     //経過フレーム
     frame: 0,
 
@@ -85,6 +87,7 @@ tiger.GameScene = tm.createClass({
             return;
         }
 
+        //マウスorタッチ情報
         var p = app.pointing;
         var px = p.position.x, py = p.position.y;
         var click = p.getPointing();
@@ -96,25 +99,11 @@ tiger.GameScene = tm.createClass({
             var pl = this.world.getPlanet(px, py);
             if (pl.distance < 32*pl.planet.power) {
                 this.control = CTRL_PLANET;
-                this.selectObject = pl.planet;
+                this.selectFrom = pl.planet;
                 pl.planet.select = true;
-
-                //選択矢印作成
-                var that = this;
-                this.arrow = tm.display.RectangleShape(32, pl.distance, {
-                    fillStyle: "rgba(0, 255, 0, 1.0)",
-                    strokeStyle: tm.graphics.LinearGradient(0,0,0,80).addColorStopList([
-                        { offset:0.0, color:"rgba(0, 255, 0, 0.0)" },
-                        { offset:1.0, color:"rgba(0, 255, 0, 1.0)" },
-                    ]).toStyle(),
-                    lineWidth: 6.0,
-                });
-                this.arrow.setPosition(pl.planet.x, pl.planet.y);
-                this.arrow.originY = 1;
-                this.arrow.foreground = true;
-                this.arrow.addChildTo(this.world);
-                this.arrow.from = {x: pl.planet.x, y: pl.planet.y};
-                this.arrow.to =   {x: pl.planet.x, y: pl.planet.y};
+                var wx = this.world.toWorldX(px);
+                var wy = this.world.toWorldY(py);
+                this.setupArrow(pl.planet.x, pl.planet.y, wx, wy);
             } else {
                 this.control = CTRL_MAP;
             }
@@ -123,6 +112,24 @@ tiger.GameScene = tm.createClass({
         //クリック中
         if (click && this.beforePointing.click) {
             drag = true;
+            if (this.arrow) {
+                var pl = this.world.getPlanet(px, py);
+                if (pl.distance < 32*pl.planet.power) {
+                    this.selectTo = pl.planet;
+                    pl.planet.select = true;
+                    this.arrow.to.x = pl.planet.x;
+                    this.arrow.to.y = pl.planet.y;
+                } else {
+                    if (this.selectTo && this.selectTo != this.selectFrom) {
+                        if (this.selectTo instanceof tiger.Planet) {
+                            this.selectTo.select = false;
+                            this.selectTo = null;
+                        }
+                    }
+                    this.arrow.to.x = px-this.world.base.x;
+                    this.arrow.to.y = py-this.world.base.y;
+                }
+            }
         }
 
         //クリック終了
@@ -130,10 +137,16 @@ tiger.GameScene = tm.createClass({
             this.control = CTRL_NOTHING;
             
             //選択中オブジェクト解放
-            if (this.selectObject) {
-                if (this.selectObject instanceof tiger.Planet) {
-                    this.selectObject.select = false;
-                    this.selectObject = null;
+            if (this.selectFrom) {
+                if (this.selectFrom instanceof tiger.Planet) {
+                    this.selectFrom.select = false;
+                    this.selectFrom = null;
+                }
+            }
+            if (this.selectTo) {
+                if (this.selectTo instanceof tiger.Planet) {
+                    this.selectTo.select = false;
+                    this.selectTo = null;
                 }
             }
 
@@ -150,7 +163,7 @@ tiger.GameScene = tm.createClass({
             var dy = py - p.prevPosition.y;
             this.world.base.x += dx;
             this.world.base.y += dy;
-            
+
             if (this.world.base.x > 0)this.world.base.x = 0;
             if (this.world.base.y > 0)this.world.base.y = 0;
             if (this.world.base.x < -this.world.size+SC_W)this.world.base.x = -this.world.size+SC_W;
@@ -164,6 +177,28 @@ tiger.GameScene = tm.createClass({
         this.beforePointing = {x: 0, y: 0, click: click, drag: drag};
         
         this.frame++;
+    },
+
+    //選択矢印セットアップ
+    setupArrow: function(fromX, fromY, toX, toY) {
+        if (this.arrow == null) {
+            this.arrow = tm.display.Sprite("arrow", 160, 16);
+            this.arrow.setPosition(fromX, fromY);
+            this.arrow.originX = 0;
+            this.arrow.foreground = true;
+            this.arrow.from = {x: fromX, y: fromY };
+            this.arrow.to =   {x: toX,   y: toY };
+            this.arrow.alpha = 0.0;
+            this.arrow.update = function() {
+                var dx = this.to.x-this.x;
+                var dy = this.to.y-this.y;
+                this.rotation = Math.atan2(dy, dx)*toDeg;   //二点間の角度
+                this.scaleX = Math.sqrt(dx*dx+dy*dy)/160;
+                this.alpha += 0.05;
+                if (this.alpha > 0.7)this.alpha = 0.7;
+            };
+            this.world.addChild(this.arrow);
+        }
     },
 });
 

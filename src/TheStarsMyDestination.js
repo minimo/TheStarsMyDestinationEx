@@ -8,6 +8,7 @@
 //アセット登録
 var assets = {
     //images
+    "arrow":        "assets/arrow.png",
     "planet":       "assets/planet.png",
     "planet_mono":  "assets/planet_mono.png",
     "frigate":      "assets/frigate1.png",

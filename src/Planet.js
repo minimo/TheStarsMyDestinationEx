@@ -12,7 +12,7 @@ tiger.Planet = tm.createClass({
 
     //惑星タイプ
     type: 0,
-    
+
     //生産力(0.5-2.0)
     power: 1,
 
@@ -92,7 +92,37 @@ tiger.Planet = tm.createClass({
     update: function() {
     },
 
+    //ダメージ処理
     damage: function(alignment, pow) {
         this.HP -= pow;
+    },
+
+    //特定ワールド座標からの距離
+    distance: function(x, y) {
+        var dx = this.x-x;
+        var dy = this.y-y;
+        return Math.sqrt(dx*dx+dy*dy);
+    },
+
+    //選択カーソル色変更
+    changeCursolColor: function(color) {
+        if (color == "green") {
+            this.cursol.strokeStyle = tm.graphics.LinearGradient(0,0,0,80).addColorStopList([
+                { offset:0.0, color:"rgba(0,255,0,0.0)" },
+                { offset:0.3, color:"rgba(0,255,0,0.8)" },
+                { offset:0.5, color:"rgba(0,255,0,1.0)" },
+                { offset:0.7, color:"rgba(0,255,0,0.8)" },
+                { offset:1.0, color:"rgba(0,255,0,0.0)" },
+            ]).toStyle();
+        }
+        if (color == "red") {
+            this.cursol.strokeStyle = tm.graphics.LinearGradient(0,0,0,80).addColorStopList([
+                { offset:0.0, color:"rgba(255,0,0,0.0)" },
+                { offset:0.3, color:"rgba(255,0,0,0.8)" },
+                { offset:0.5, color:"rgba(255,0,0,1.0)" },
+                { offset:0.7, color:"rgba(255,0,0,0.8)" },
+                { offset:1.0, color:"rgba(255,0,0,0.0)" },
+           ]).toStyle();
+        }
     },
 });

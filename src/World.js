@@ -79,6 +79,24 @@ tiger.World = tm.createClass({
         }
     },
 
+    //スクリーン座標の設定    
+    setScreenPosition: function(x, y) {
+        this.base.x = -x;
+        this.base.y = -y;
+    },
+    screenX: {
+        get: function() {return -this.base.x;},
+        set: function(x) {this.base.x = -x;}
+    },
+    screenY: {
+        get: function() {return -this.base.y;},
+        set: function(x) {this.base.y = -y;}
+    },
+    
+    //ワールド座標への変換
+    toWorldX: function(x) {return x-this.base.x;},
+    toWorldY: function(y) {return y-this.base.y;},
+
     //指定スクリーン座標から一番近い惑星を取得
     getPlanet: function(screenX, screenY){
         //スクリーン座標からマップ座標へ変換
