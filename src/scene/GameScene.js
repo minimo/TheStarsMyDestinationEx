@@ -89,20 +89,20 @@ tiger.GameScene = tm.createClass({
 
         //マウスorタッチ情報
         var p = app.pointing;
-        var px = p.position.x, py = p.position.y;
+        var sx = p.position.x, sy = p.position.y;
         var click = p.getPointing();
         var drag = false;
 
         //初回クリック
         if (click && !this.beforePointing.click) {
             //惑星選択チェック
-            var pl = this.world.getPlanet(px, py);
+            var pl = this.world.getPlanet(sx, sy);
             if (pl.distance < 32*pl.planet.power) {
                 this.control = CTRL_PLANET;
                 this.selectFrom = pl.planet;
                 pl.planet.select = true;
-                var wx = this.world.toWorldX(px);
-                var wy = this.world.toWorldY(py);
+                var wx = this.toWorldX(sx);
+                var wy = this.toWorldY(sy);
                 this.setupArrow(pl.planet.x, pl.planet.y, wx, wy);
             } else {
                 this.control = CTRL_MAP;
@@ -113,7 +113,7 @@ tiger.GameScene = tm.createClass({
         if (click && this.beforePointing.click) {
             drag = true;
             if (this.arrow) {
-                var pl = this.world.getPlanet(px, py);
+                var pl = this.world.getPlanet(sx, sy);
                 if (pl.distance < 32*pl.planet.power) {
                     this.selectTo = pl.planet;
                     pl.planet.select = true;
@@ -126,8 +126,8 @@ tiger.GameScene = tm.createClass({
                             this.selectTo = null;
                         }
                     }
-                    this.arrow.to.x = px-this.world.base.x;
-                    this.arrow.to.y = py-this.world.base.y;
+                    this.arrow.to.x = this.toWorldX(sx);
+                    this.arrow.to.y = this.toWorldX(sy);
                 }
             }
         }
@@ -159,8 +159,8 @@ tiger.GameScene = tm.createClass({
 
         //マップ操作
         if (this.control == CTRL_MAP) {
-            var dx = px - p.prevPosition.x;
-            var dy = py - p.prevPosition.y;
+            var dx = p.position.x - p.prevPosition.x;
+            var dy = p.position.y - p.prevPosition.y;
             this.world.base.x += dx;
             this.world.base.y += dy;
 
@@ -178,6 +178,22 @@ tiger.GameScene = tm.createClass({
         
         this.frame++;
     },
+    
+    //スクリーン座標の設定    
+    setScreenPosition: function(x, y) {
+        this.world.base.x = -x;
+        this.world.base.y = -y;
+    },
+/*
+    get screenX() {return -this.world.base.x;},
+    set screenX(x) {this.world.base.x = -x;},
+    get screenY() {return -this.world.base.y;},
+    set screenY(y) {this.world.base.y = -y;},
+*/    
+    //ワールド座標への変換
+    toWorldX: function(x) {return x-this.world.base.x;},
+    toWorldY: function(y) {return y-this.world.base.y;},
+
 
     //選択矢印セットアップ
     setupArrow: function(fromX, fromY, toX, toY) {
