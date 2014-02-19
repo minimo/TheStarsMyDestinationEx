@@ -1,6 +1,6 @@
 /*
 
-  TheStarsMyDestination serverside
+    TheStarsMyDestination serverside
 	2014/02/10
 	This program is MIT lisence.
 
@@ -47,18 +47,18 @@ var robby = [];     //待機中プレイヤー（playerID）
 var sessionID = 0;  //セッションＩＤ
 
 //ロビー
-io.of('/tactics').on('connection', function(socket) {
+io.of('/tiger').on('connection', function(socket) {
     //クライアントに接続成功とＩＤを通知
     socket.emit('connected', socket.id);
     log('connected', socket.id);
-    
+
     if (robby.length > 0) {
         //ロビーに人がプレイヤーが居れば対戦成立
         sessionID++;
-        
+
         var hostID = robby[0];      //先にロビーに居た方がホストになる
         var guestID = socket.id;
-        
+
         //対戦成立とセッション情報を通知
         socket.emit('msg matching player', {id: sessionID, host: hostID, guest:guestID});
         socket.broadcast.emit('msg matching player', {id: sessionID, host: hostID, guest:guestID}); 
@@ -84,8 +84,8 @@ io.of('/tactics').on('connection', function(socket) {
 
 // 通信対戦を始める
 function startBattle(id){
-    // /tactics/:battleId に対する接続を待ち受けるイベントリスナ
-    var battle = io.of('/tactics/'+id).on('connection', function(socket){
+    // /tiger/:battleId に対する接続を待ち受けるイベントリスナ
+    var battle = io.of('/tiger/'+id).on('connection', function(socket){
  
         //ゲーム準備完了通知受信
         socket.on('msg gameready', function(){
@@ -93,23 +93,23 @@ function startBattle(id){
             socket.emit('msg gamestart');
             socket.broadcast.emit('msg gamestart');
         });
-        
-        //砦を追加した
-        socket.on('msg send fortdata', function(msg){
-            log('send fort data');
-            socket.broadcast.emit('msg send fortdata', msg);
+
+        //惑星を追加した
+        socket.on('msg enter planet', function(msg){
+            log('eneter planet');
+            socket.broadcast.emit('msg enter planet', msg);
         });
 
         //ユニット追加
-        socket.on('msg enterunit', function(msg){
+        socket.on('msg enter unit', function(msg){
             log('enter unit:'+socket.id);
-            socket.broadcast.emit('msg enterunit', msg);
+            socket.broadcast.emit('msg enter unit', msg);
         });
 
         //ユニット操作
-        socket.on('msg controlunit', function(msg){
+        socket.on('msg control unit', function(msg){
             log('control unit:'+socket.id);
-            socket.broadcast.emit('msg controlunit', msg);
+            socket.broadcast.emit('msg control unit', msg);
         });
         
         //ユニットデータ同期
@@ -117,14 +117,14 @@ function startBattle(id){
             socket.broadcast.emit('msg sync unitdata', msg);
         });
 
-        //砦データ再送要求
-        socket.on('msg resend fortdata', function(msg) {
-            socket.broadcast.emit('msg resend fortdata', msg);
+        //惑星データ再送要求
+        socket.on('msg resend planet', function(msg) {
+            socket.broadcast.emit('msg resend planet', msg);
         });
 
-        //砦データ同期
-        socket.on('msg sync fortdata', function(msg) {
-            socket.broadcast.emit('msg sync fortdata', msg);
+        //惑星データ同期
+        socket.on('msg sync planet', function(msg) {
+            socket.broadcast.emit('msg sync planet', msg);
         });
 
         //相手通信確認（送信）
