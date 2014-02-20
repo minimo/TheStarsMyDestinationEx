@@ -33,6 +33,9 @@ tiger.World = tm.createClass({
     //ユニットリスト
     units: null,
 
+    //艦隊派遣時戦力レート(0.1 - 1.0)
+    rate: 0.5,
+
     init: function(scene) {
         this.scene = scene;
         this.planets = [];
@@ -81,8 +84,14 @@ tiger.World = tm.createClass({
     
     //艦隊投入
     enterUnit: function(from, to) {
-       var unit = tiger.Unit(from.x, from.y);
-       this.addChild(unit);
+        if (from.HP < 10)return null;
+        var HP = from.HP * this.rate;
+        from.HP -= HP;
+        if (from.HP < 0)from.HP = 1;
+        var unit = tiger.Unit(from.x, from.y, from.alignment, HP);
+        unit.setDestination(to);
+        this.addChild(unit);
+        return unit;
     },
 
     //指定スクリーン座標から一番近い惑星を取得

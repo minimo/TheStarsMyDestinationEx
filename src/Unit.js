@@ -26,24 +26,22 @@ tiger.Unit = tm.createClass({
     destination: null,
 
     //進行速度
-    speed: 1,
+    speed: 0.5,
 
-    init: function(x, y, alignment, HP, power, type) {
+    init: function(x, y, alignment, HP, power) {
         this.superInit("frigate", 32, 32);
         this.x = x || 0;
         this.y = y || 0;
         this.alignment = alignment || 0;
         this.HP = HP || 1;
         this.power = power || 1;
-        this.type = type || 0;
-        this.setScale(0.5);
         this.setFrameIndex(0, 32, 32);
     },
 
     update: function() {
         if (this.destination) {
-            var dx = this.x-this.destination.x;
-            var dy = this.y-this.destination.y;
+            var dx = this.destination.x-this.x;
+            var dy = this.destination.y-this.y;
             var dir = Math.atan2(dy, dx);
             this.x += Math.sin(dir)*this.speed;
             this.y += Math.cos(dir)*this.speed;
