@@ -11,6 +11,9 @@ tiger.Planet = tm.createClass({
     superClass: tm.display.Sprite,    
 
     //惑星タイプ
+    //0: 中立
+    //1: プレイヤー
+    //2: エネミー
     type: 0,
 
     //生産力(0.5-2.0)
@@ -27,7 +30,7 @@ tiger.Planet = tm.createClass({
 
     init: function(x, y, alignment, HP, power, type) {
         this.alignment = alignment || 0;
-        if (this.alignment == TYPE_NUTRAL) {
+        if (this.alignment == TYPE_NEUTRAL) {
             this.superInit("planet_mono", 64, 64);
         } else {
             this.superInit("planet", 64, 64);
@@ -45,22 +48,28 @@ tiger.Planet = tm.createClass({
         var that = this;
         //HP表示
         this.label = tm.display.Label("", 30).addChildTo(this);
+        this.label.fontFamily = "'Orbitron'";
         this.label.align     = "center";
         this.label.baseline  = "middle";
         this.label.fontSize = 20;
+        this.label.fontWeight = 700;
         this.label.update = function() {
             this.text = ""+that.HP;
             switch (that.alignment) {
-                case TYPE_NUTRAL:
+                case TYPE_NEUTRAL:
                     this.fillStyle = "black";
+                    this.fillStyle = "rgba(0, 0, 0, 1.0)";
                     break;
                 case TYPE_PLAYER:
                     this.fillStyle = "blue";
+                    this.fillStyle = "rgba(64, 64, 200, 1.0)";
                     break;
                 case TYPE_ENEMY:
                     this.fillStyle = "red";
+                    this.fillStyle = "rgba(255, 64, 64, 1.0)";
                     break;
             }
+            this.setScale(1/that.power);
         };
 
         //選択カーソル

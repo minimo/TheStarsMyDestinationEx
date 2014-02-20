@@ -30,9 +30,9 @@ tiger.World = tm.createClass({
     //惑星リスト
     planets: null,
 
-    //ユニットリスト    
+    //ユニットリスト
     units: null,
-    
+
     init: function(scene) {
         this.scene = scene;
         this.planets = [];
@@ -78,6 +78,12 @@ tiger.World = tm.createClass({
             this.addPlanet(x, y);
         }
     },
+    
+    //艦隊投入
+    enterUnit: function(from, to) {
+       var unit = tiger.Unit(from.x, from.y);
+       this.addChild(unit);
+    },
 
     //指定スクリーン座標から一番近い惑星を取得
     getPlanet: function(screenX, screenY){
@@ -102,7 +108,7 @@ tiger.World = tm.createClass({
 
     //惑星の追加
     addPlanet: function(x, y, alignment, HP, power, type) {
-        alignment = alignment || TYPE_NUTRAL;
+        alignment = alignment || TYPE_NEUTRAL;
         power = power || rand(80, 150)/100;
         HP = HP || ~~(rand(50, 100)*power);
         type = type || rand(0, 5);

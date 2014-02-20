@@ -18,7 +18,7 @@ SC_W = 640;
 SC_H = 640;
 
 //ユニット、惑星タイプ
-TYPE_NUTRAL = 0;
+TYPE_NEUTRAL = 0;
 TYPE_PLAYER = 1;
 TYPE_ENEMY  = 2;
 

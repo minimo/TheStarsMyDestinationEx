@@ -22,10 +22,6 @@ tiger.GameScene = tm.createClass({
     //マップクラス
     world: null,
 
-    //スクリーン座標
-    _screenX: 0,
-    _screenY: 0,
-
     //準備完了フラグ
     ready: false,
 
@@ -58,7 +54,7 @@ tiger.GameScene = tm.createClass({
 
     //経過フレーム
     frame: 0,
-
+    
     init: function() {
         this.superInit();
 
@@ -101,13 +97,14 @@ tiger.GameScene = tm.createClass({
         if (click && !this.beforePointing.click) {
             //惑星選択チェック
             var pl = this.world.getPlanet(sx, sy);
-            if (pl.distance < 32*pl.planet.power) {
+            if (pl.planet.alignment == TYPE_PLAYER && pl.distance < 32*pl.planet.power) {
                 this.control = CTRL_PLANET;
                 this.selectFrom = pl.planet;
                 pl.planet.select = true;
                 var wx = this.toWorldX(sx);
                 var wy = this.toWorldY(sy);
                 this.setupArrow(pl.planet, {x: wx, y:wy});
+                this.control = CTRL_PLANET;
             } else {
                 this.control = CTRL_MAP;
             }
@@ -136,8 +133,14 @@ tiger.GameScene = tm.createClass({
 
         //クリック終了
         if (!click && this.beforePointing.click) {
-            this.control = CTRL_NOTHING;
-            
+
+            //艦隊派遣
+            if (this.control == CTRL_PLANET) {
+                if (this.selectTo instanceof tiger.Planet) {
+                    this.world.enterUnit(this.selectFrom, this.selectTo);
+                }
+            }
+
             //選択中オブジェクト解放
             if (this.selectFrom) {
                 if (this.selectFrom instanceof tiger.Planet) {
@@ -154,9 +157,10 @@ tiger.GameScene = tm.createClass({
 
             //選択矢印解放            
             if (this.arrow) {
-                this.arrow.remove();
+                this.arrow.active = false;
                 this.arrow = null;
             }
+            this.control = CTRL_NOTHING;
         }
 
         //マップ操作
@@ -172,7 +176,7 @@ tiger.GameScene = tm.createClass({
             if (this.screenY > this.world.size+SC_H)this.screenY = this.world.size-SC_H;
         }
 
-        //惑星選択        
+        //惑星選択
         if (this.control == CTRL_PLANET) {
         }
 
@@ -195,6 +199,7 @@ tiger.GameScene = tm.createClass({
             this.arrow.from = from;
             this.arrow.to = to;
             this.arrow.alpha = 0.0;
+            this.arrow.active = true;
             this.arrow.update = function() {
                 //中心点からの直線を計算
                 var fx = this.from.x, fy = this.from.y;
@@ -222,8 +227,14 @@ tiger.GameScene = tm.createClass({
                 this.y = fy;
                 this.rotation = Math.atan2(dy, dx)*toDeg;   //二点間の角度
                 this.scaleX = Math.sqrt(dx*dx+dy*dy)/160;
-                this.alpha += 0.05;
-                if (this.alpha > 0.7)this.alpha = 0.7;
+                
+                if (this.active) {
+                    this.alpha += 0.05;
+                    if (this.alpha > 0.7)this.alpha = 0.7;
+                } else {
+                    this.alpha -= 0.05;
+                    if (this.alpha < 0.0)this.remove();
+                }
             };
             this.world.addChild(this.arrow);
         }

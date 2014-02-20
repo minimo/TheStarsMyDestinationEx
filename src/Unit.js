@@ -13,23 +13,59 @@ tiger.Unit = tm.createClass({
     //戦力
     HP: 0,
 
+    //攻撃力
+    power: 1,
+
     //属性（0:中立 1:プレイヤー 2:エネミー）
     alignment: 0,   //※仕様上中立は無い（予定）
 
-    //目的地
-    destination: null,
-    
     //所属艦隊ＩＤ
     group:0,
 
-    init: function() {
-        this.superInit("firgate", 32, 32);
+    //目的地
+    destination: null,
+
+    //進行速度
+    speed: 1,
+
+    init: function(x, y, alignment, HP, power, type) {
+        this.superInit("frigate", 32, 32);
+        this.x = x || 0;
+        this.y = y || 0;
+        this.alignment = alignment || 0;
+        this.HP = HP || 1;
+        this.power = power || 1;
+        this.type = type || 0;
+        this.setScale(0.5);
+        this.setFrameIndex(0, 32, 32);
     },
 
     update: function() {
+        if (this.destination) {
+            var dx = this.x-this.destination.x;
+            var dy = this.y-this.destination.y;
+            var dir = Math.atan2(dy, dx);
+            this.x += Math.sin(dir)*this.speed;
+            this.y += Math.cos(dir)*this.speed;
+
+            //目標に到達したっぽい
+            if (this.destination instanceof tiger.Planet) {
+            }
+        }
     },
 
     //目的地座標設定    
-    setDestination: function(x, y) {
+    setDestination: function(d) {
+        if (d instanceof tiger.Planet) {
+            this.destination = d;
+        }
+    },
+
+    //特定ワールド座標からの距離
+    distance: function(x, y) {
+        var dx = this.x-x;
+        var dy = this.y-y;
+        return Math.sqrt(dx*dx+dy*dy);
     },
 });
+
