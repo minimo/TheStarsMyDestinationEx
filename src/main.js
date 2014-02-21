@@ -42,6 +42,9 @@ app = {};
 
 //アプリケーションメイン
 tm.main(function() {
+
+    tiger.Effect.setup();
+
     app = tiger.CanvasApp("#world");
 //    app.enableStats();
     app.run();

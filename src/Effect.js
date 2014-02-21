@@ -30,41 +30,6 @@ tiger.Effect.setup = function() {
                 { offset: 1.00, color: "rgba(255,255,255,0)" },
             ]).toStyle())
         .fillCircle(50, 50, 50);
-
-    /** @const */
-    var size = 16;
-    tiger.Effect["particle16"] = tiger.Particle(size, 1.0, 0.9, tm.graphics.Canvas()
-        .resize(size, size)
-        .setFillStyle(
-            tm.graphics.RadialGradient(size/2, size/2, 0, size/2, size/2, size/2)
-                .addColorStopList([
-                    {offset:0.0, color: "rgba(255,255,255,1.0)"},
-                    {offset:1.0, color: "rgba(255,128,  0,0.0)"},
-                ]).toStyle()
-        )
-        .fillRect(0, 0, size, size)
-        .element
-    );
-
-};
-
-tiger.Effect.genParticle = function(x, y, scene) {
-    var p = tiger.Effect["particle16"].clone().setPosition(x, y);
-    p.isEffect = true;
-    p.addChildTo(scene);
-    var speed = tiger.math.randf(5, 20);
-    var dir = tiger.math.randf(Math.PI,Math.PI*2);
-    p.dx = Math.cos(dir) * speed;
-    p.dy = Math.sin(dir) * speed;
-    var scaleMin = 0.1;
-    var scaleMax = 0.5;
-    p.scaleX = p.scaleY = (tiger.math.randf(scaleMin, scaleMax) + tiger.math.randf(scaleMin, scaleMax)) / 2;
-    p.addEventListener("enterframe", function() {
-        this.x += this.dx;
-        this.y += this.dy;
-        this.dx *= 0.9;
-        this.dy *= 0.9;
-    });
 };
 
 tiger.Effect.genShockwave = function(x, y, scene, scaleTo) {
