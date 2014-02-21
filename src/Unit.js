@@ -25,45 +25,70 @@ tiger.Unit = tm.createClass({
     //目的地
     destination: null,
 
-    //進行速度
+    //進行用パラメータ
+    vx: 0,
+    vy: 0,
     speed: 0.5,
 
     init: function(x, y, alignment, HP, power) {
-        this.superInit("frigate", 32, 32);
+        this.superInit("frigate", 64, 64);
         this.x = x || 0;
         this.y = y || 0;
         this.alignment = alignment || 0;
         this.HP = HP || 1;
         this.power = power || 1;
-        this.setFrameIndex(0, 32, 32);
+        this.setFrameIndex(0, 64, 64);
     },
 
     update: function() {
         if (this.destination) {
-            var dx = this.destination.x-this.x;
-            var dy = this.destination.y-this.y;
-            var dir = Math.atan2(dy, dx);
-            this.x += Math.sin(dir)*this.speed;
-            this.y += Math.cos(dir)*this.speed;
+            this.x += this.vx;
+            this.y += this.vy;
+
+            //進行方向を計算する
+            var rot = Math.atan2(this.vy, this.vx)*toDeg;
+            if (rot < 0) {
+                rot += 350;  //右から時計回りで３６０になる様にする
+            } else {
+                rot += 5;  //補正
+            }
+            this.setFrameIndex(~~(rot/10), 64, 64);
 
             //目標に到達したっぽい
-            if (this.destination instanceof tiger.Planet) {
+            if (this.arrival()) {
             }
         }
     },
 
     //目的地座標設定    
     setDestination: function(d) {
-        if (d instanceof tiger.Planet) {
-            this.destination = d;
-        }
+        this.destination = d;
+        var gx = this.x;
+        var gy = this.y;
+        var tx = d.x;
+        var ty = d.y;
+        var dis = Math.sqrt((tx-gx)*(tx-gx) + (ty-gy)*(ty-gy));
+        if (dis == 0)return;
+        this.vx = (tx-gx)/dis*this.speed;
+        this.vy = (ty-gy)/dis*this.speed;
     },
 
     //特定ワールド座標からの距離
-    distance: function(x, y) {
+    getDistance: function(x, y) {
         var dx = this.x-x;
         var dy = this.y-y;
         return Math.sqrt(dx*dx+dy*dy);
+    },
+
+    //被ダメージ処理    
+    damage: function(pow) {
+        this.HP -= pow;
+        if (this.HP < 0) {
+        }
+    },
+
+    //到着判定
+    arrival: function() {
     },
 });
 
