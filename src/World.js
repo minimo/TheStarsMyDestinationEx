@@ -53,6 +53,25 @@ tiger.World = tm.createClass({
         }
     },
 
+    update: function() {
+        //到着判定
+        for (var i = 0, len = this.units.length; i < len; i++) {
+            var unit = this.units[i];
+            for (var j = 0, len2 = this.planets.length; j < len2; j++) {
+                var planet = this.planets[j];
+                if (planet.inTerritory(unit)) {
+                    if (unit.alignment == planet.alignment) {
+                        planet.HP += unit.HP;
+                        unit.destroy(false);
+                    } else {
+                        planet.damage(unit.HP);
+                        unit.destroy(true);
+                    }
+                }
+            }
+        }
+    },
+    
     //マップの構築
     build: function() {
         //バックグラウンドの追加

@@ -53,10 +53,6 @@ tiger.Unit = tm.createClass({
                 rot += 5;  //補正
             }
             this.setFrameIndex(~~(rot/10), 64, 64);
-
-            //目標に到達したっぽい
-            if (this.arrival()) {
-            }
         }
     },
 
@@ -83,12 +79,17 @@ tiger.Unit = tm.createClass({
     //被ダメージ処理    
     damage: function(pow) {
         this.HP -= pow;
-        if (this.HP < 0) {
-        }
+        if (this.HP < 0)this.destroy(true);
     },
 
-    //到着判定
-    arrival: function() {
-    },
+    //破壊処理
+    destroy: function(b) {
+        if (b) {
+            //爆発あり
+        } else {
+            //爆発なし
+        }
+        this.remove();
+    }
 });
 
