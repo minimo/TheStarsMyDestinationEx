@@ -180,8 +180,9 @@ tiger.GameScene = tm.createClass({
         if (this.control == CTRL_PLANET) {
         }
 
+        this.world.update();
+
         this.beforePointing = {x: 0, y: 0, click: click, drag: drag};
-        
         this.frame++;
     },
     

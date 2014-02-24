@@ -102,7 +102,7 @@ tiger.Planet = tm.createClass({
     },
 
     //ダメージ処理
-    damage: function(alignment, pow) {
+    damage: function(pow) {
         this.HP -= pow;
     },
 
@@ -111,20 +111,6 @@ tiger.Planet = tm.createClass({
         var dx = this.x-x;
         var dy = this.y-y;
         return Math.sqrt(dx*dx+dy*dy);
-    },
-
-    //領空内に入っているか
-    inTerritory: function(x, y) {
-        var dis = this.distance(x, y);
-        if (dis < 32*this.power)return true;
-        return false;
-    },
-
-    //防空領空内に入っているか
-    inDefenceZone: function(x, y) {
-        var dis = this.distance(x, y);
-        if (dis < 50*this.power)return true;
-        return false;
     },
 
     //選択カーソル色変更

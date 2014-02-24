@@ -37,6 +37,13 @@ var sec = function(s) { return ~~(60 * s) };               //秒からフレー�
 var rand = function(min, max) { return mt.nextInt(min, max); };    //乱数発生
 //var rand = function(max) {return ~~(Math.random() * max);}
 
+//距離計算
+var distance = function(from, to) {
+    var x = from.x-to.x;
+    var y = from.y - to.y;
+    return Math.sqrt(x*x+y*y);
+}
+
 //インスタンス
 app = {};
 

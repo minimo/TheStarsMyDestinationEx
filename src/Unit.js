@@ -89,7 +89,6 @@ tiger.Unit = tm.createClass({
         } else {
             //爆発なし
         }
-        this.remove();
     }
 });
 

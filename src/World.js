@@ -54,24 +54,55 @@ tiger.World = tm.createClass({
     },
 
     update: function() {
-        //到着判定
+        //ユニット対惑星
         for (var i = 0, len = this.units.length; i < len; i++) {
             var unit = this.units[i];
-            for (var j = 0, len2 = this.planets.length; j < len2; j++) {
-                var planet = this.planets[j];
-                if (planet.inTerritory(unit)) {
-                    if (unit.alignment == planet.alignment) {
-                        planet.HP += unit.HP;
-                        unit.destroy(false);
-                    } else {
-                        planet.damage(unit.HP);
-                        unit.destroy(true);
-                    }
+            var planet = unit.destination;
+            //到着判定
+            var dis = distance(unit, planet);
+            if (dis < 36*planet.power) {
+                if (unit.alignment == planet.alignment) {
+                    planet.HP += unit.HP;
+                    unit.destroy(false);
+                } else {
+                    planet.damage(unit.HP);
+                    unit.destroy(true);
                 }
+            }
+
+            //領空内判定
+            if (dis < 50*planet.power) {
+            }
+        }
+
+        //ユニット対ユニット
+        len = this.units.length;
+        for (var i = 0; i < len; i++) {
+            var unit1 = this.units[i];
+            for (var j = 0; j < len; j++) {
+                if (i == j)continue;
+                var unit2 = this.units[j];
+                var dis = distance(unit1, unit2);
+            }
+        }
+
+        //思考ルーチン実行
+        this.thinkCPU();
+
+        //破壊ユニット掃除
+        for (var i = 0; i < len; i++) {
+            var unit = this.units[i];
+            if (unit.HP <= 0) {
+                unit.remove();
+                this.units.splice(i, 1);
             }
         }
     },
-    
+
+    //ＣＰＵ思考ルーチン
+    thinkCPU: function() {
+    },
+
     //マップの構築
     build: function() {
         //バックグラウンドの追加
