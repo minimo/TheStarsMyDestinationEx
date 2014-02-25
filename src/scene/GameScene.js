@@ -172,8 +172,8 @@ tiger.GameScene = tm.createClass({
 
             if (this.screenX < 0)this.screenX = 0;
             if (this.screenY < 0)this.screenY = 0;
-            if (this.screenX > this.world.size+SC_W)this.screenX = this.world.size-SC_W;
-            if (this.screenY > this.world.size+SC_H)this.screenY = this.world.size-SC_H;
+            if (this.screenX > this.world.size-SC_W)this.screenX = this.world.size-SC_W;
+            if (this.screenY > this.world.size-SC_H)this.screenY = this.world.size-SC_H;
         }
 
         //惑星選択
