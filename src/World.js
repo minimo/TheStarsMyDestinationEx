@@ -178,24 +178,45 @@ tiger.World = tm.createClass({
 
     //オブジェクトを表示レイヤーに追加
     addChild: function(child) {
+        //ユニットレイヤ
         if (child instanceof tiger.Unit) {
-            //ユニットレイヤ
             this.layer[LAYER_UNIT].addChild(child);
             this.units[this.units.length] = child;
-        } else if (child instanceof tiger.Planet) {
-            //マップレイヤ
+            return;
+        }
+
+        //マップレイヤ
+        if (child instanceof tiger.Planet) {
             this.layer[LAYER_PLANET].addChild(child);
             this.planets[this.planets.length] = child;
-        } else {
-            if (child.isEffect) {
-                //エフェクト用レイヤ
+            return;
+        }
+
+        //エフェクトレイヤ
+        if (child.isEffect) {
+            if (!child.isLower) {
                 this.layer[LAYER_EFFECT_UPPER].addChild(child);
-            } if (child.foreground) {
-                this.layer[LAYER_FOREGROUND].addChild(child);
+                return;
             } else {
-                this.layer[LAYER_BACKGROUND].addChild(child);
-//                this.superClass.prototype.addChild.apply(this, arguments);
+                this.layer[LAYER_EFFECT_LOWER].addChild(child);
+                return;
             }
         }
+
+        //フォアグラウンドレイヤ
+        if (child.isForeground) {
+            this.layer[LAYER_FOREGROUND].addChild(child);
+            return;
+        }
+
+        //システム表示レイヤ
+        if (child.isSystem) {
+            this.layer[LAYER_SYSTEM].addChild(child);
+            return;
+        }
+
+        //どれにも該当しない場合はバックグラウンドへ追加        
+        this.layer[LAYER_BACKGROUND].addChild(child);
+//      this.superClass.prototype.addChild.apply(this, arguments);
     },
 });
