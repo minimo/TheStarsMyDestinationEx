@@ -37,6 +37,9 @@ tiger.World = tm.createClass({
     //艦隊派遣時戦力レート(0.1 - 1.0)
     rate: 0.5,
 
+    //ユニットグループID
+    unitID: 0,
+
     init: function(scene) {
         this.superInit();
         this.scene = scene;
@@ -64,7 +67,7 @@ tiger.World = tm.createClass({
             var planet = unit.destination;
             //到着判定
             var dis = distance(unit, planet);
-            if (dis < 36*planet.power) {
+            if (dis < 32*planet.power) {
                 if (unit.alignment == planet.alignment) {
                     planet.HP += unit.HP;
                     unit.destroy();
@@ -79,7 +82,7 @@ tiger.World = tm.createClass({
             }
 
             //領空内判定
-            if (dis < 50*planet.power) {
+            if (dis < 40*planet.power) {
             }
         }
 
@@ -90,9 +93,11 @@ tiger.World = tm.createClass({
             if (unit1.HP <= 0)continue;
             for (var j = 0; j < len; j++) {
                 if (i == j)continue;
-                if (unit2.HP <= 0)continue;
                 var unit2 = this.units[j];
+                if (unit2.HP <= 0)continue;
                 var dis = distance(unit1, unit2);
+                if (dis < 40) {
+                }
             }
         }
 
@@ -141,10 +146,17 @@ tiger.World = tm.createClass({
         var HP = from.HP * this.rate;
         from.HP -= HP;
         if (from.HP < 0)from.HP = 1;
-        var unit = tiger.Unit(from.x, from.y, from.alignment, HP);
-        unit.setDestination(to);
-        this.addChild(unit);
-        return unit;
+        var num = ~~(HP/10)+1;
+        var unitHP = 10;
+        if (num > 20) {
+            unitHP = 20;
+            num = ~~(num/2)+1;
+        }
+        for (var i = 0; i < num; i++) {
+            var unit = tiger.Unit(from.x, from.y, from.alignment, unitHP);
+            unit.setDestination(to);
+            this.addChild(unit);
+        }
     },
 
     //指定スクリーン座標から一番近い惑星を取得
@@ -171,8 +183,8 @@ tiger.World = tm.createClass({
     //惑星の追加
     addPlanet: function(x, y, alignment, HP, power, type) {
         alignment = alignment || TYPE_NEUTRAL;
-        power = power || rand(80, 150)/100;
-        HP = HP || ~~(rand(50, 100)*power);
+        power = power || rand(50, 200)/100;
+        HP = HP || ~~(rand(30, 70)*power);
         type = type || rand(0, 5);
 
         var p = tiger.Planet(x, y, alignment, HP, power, type);

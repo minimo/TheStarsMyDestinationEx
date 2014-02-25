@@ -107,8 +107,8 @@ tiger.Planet = tm.createClass({
             if (this.alpha == TYPE_ENEMY) {
                 rev = 0.7;
             }
-            if (this.frame % 60 == 0){
-                this.HP += this.power * rev;
+            if (this.frame % 30 == 0){
+                this.HP += this.power * rev * 0.5;
             }
         }
         this.frame++;

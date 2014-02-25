@@ -126,7 +126,7 @@ tiger.GameScene = tm.createClass({
                             this.selectTo = null;
                         }
                     }
-                    this.arrow.to = {x: this.toWorldX(sx), y: this.toWorldX(sy)};
+                    this.arrow.to = {x: this.toWorldX(sx), y: this.toWorldY(sy)};
                 }
             }
         }
