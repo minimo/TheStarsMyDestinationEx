@@ -8,6 +8,7 @@
 
 //マップ管理クラス
 tiger.World = tm.createClass({
+    superClass: tm.app.Object2D,
 
     //親シーン
     scene: null,
@@ -22,7 +23,7 @@ tiger.World = tm.createClass({
     base: null,
 
     //スプライトレイヤー
-    layer: null,
+    layers: null,
 
     //最大惑星数
     maxPlanets: 20,
@@ -37,6 +38,7 @@ tiger.World = tm.createClass({
     rate: 0.5,
 
     init: function(scene) {
+        this.superInit();
         this.scene = scene;
         this.planets = [];
         this.units = [];
@@ -44,12 +46,13 @@ tiger.World = tm.createClass({
         this.base = tm.app.Object2D();
         this.base.originX = 0;
         this.base.originY = 0;
+        this.superClass.prototype.addChild.call(this, this.base);
 
         //表示レイヤー構築（数字が大きい程優先度が高い）
-        this.layer = [];
+        this.layers = [];
         for (var i = 0; i < LAYER_SYSTEM+1; i++) {
             var gr = tm.app.Object2D().addChildTo(this.base);
-            this.layer[i] = gr;
+            this.layers[i] = gr;
         }
     },
 
@@ -57,17 +60,22 @@ tiger.World = tm.createClass({
         //ユニット対惑星
         for (var i = 0, len = this.units.length; i < len; i++) {
             var unit = this.units[i];
+            if (unit.HP <= 0)continue;
             var planet = unit.destination;
             //到着判定
             var dis = distance(unit, planet);
             if (dis < 36*planet.power) {
                 if (unit.alignment == planet.alignment) {
                     planet.HP += unit.HP;
-                    unit.destroy(false);
+                    unit.destroy();
                 } else {
-                    planet.damage(unit.HP);
-                    unit.destroy(true);
+                    planet.HP -= unit.HP;
+                    if (planet.HP < 0) {
+                        planet.HP *= -1;
+                        planet.alignment = unit.alignment;
+                    }
                 }
+                unit.HP = 0;
             }
 
             //領空内判定
@@ -79,15 +87,14 @@ tiger.World = tm.createClass({
         len = this.units.length;
         for (var i = 0; i < len; i++) {
             var unit1 = this.units[i];
+            if (unit1.HP <= 0)continue;
             for (var j = 0; j < len; j++) {
                 if (i == j)continue;
+                if (unit2.HP <= 0)continue;
                 var unit2 = this.units[j];
                 var dis = distance(unit1, unit2);
             }
         }
-
-        //思考ルーチン実行
-        this.thinkCPU();
 
         //破壊ユニット掃除
         for (var i = 0; i < len; i++) {
@@ -97,10 +104,6 @@ tiger.World = tm.createClass({
                 this.units.splice(i, 1);
             }
         }
-    },
-
-    //ＣＰＵ思考ルーチン
-    thinkCPU: function() {
     },
 
     //マップの構築
@@ -176,18 +179,18 @@ tiger.World = tm.createClass({
         this.addChild(p);
     },
 
-    //オブジェクトを表示レイヤーに追加
+    //addChildオーバーロード
     addChild: function(child) {
         //ユニットレイヤ
         if (child instanceof tiger.Unit) {
-            this.layer[LAYER_UNIT].addChild(child);
+            this.layers[LAYER_UNIT].addChild(child);
             this.units[this.units.length] = child;
             return;
         }
 
         //マップレイヤ
         if (child instanceof tiger.Planet) {
-            this.layer[LAYER_PLANET].addChild(child);
+            this.layers[LAYER_PLANET].addChild(child);
             this.planets[this.planets.length] = child;
             return;
         }
@@ -195,28 +198,28 @@ tiger.World = tm.createClass({
         //エフェクトレイヤ
         if (child.isEffect) {
             if (!child.isLower) {
-                this.layer[LAYER_EFFECT_UPPER].addChild(child);
+                this.layers[LAYER_EFFECT_UPPER].addChild(child);
                 return;
             } else {
-                this.layer[LAYER_EFFECT_LOWER].addChild(child);
+                this.layers[LAYER_EFFECT_LOWER].addChild(child);
                 return;
             }
         }
 
         //フォアグラウンドレイヤ
         if (child.isForeground) {
-            this.layer[LAYER_FOREGROUND].addChild(child);
+            this.layers[LAYER_FOREGROUND].addChild(child);
             return;
         }
 
         //システム表示レイヤ
         if (child.isSystem) {
-            this.layer[LAYER_SYSTEM].addChild(child);
+            this.layers[LAYER_SYSTEM].addChild(child);
             return;
         }
 
-        //どれにも該当しない場合はバックグラウンドへ追加        
-        this.layer[LAYER_BACKGROUND].addChild(child);
-//      this.superClass.prototype.addChild.apply(this, arguments);
+        //どれにも該当しない場合はバックグラウンドへ追加
+        this.layers[LAYER_BACKGROUND].addChild(child);
+//        this.superClass.prototype.addChild.apply(this, arguments);
     },
 });

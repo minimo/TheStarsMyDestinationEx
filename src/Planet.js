@@ -28,6 +28,9 @@ tiger.Planet = tm.createClass({
     //選択中フラグ
     select: false,
 
+    //経過フレーム数
+    frame: 0,
+
     init: function(x, y, alignment, HP, power, type) {
         this.alignment = alignment || 0;
         if (this.alignment == TYPE_NEUTRAL) {
@@ -54,7 +57,7 @@ tiger.Planet = tm.createClass({
         this.label.fontSize = 20;
         this.label.fontWeight = 700;
         this.label.update = function() {
-            this.text = ""+that.HP;
+            this.text = "" + ~~that.HP;
             switch (that.alignment) {
                 case TYPE_NEUTRAL:
                     this.fillStyle = "black";
@@ -99,11 +102,16 @@ tiger.Planet = tm.createClass({
     },
 
     update: function() {
-    },
-
-    //ダメージ処理
-    damage: function(pow) {
-        this.HP -= pow;
+        if (this.alignment != TYPE_NEUTRAL) {
+            var rev = 1;
+            if (this.alpha == TYPE_ENEMY) {
+                rev = 0.7;
+            }
+            if (this.frame % 60 == 0){
+                this.HP += this.power * rev;
+            }
+        }
+        this.frame++;
     },
 
     //特定ワールド座標からの距離

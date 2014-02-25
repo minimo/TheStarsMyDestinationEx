@@ -79,16 +79,11 @@ tiger.Unit = tm.createClass({
     //被ダメージ処理    
     damage: function(pow) {
         this.HP -= pow;
-        if (this.HP < 0)this.destroy(true);
+        if (this.HP < 0)this.destroy();
     },
 
     //破壊処理
-    destroy: function(b) {
-        if (b) {
-            //爆発あり
-        } else {
-            //爆発なし
-        }
+    destroy: function() {
     }
 });
 

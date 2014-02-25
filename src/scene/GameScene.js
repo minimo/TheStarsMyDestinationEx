@@ -54,12 +54,12 @@ tiger.GameScene = tm.createClass({
 
     //経過フレーム
     frame: 0,
-    
+
     init: function() {
         this.superInit();
 
         this.world = tiger.World();
-        this.addChild(this.world.base);
+        this.addChild(this.world);
 
         //デバッグ表示
         var sc = tm.app.Label("");
@@ -182,6 +182,7 @@ tiger.GameScene = tm.createClass({
 
         this.world.update();
 
+        //前フレーム情報保存
         this.beforePointing = {x: 0, y: 0, click: click, drag: drag};
         this.frame++;
     },
@@ -228,7 +229,7 @@ tiger.GameScene = tm.createClass({
                 this.y = fy;
                 this.rotation = Math.atan2(dy, dx)*toDeg;   //二点間の角度
                 this.scaleX = Math.sqrt(dx*dx+dy*dy)/160;
-                
+
                 if (this.active) {
                     this.alpha += 0.05;
                     if (this.alpha > 0.7)this.alpha = 0.7;
