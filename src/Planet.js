@@ -124,6 +124,7 @@ tiger.Planet = tm.createClass({
                 this.HP *= -1;
                 this.alignment = alignment;
                 this.image = tm.asset.Manager.get("planet");
+                this.setFrameIndex(this.type, 64, 64);
             }
         }
     },
