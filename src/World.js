@@ -68,17 +68,11 @@ tiger.World = tm.createClass({
             //到着判定
             var dis = distance(unit, planet);
             if (dis < 32*planet.power) {
-                if (unit.alignment == planet.alignment) {
-                    planet.HP += unit.HP;
-                    unit.destroy();
-                } else {
-                    planet.HP -= unit.HP;
-                    if (planet.HP < 0) {
-                        planet.HP *= -1;
-                        planet.alignment = unit.alignment;
-                    }
-                }
+                planet.damage(unit.alignment, unit.HP);
                 unit.HP = 0;
+                if (planet.alignment != unit.alignment) {
+                    unit.destroy();
+                }
             }
 
             //領空内判定

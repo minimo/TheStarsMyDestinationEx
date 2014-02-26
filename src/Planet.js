@@ -114,6 +114,20 @@ tiger.Planet = tm.createClass({
         this.frame++;
     },
 
+    //攻撃を受ける
+    damage: function(alignment, power) {
+        if (this.alignment == alignment) {
+            this.HP += power;
+        } else {
+            this.HP -= power;
+            if (this.HP < 0) {
+                this.HP *= -1;
+                this.alignment = alignment;
+                this.image = tm.asset.Manager.get("planet");
+            }
+        }
+    },
+
     //特定ワールド座標からの距離
     distance: function(x, y) {
         var dx = this.x-x;
