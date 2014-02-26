@@ -56,7 +56,7 @@ tiger.Unit = tm.createClass({
         }
     },
 
-    //目的地座標設定    
+    //目的地座標設定
     setDestination: function(d) {
         this.destination = d;
         var gx = this.x;
