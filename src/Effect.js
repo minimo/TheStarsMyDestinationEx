@@ -101,5 +101,29 @@ tiger.Effect.genShockwaveL = function(x, y, scene) {
         }.bind(shockwave));
 };
 
+//レーザー
+tiger.Effect.genLaser = function(from, to, scene) {
+    var dis = distance(from, to);
+    var ls = tm.display.RectangleShape(dis, 1, {
+        strokeStyle: "rgba(1.0, 1.0, 1.0, 1.0)",
+        fillStyle: tm.graphics.RadialGradient(150, 150, 0, 150, 150, 150)
+            .addColorStopList([
+                { offset: 0.0, color: "rgba(255,255,255,0)" },
+                { offset: 0.5, color: "rgba(255,255,255,1)" },
+                { offset: 1.0, color: "rgba(255,255,255,1)" },
+            ])
+            .toStyle()
+    }).setPosition(from.x, from.y);
+    ls.rotation = Math.atan2(to.y-from.y, to.x-from.x)*toDeg;   //二点間の角度
+    ls.isEffect = true;
+    ls.addChildTo(scene);
+    ls.tweener.clear()
+        .wait(1000)
+        .call(function() {
+            this.remove();
+        }.bind(ls));
+};
+
 
 })();
+
