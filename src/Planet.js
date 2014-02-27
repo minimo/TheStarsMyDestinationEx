@@ -73,6 +73,13 @@ tiger.Planet = tm.createClass({
                     break;
             }
             this.setScale(1/that.power);
+            if (that.select) {
+                this.fontSize+=5;
+                if (this.fontSize > 60)this.fontSize = 60;
+            } else {
+                this.fontSize-=5;
+                if (this.fontSize < 20)this.fontSize = 20;
+            }
         };
 
         //選択カーソル
