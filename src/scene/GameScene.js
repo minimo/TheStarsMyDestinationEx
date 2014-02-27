@@ -4,13 +4,18 @@
  *  2014/02/11
  *  @auther minimo  
  *  This Program is MIT license.
+ *
+ *  Worldに対する操作、CPUの思考ルーチンを処理
+ *
  */
 
 //コントロールフラグ
 CTRL_NOTHING = 0;
 CTRL_MAP = 1;
 CTRL_PLANET = 2;
-CTRL_FRIGATE = 3;
+CTRL_UNIT = 3;
+CTRL_RATE = 4;
+CTRL_SCALE = 5;
 
 //ゲームシーン
 tiger.GameScene = tm.createClass({

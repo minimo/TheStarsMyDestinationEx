@@ -32,6 +32,7 @@ tiger.Effect.setup = function() {
         .fillCircle(50, 50, 50);
 };
 
+//衝撃波
 tiger.Effect.genShockwave = function(x, y, scene, scaleTo) {
     scaleTo = scaleTo || 1.8;
     var scale = 0.1;
@@ -54,6 +55,7 @@ tiger.Effect.genShockwave = function(x, y, scene, scaleTo) {
         });
 };
 
+//衝撃波（大）
 tiger.Effect.genShockwaveRev = function(x, y, scene, scaleFrom) {
     scaleFrom = scaleFrom || 1.8;
     var scaleTo = 0.1;

@@ -4,6 +4,10 @@
  *  2014/02/11
  *  @auther minimo  
  *  This Program is MIT license.
+ *
+ *  配置した惑星やユニットの移動、戦闘その他を自動で処理
+ *  操作はGameSceneから行う
+ *
  */
 
 //マップ管理クラス
@@ -147,7 +151,11 @@ tiger.World = tm.createClass({
             num = ~~(num/2)+1;
         }
         for (var i = 0; i < num; i++) {
-            var unit = tiger.Unit(from.x, from.y, from.alignment, unitHP);
+            var r = 16*from.power+rand(0, 20);
+            var d = rand(0, 360)*toRad;
+            var x = from.x + Math.sin(d) * r;
+            var y = from.y + Math.cos(d) * r;
+            var unit = tiger.Unit(x, y, from.alignment, unitHP);
             unit.setDestination(to);
             this.addChild(unit);
         }
