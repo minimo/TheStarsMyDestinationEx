@@ -56,6 +56,7 @@ tiger.Planet = tm.createClass({
         this.label.baseline  = "middle";
         this.label.fontSize = 20;
         this.label.fontWeight = 700;
+        this.label.setScale(1/this.power);
         this.label.update = function() {
             this.text = "" + ~~that.HP;
             switch (that.alignment) {
@@ -72,7 +73,6 @@ tiger.Planet = tm.createClass({
                     this.fillStyle = "rgba(255, 64, 64, 1.0)";
                     break;
             }
-            this.setScale(1/that.power);
             if (that.select) {
                 this.fontSize+=5;
                 if (this.fontSize > 60)this.fontSize = 60;
