@@ -56,6 +56,7 @@ app = {};
 //アプリケーションメイン
 tm.main(function() {
 
+    //エフェクトクラスセットアップ
     tiger.Effect.setup();
 
     app = tiger.CanvasApp("#world");
