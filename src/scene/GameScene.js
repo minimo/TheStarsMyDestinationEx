@@ -49,6 +49,7 @@ tiger.GameScene = tm.createClass({
         y: 0,
         click: false,
         drag: false,
+        mouseoverObject: null,
     },
 
     //クリック間隔
@@ -90,6 +91,11 @@ tiger.GameScene = tm.createClass({
             //準備完了
             this.ready = true;
             return;
+        }
+
+        if (this.mouseoverObject) {
+            this.mouseoverObject.mouseover = false;
+            this.mouseoverObject = null;
         }
 
         //マウスorタッチ情報
@@ -137,8 +143,8 @@ tiger.GameScene = tm.createClass({
                     //画面端スクロール
                     if (sx < 120 || sx>SC_W-120 || sy < 120 || sy > SC_H-120) {
                         //ポインタの位置によりスクロール量を計算
-                        this.screenX = clamp(this.screenX+(sx-SC_W/2)/16, 0, SC_W);
-                        this.screenY = clamp(this.screenY+(sy-SC_H/2)/16, 0, SC_H);
+                        this.screenX = clamp(this.screenX+(sx-SC_W/2)/32, 0, SC_W);
+                        this.screenY = clamp(this.screenY+(sy-SC_H/2)/32, 0, SC_H);
                     }
                 }
             }
@@ -174,6 +180,15 @@ tiger.GameScene = tm.createClass({
                 this.arrow = null;
             }
             this.control = CTRL_NOTHING;
+        }
+
+        //非クリック状態
+        if (!click && !this.beforePointing.click) {
+            var pl = this.world.getPlanet(sx, sy);
+            if (pl.distance < 32*pl.planet.power) {
+                pl.planet.mouseover = true;
+                this.mouseoverObject = pl.planet;
+            }
         }
 
         //マップ操作

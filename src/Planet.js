@@ -28,6 +28,9 @@ tiger.Planet = tm.createClass({
     //選択中フラグ
     select: false,
 
+    //マウスオーバーフラグ
+    mouseover: false,
+
     //経過フレーム数
     frame: 0,
 
@@ -49,39 +52,6 @@ tiger.Planet = tm.createClass({
         this.setScale(this.power);
 
         var that = this;
-        //HP表示
-        this.label = tm.display.Label("", 30).addChildTo(this);
-        this.label.fontFamily = "'Orbitron'";
-        this.label.align     = "center";
-        this.label.baseline  = "middle";
-        this.label.fontSize = 20;
-        this.label.fontWeight = 700;
-        this.label.setScale(1/this.power);
-        this.label.update = function() {
-            this.text = "" + ~~that.HP;
-            switch (that.alignment) {
-                case TYPE_NEUTRAL:
-                    this.fillStyle = "black";
-                    this.fillStyle = "rgba(0, 0, 0, 1.0)";
-                    break;
-                case TYPE_PLAYER:
-                    this.fillStyle = "blue";
-                    this.fillStyle = "rgba(64, 64, 200, 1.0)";
-                    break;
-                case TYPE_ENEMY:
-                    this.fillStyle = "red";
-                    this.fillStyle = "rgba(255, 64, 64, 1.0)";
-                    break;
-            }
-            if (that.select) {
-                this.fontSize+=5;
-                if (this.fontSize > 60)this.fontSize = 60;
-            } else {
-                this.fontSize-=5;
-                if (this.fontSize < 20)this.fontSize = 20;
-            }
-        };
-
         //選択カーソル
         this.cursol = tm.display.CircleShape(80, 80, {
             fillStyle: "rgba(0,0,0,0)",
@@ -104,6 +74,66 @@ tiger.Planet = tm.createClass({
             } else {
                 this.alpha-=0.05;
                 if (this.alpha < 0.0)this.alpha = 0.0;
+            }
+        };
+
+        //HP表示
+        //縁取り用
+        this.labels = [];
+        for (var i = 0; i < 4; i++) {
+            this.labels[i] = tm.display.Label("", 30).addChildTo(this);
+            this.labels[i].fontFamily = "'Orbitron'";
+            this.labels[i].align     = "center";
+            this.labels[i].baseline  = "middle";
+            this.labels[i].fontSize = 20;
+            this.labels[i].fontWeight = 700;
+            this.labels[i].setScale(1/this.power);
+            this.labels[i].update = function() {
+                this.text = "" + ~~that.HP;
+                this.fillStyle = "rgba(0, 0, 0, 1.0)";
+                if (that.select || that.mouseover) {
+                    this.fontSize+=5;
+                    if (this.fontSize > 60)this.fontSize = 60;
+                } else {
+                    this.fontSize-=5;
+                    if (this.fontSize < 25)this.fontSize = 25;
+                }
+            };
+            if (i == 0){this.labels[i].x =  1;this.labels[i].y =  0;}
+            if (i == 1){this.labels[i].x = -1;this.labels[i].y =  0;}
+            if (i == 2){this.labels[i].x =  0;this.labels[i].y =  1;}
+            if (i == 3){this.labels[i].x =  0;this.labels[i].y = -1;}
+        }
+
+        this.label = tm.display.Label("", 30).addChildTo(this);
+//        this.label.fill = true;
+//        this.label.stroke = true;
+//        this.label.strokeStyle = "black";
+        this.label.fontFamily = "'Orbitron'";
+        this.label.align     = "center";
+        this.label.baseline  = "middle";
+        this.label.fontSize = 20;
+        this.label.fontWeight = 700;
+        this.label.setScale(1/this.power);
+        this.label.update = function() {
+            this.text = "" + ~~that.HP;
+            switch (that.alignment) {
+                case TYPE_NEUTRAL:
+                    this.fillStyle = "rgba(255, 255, 255, 1.0)";
+                    break;
+                case TYPE_PLAYER:
+                    this.fillStyle = "rgba(64, 64, 255, 1.0)";
+                    break;
+                case TYPE_ENEMY:
+                    this.fillStyle = "rgba(255, 64, 64, 1.0)";
+                    break;
+            }
+            if (that.select || that.mouseover) {
+                this.fontSize+=5;
+                if (this.fontSize > 60)this.fontSize = 60;
+            } else {
+                this.fontSize-=5;
+                if (this.fontSize < 25)this.fontSize = 25;
             }
         };
     },
