@@ -49,6 +49,10 @@ var distanceSq = function(from, to) {
     var y = from.y - to.y;
     return x*x+y*y;
 }
+//数値の制限
+var clamp = function(x, min, max) {
+        return (x<min)?min:((x>max)?max:x);
+};
 
 //インスタンス
 app = {};

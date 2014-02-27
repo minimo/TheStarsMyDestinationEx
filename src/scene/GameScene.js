@@ -119,6 +119,7 @@ tiger.GameScene = tm.createClass({
         if (click && this.beforePointing.click) {
             drag = true;
             if (this.arrow) {
+                //惑星選択
                 var pl = this.world.getPlanet(sx, sy);
                 if (pl.distance < 32*pl.planet.power && pl.planet != this.selectFrom) {
                     this.selectTo = pl.planet;
@@ -132,6 +133,13 @@ tiger.GameScene = tm.createClass({
                         }
                     }
                     this.arrow.to = {x: this.toWorldX(sx), y: this.toWorldY(sy)};
+
+                    //画面端スクロール
+                    if (sx < 120 || sx > SC_W-120 || sy < 120 || sy > SC_H-120) {
+                        //ポインタの位置によりスクロール量を計算
+                        this.screenX = clamp(this.screenX+(sx-SC_W/2)/16, 0, SC_W);
+                        this.screenY = clamp(this.screenY+(sy-SC_H/2)/16, 0, SC_H);
+                    }
                 }
             }
         }
@@ -170,10 +178,8 @@ tiger.GameScene = tm.createClass({
 
         //マップ操作
         if (this.control == CTRL_MAP) {
-            var dx = p.position.x - p.prevPosition.x;
-            var dy = p.position.y - p.prevPosition.y;
-            this.screenX -= dx;
-            this.screenY -= dy;
+            this.screenX -= p.position.x - p.prevPosition.x;
+            this.screenY -= p.position.y - p.prevPosition.y;
 
             if (this.screenX < 0)this.screenX = 0;
             if (this.screenY < 0)this.screenY = 0;
