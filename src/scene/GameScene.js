@@ -135,7 +135,7 @@ tiger.GameScene = tm.createClass({
                     this.arrow.to = {x: this.toWorldX(sx), y: this.toWorldY(sy)};
 
                     //画面端スクロール
-                    if (sx < 120 || sx > SC_W-120 || sy < 120 || sy > SC_H-120) {
+                    if (sx < 120 || sx>SC_W-120 || sy < 120 || sy > SC_H-120) {
                         //ポインタの位置によりスクロール量を計算
                         this.screenX = clamp(this.screenX+(sx-SC_W/2)/16, 0, SC_W);
                         this.screenY = clamp(this.screenY+(sy-SC_H/2)/16, 0, SC_H);
@@ -178,13 +178,8 @@ tiger.GameScene = tm.createClass({
 
         //マップ操作
         if (this.control == CTRL_MAP) {
-            this.screenX -= p.position.x - p.prevPosition.x;
-            this.screenY -= p.position.y - p.prevPosition.y;
-
-            if (this.screenX < 0)this.screenX = 0;
-            if (this.screenY < 0)this.screenY = 0;
-            if (this.screenX > this.world.size-SC_W)this.screenX = this.world.size-SC_W;
-            if (this.screenY > this.world.size-SC_H)this.screenY = this.world.size-SC_H;
+            this.screenX = clamp(this.screenX-(p.position.x-p.prevPosition.x), 0, SC_W);
+            this.screenY = clamp(this.screenY-(p.position.y-p.prevPosition.y), 0, SC_H);
         }
 
         //惑星選択
