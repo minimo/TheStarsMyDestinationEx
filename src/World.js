@@ -4,10 +4,6 @@
  *  2014/02/11
  *  @auther minimo  
  *  This Program is MIT license.
- *
- *  ゲーム内制御、配置した惑星、ユニットの移動、戦闘を制御。
- *  プレイヤーの操作はGameSceneから行う。
- *
  */
 
 //マップ管理クラス
@@ -19,6 +15,9 @@ tiger.World = tm.createClass({
 
     //マップの一辺のサイズ
     size: 640*2,
+
+    //マップの現在スケール
+    scale: 1,
 
     //ベースレイヤー
     base: null,
@@ -40,9 +39,6 @@ tiger.World = tm.createClass({
 
     //ユニットグループID
     unitID: 0,
-    
-    //経過フレーム数
-    frame: 0,
 
     init: function(scene) {
         this.superInit();
@@ -50,7 +46,6 @@ tiger.World = tm.createClass({
         this.planets = [];
         this.units = [];
 
-        //レイヤーのベースを作成
         this.base = tm.app.Object2D();
         this.base.originX = 0;
         this.base.originY = 0;
@@ -62,8 +57,6 @@ tiger.World = tm.createClass({
             var gr = tm.app.Object2D().addChildTo(this.base);
             this.layers[i] = gr;
         }
-
-        this.setScale(this.scale);
     },
 
     update: function() {
@@ -110,8 +103,6 @@ tiger.World = tm.createClass({
                 this.units.splice(i, 1);
             }
         }
-
-        this.frame++;
     },
 
     //マップの構築
@@ -238,11 +229,3 @@ tiger.World = tm.createClass({
 //        this.superClass.prototype.addChild.apply(this, arguments);
     },
 });
-
-/*
-//マップスケール操作
-tiger.World.prototype.accessor("mapScale", {
-    "get": function()   { return this.scaleX; },
-    "set": function(s)  { this.setScale(s); }
-});
-*/

@@ -4,18 +4,13 @@
  *  2014/02/11
  *  @auther minimo  
  *  This Program is MIT license.
- *
- *  Worldに対する操作、ＣＰＵの思考ルーチンを制御。
- *
  */
 
 //コントロールフラグ
-CTRL_NOTHING = 0;   //制御無し
-CTRL_MAP = 1;       //マップ
-CTRL_PLANET = 2;    //惑星
-CTRL_UNIT = 3;      //ユニット
-CTRL_RATE = 4;      //派兵レート
-CTRL_SCALE = 5;     //マップスケール
+CTRL_NOTHING = 0;
+CTRL_MAP = 1;
+CTRL_PLANET = 2;
+CTRL_FRIGATE = 3;
 
 //ゲームシーン
 tiger.GameScene = tm.createClass({
@@ -184,6 +179,8 @@ tiger.GameScene = tm.createClass({
         //惑星選択
         if (this.control == CTRL_PLANET) {
         }
+
+        this.world.update();
 
         //前フレーム情報保存
         this.beforePointing = {x: 0, y: 0, click: click, drag: drag};
