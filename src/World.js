@@ -64,6 +64,7 @@ tiger.World = tm.createClass({
     },
 
     update: function() {
+    
         //ユニット対惑星
         for (var i = 0, len = this.units.length; i < len; i++) {
             var unit = this.units[i];
@@ -139,9 +140,11 @@ tiger.World = tm.createClass({
     },
     
     //艦隊投入
-    enterUnit: function(from, to) {
+    enterUnit: function(from, to, rate) {
+        rate = rate || this.rate;
+
         if (from.HP < 10)return null;
-        var HP = from.HP * this.rate;
+        var HP = from.HP * rate;
         from.HP -= HP;
         if (from.HP < 0)from.HP = 1;
         var num = ~~(HP/10)+1;
@@ -151,7 +154,7 @@ tiger.World = tm.createClass({
             num = ~~(num/2)+1;
         }
         for (var i = 0; i < num; i++) {
-            var r = 16*from.power+rand(0, 20);
+            var r = 24 * from.power+rand(0, 20);
             var d = rand(0, 360)*toRad;
             var x = from.x + Math.sin(d) * r;
             var y = from.y + Math.cos(d) * r;

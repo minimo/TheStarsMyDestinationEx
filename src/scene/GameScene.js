@@ -201,13 +201,44 @@ tiger.GameScene = tm.createClass({
         if (this.control == CTRL_PLANET) {
         }
 
+        this.thinkCPU();
         this.world.update();
 
         //前フレーム情報保存
         this.beforePointing = {x: 0, y: 0, click: click, drag: drag};
         this.frame++;
     },
-    
+
+    //ＣＰＵ思考ルーチン
+    thinkCPU: function() {
+        //５秒に１回思考する
+        if (this.frame % 30 * 5 != 0) return;
+
+        //領土に一番近い惑星で自分の７割程度なら艦隊を派遣
+        var len = this.world.planets.length;
+        for (var i = 0; i < len; i++) {
+            var p = this.world.planets[i];
+            if (p.alignment != TYPE_ENEMY) continue;
+            if (p.HP < 10) continue;
+            var min = 99999;
+            var target1 = null;
+            var target2 = null;
+            for (var j = 0; j < len; j++) {
+                var e = this.world.planets[j];
+                if (i == j || e.alignment == TYPE_ENEMY) continue;
+                var dis = distance(p, e);
+                if (dis < min) {
+                    min = dis;
+                    target1 = e;
+                }
+            }
+            if (target1 && target1.HP < p.HP * 0.7) {
+                this.world.enterUnit(p, target1, 0.7);
+                break;
+            }
+        }
+    },
+
     //ワールド座標への変換
     toWorldX: function(x) {return x-this.world.base.x;},
     toWorldY: function(y) {return y-this.world.base.y;},

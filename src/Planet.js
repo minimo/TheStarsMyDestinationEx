@@ -84,6 +84,7 @@ tiger.Planet = tm.createClass({
         this.label.baseline  = "middle";
         this.label.fontSize = 20;
         this.label.fontWeight = 700;
+        this.label.outlineWidth = 2;
         this.label.setScale(1/this.power);
         this.label.update = function() {
             this.text = "" + ~~that.HP;
