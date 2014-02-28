@@ -57,6 +57,10 @@ tiger.GameScene = tm.createClass({
     
     //矢印的なアレ
     arrow: null,
+    
+    //勝者決定フラグ
+    winner: 0,
+    winCount: 0,
 
     //経過フレーム
     frame: 0,
@@ -207,6 +211,10 @@ tiger.GameScene = tm.createClass({
         //前フレーム情報保存
         this.beforePointing = {x: 0, y: 0, click: click, drag: drag};
         this.frame++;
+    },
+
+    //勝敗判定
+    judgment: function() {
     },
 
     //ＣＰＵ思考ルーチン

@@ -43,7 +43,7 @@ tiger.World = tm.createClass({
 
     //ユニットグループID
     unitID: 0,
-
+    
     init: function(scene) {
         this.superInit();
         this.scene = scene;
@@ -194,6 +194,25 @@ tiger.World = tm.createClass({
 
         var p = tiger.Planet(x, y, alignment, HP, power, type);
         this.addChild(p);
+    },
+
+    //戦力合計を算出
+    getPowerOfPlanet: function(alignment) {
+        var val = 0;
+        for (var i = 0, len = this.planets.length; i < len; i++) {
+            var p = this.planets[i];
+            if (p.alignment == alignment) val += p.HP;
+        }
+        return val;
+    },
+
+    getPowerOfUnit: function(alignment) {
+        var val = 0;
+        for (var i = 0, len = this.unit.length; i < len; i++) {
+            var p = this.units[i];
+            if (p.alignment == alignment) val += p.HP;
+        }
+        return val;
     },
 
     //addChildオーバーロード
