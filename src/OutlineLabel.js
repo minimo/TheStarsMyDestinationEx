@@ -61,7 +61,17 @@ tm.display = tm.display || {};
         },
 
         setFontWeight: function(weight) {
-            for (var i = 0; i < 9; i++)this.labels[i].fontWeight= weight;
+            for (var i = 0; i < 9; i++)this.labels[i].fontWeight = weight;
+            return this;
+        },
+
+        setFillStyle: function(fillStyle) {
+            for (var i = 0; i < 9; i++)this.labels[i].fillStyle = weight;
+            return this;
+        },
+
+        setBlendMode: function(blendMode) {
+            for (var i = 0; i < 9; i++)this.labels[i].blendMode = blendMode;
             return this;
         },
     });
@@ -134,7 +144,7 @@ tm.display = tm.display || {};
     });
 
     /**
-     * @property fillStyle
+     * @property outlineFillStyle
      */
     tm.display.OutlineLabel.prototype.accessor("outlineFillStyle", {
         "get": function() { return this.labels[0].fillStyle; },
@@ -156,22 +166,22 @@ tm.display = tm.display || {};
     });
 
     /**
-     * @property    align
-     */
-    tm.display.OutlineLabel.prototype.accessor("align", {
-        "get": function() { return this.labels[0].align; },
-        "set": function(align) {
-            for (var i = 0; i < 9; i++)this.labels[i].align = align;
-        }
-    });
-
-    /**
      * @property    baseline
      */
     tm.display.OutlineLabel.prototype.accessor("baseline", {
         "get": function() { return this.labels[0].baseline; },
         "set": function(baseline) {
             for (var i = 0; i < 9; i++)this.labels[i].baseline = baseline;
+        }
+    });
+
+    /**
+     * @property    baseline
+     */
+    tm.display.OutlineLabel.prototype.accessor("blendMode", {
+        "get": function() { return this.labels[0].blendMode; },
+        "set": function(blendMode) {
+            for (var i = 0; i < 9; i++)this.labels[i].blendMode = blendMode;
         }
     });
 
