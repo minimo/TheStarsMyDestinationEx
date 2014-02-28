@@ -78,37 +78,7 @@ tiger.Planet = tm.createClass({
         };
 
         //HP表示
-        //縁取り用
-        this.labels = [];
-        for (var i = 0; i < 4; i++) {
-            this.labels[i] = tm.display.Label("", 30).addChildTo(this);
-            this.labels[i].fontFamily = "'Orbitron'";
-            this.labels[i].align     = "center";
-            this.labels[i].baseline  = "middle";
-            this.labels[i].fontSize = 20;
-            this.labels[i].fontWeight = 700;
-            this.labels[i].setScale(1/this.power);
-            this.labels[i].update = function() {
-                this.text = "" + ~~that.HP;
-                this.fillStyle = "rgba(0, 0, 0, 1.0)";
-                if (that.select || that.mouseover) {
-                    this.fontSize+=5;
-                    if (this.fontSize > 60)this.fontSize = 60;
-                } else {
-                    this.fontSize-=5;
-                    if (this.fontSize < 25)this.fontSize = 25;
-                }
-            };
-            if (i == 0){this.labels[i].x =  1;this.labels[i].y =  0;}
-            if (i == 1){this.labels[i].x = -1;this.labels[i].y =  0;}
-            if (i == 2){this.labels[i].x =  0;this.labels[i].y =  1;}
-            if (i == 3){this.labels[i].x =  0;this.labels[i].y = -1;}
-        }
-
-        this.label = tm.display.Label("", 30).addChildTo(this);
-//        this.label.fill = true;
-//        this.label.stroke = true;
-//        this.label.strokeStyle = "black";
+        this.label = tm.display.OutlineLabel("", 30).addChildTo(this);
         this.label.fontFamily = "'Orbitron'";
         this.label.align     = "center";
         this.label.baseline  = "middle";
