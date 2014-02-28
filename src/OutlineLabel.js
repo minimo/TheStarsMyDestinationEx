@@ -14,8 +14,11 @@ tm.display = tm.display || {};
     tm.display.OutlineLabel = tm.createClass({
         superClass: tm.display.CanvasElement,
 
-        //縁取り用
+        //縁取り用ラベル
         labels: null,
+        
+        //アウトラインの幅
+        _outlineWidth: 1,
 
         /**
          * @constructor
@@ -31,8 +34,7 @@ tm.display = tm.display || {};
             for (var i = -1; i < 2; i++) {
                 for (var j = -1; j < 2; j++) {
                     this.labels[n] = tm.display.Label(text, size);
-                    this.labels[n].x = i;
-                    this.labels[n].y = j;
+                    this.labels[n].setPosition(i * this.outlineWidth, j * this.outlineWidth);
                     if (i == 0 && j == 0){
                         this.labels[n].fillStyle = 'white';
                     } else {
@@ -42,41 +44,52 @@ tm.display = tm.display || {};
                     n++;
                 }
             }
+            //真ん中は一番後に追加
             this.labels[4].addChildTo(this);
         },
 
         setAlign: function(align) {
-            for (var i = 0; i < 9; i++)this.labels[i].align = align;
+            this.align = align;
             return this;
         },
 
         setBaseline: function(baseline) {
-            for (var i = 0; i < 9; i++)this.labels[i].baseline = baseline;
+            this.baseline = baseline;
             return this;
         },
         
         setFontSize: function(size) {
-            for (var i = 0; i < 9; i++)this.labels[i].fontSize = size;
+            this.fontSize = size;
             return this;
         },
         
         setFontFamily: function(family) {
-            for (var i = 0; i < 9; i++)this.labels[i].fontFamily= family;
+            this.fontFamily = family;
             return this;
         },
 
         setFontWeight: function(weight) {
-            for (var i = 0; i < 9; i++)this.labels[i].fontWeight = weight;
-            return this;
-        },
-
-        setFillStyle: function(fillStyle) {
-            for (var i = 0; i < 9; i++)this.labels[i].fillStyle = weight;
+            this.fontWeight = weight;
             return this;
         },
 
         setBlendMode: function(blendMode) {
-            for (var i = 0; i < 9; i++)this.labels[i].blendMode = blendMode;
+            this.blendMode = blendMode;
+            return this;
+        },
+
+        setFillStyle: function(fillStyle) {
+            this.fillStyle = fillStyle;
+            return this;
+        },
+
+        setFillStyleOutline: function(fillStyle) {
+            this.fillStyleOutline = fillStyle;
+            return this;
+        },
+
+        setOutlineWidth: function(width) {
+            this.outlineWidth = width;
             return this;
         },
     });
@@ -149,9 +162,9 @@ tm.display = tm.display || {};
     });
 
     /**
-     * @property outlineFillStyle
+     * @property fillStyleOutline
      */
-    tm.display.OutlineLabel.prototype.accessor("outlineFillStyle", {
+    tm.display.OutlineLabel.prototype.accessor("fillStyleOutline", {
         "get": function() { return this.labels[0].fillStyle; },
         "set": function(fillStyle) {
             for (var i = 0; i < 9; i++) {
@@ -181,12 +194,29 @@ tm.display = tm.display || {};
     });
 
     /**
-     * @property    baseline
+     * @property    blendMode
      */
     tm.display.OutlineLabel.prototype.accessor("blendMode", {
-        "get": function() { return this.labels[0].blendMode; },
+        "get": function() { return this.labels[4].blendMode; },
         "set": function(blendMode) {
             for (var i = 0; i < 9; i++)this.labels[i].blendMode = blendMode;
+        }
+    });
+
+    /**
+     * @property    outlineWidth
+     */
+    tm.display.OutlineLabel.prototype.accessor("outlineWidth", {
+        "get": function() { return this._outlineWidth; },
+        "set": function(width) {
+            this._outlineWidth = width;
+            var n = 0;
+            for (var i = -1; i < 2; i++) {
+                for (var j = -1; j < 2; j++) {
+                    this.labels[n].setPosition(i * this._outlineWidth, j * this._outlineWidth);
+                    n++;
+                }
+            }
         }
     });
 
