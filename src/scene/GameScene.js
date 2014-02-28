@@ -212,7 +212,7 @@ tiger.GameScene = tm.createClass({
     //ＣＰＵ思考ルーチン
     thinkCPU: function() {
         //５秒に１回思考する
-        if (this.frame % 30 * 5 != 0) return;
+        if (this.frame % 60 * 5 != 0) return;
 
         //領土に一番近い惑星で自分の７割程度なら艦隊を派遣
         var len = this.world.planets.length;

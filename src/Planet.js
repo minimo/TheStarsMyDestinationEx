@@ -93,7 +93,7 @@ tiger.Planet = tm.createClass({
                     this.fillStyle = "rgba(255, 255, 255, 1.0)";
                     break;
                 case TYPE_PLAYER:
-                    this.fillStyle = "rgba(64, 64, 255, 1.0)";
+                    this.fillStyle = "rgba(60, 60, 255, 1.0)";
                     break;
                 case TYPE_ENEMY:
                     this.fillStyle = "rgba(255, 64, 64, 1.0)";
@@ -101,7 +101,7 @@ tiger.Planet = tm.createClass({
             }
             if (that.select || that.mouseover) {
                 this.fontSize+=5;
-                if (this.fontSize > 60)this.fontSize = 60;
+                if (this.fontSize > 50)this.fontSize = 50;
             } else {
                 this.fontSize-=5;
                 if (this.fontSize < 25)this.fontSize = 25;

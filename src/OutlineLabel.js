@@ -14,7 +14,7 @@ tm.display = tm.display || {};
     tm.display.OutlineLabel = tm.createClass({
         superClass: tm.display.CanvasElement,
 
-        //縁取り用ラベル
+        //縁取り分を含めたラベル配列
         labels: null,
         
         //アウトラインの幅
@@ -205,6 +205,7 @@ tm.display = tm.display || {};
 
     /**
      * @property    outlineWidth
+     *              縁取り幅
      */
     tm.display.OutlineLabel.prototype.accessor("outlineWidth", {
         "get": function() { return this._outlineWidth; },
