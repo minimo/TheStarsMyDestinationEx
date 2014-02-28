@@ -6,6 +6,11 @@ tm.display = tm.display || {};
 
 (function() {
 
+    /**
+     * @class tm.display.OutlineLabel
+     * システムフォントを描画するクラス（アウトライン付き）
+     * @extends tm.display.CanvasElement
+     */
     tm.display.OutlineLabel = tm.createClass({
         superClass: tm.display.CanvasElement,
 
