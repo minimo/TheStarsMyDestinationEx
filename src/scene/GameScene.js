@@ -220,21 +220,27 @@ tiger.GameScene = tm.createClass({
             var p = this.world.planets[i];
             if (p.alignment != TYPE_ENEMY) continue;
             if (p.HP < 10) continue;
-            var min = 99999;
+            var min1 = 99999;
+            var min2 = 99999;
             var target1 = null;
             var target2 = null;
             for (var j = 0; j < len; j++) {
                 var e = this.world.planets[j];
                 if (i == j || e.alignment == TYPE_ENEMY) continue;
                 var dis = distance(p, e);
-                if (dis < min) {
-                    min = dis;
+                if (dis < min1) {
+                    min1 = dis;
                     target1 = e;
+                } else if (dis < min2) {
+                    min2 = dis;
+                    target2 = e;
                 }
             }
             if (target1 && target1.HP < p.HP * 0.7) {
                 this.world.enterUnit(p, target1, 0.7);
                 break;
+            } else if (target2 && target2.HP < p.HP * 0.7) {
+                this.world.enterUnit(p, target2, 0.7);
             }
         }
     },
