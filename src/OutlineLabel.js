@@ -123,4 +123,56 @@ tm.display = tm.display || {};
         },
     });
 
+    /**
+     * @property fillStyle
+     */
+    tm.display.OutlineLabel.prototype.accessor("fillStyle", {
+        "get": function() { return this.labels[4].fillStyle; },
+        "set": function(fillStyle) {
+            this.labels[4].fillStyle = fillStyle;
+        },
+    });
+
+    /**
+     * @property fillStyle
+     */
+    tm.display.OutlineLabel.prototype.accessor("outlineFillStyle", {
+        "get": function() { return this.labels[0].fillStyle; },
+        "set": function(fillStyle) {
+            for (var i = 0; i < 9; i++) {
+                if (i != 4)this.labels[i].fillStyle = fillStyle;
+            }
+        },
+    });
+
+    /**
+     * @property    align
+     */
+    tm.display.OutlineLabel.prototype.accessor("align", {
+        "get": function() { return this.labels[0].align; },
+        "set": function(align) {
+            for (var i = 0; i < 9; i++)this.labels[i].align = align;
+        }
+    });
+
+    /**
+     * @property    align
+     */
+    tm.display.OutlineLabel.prototype.accessor("align", {
+        "get": function() { return this.labels[0].align; },
+        "set": function(align) {
+            for (var i = 0; i < 9; i++)this.labels[i].align = align;
+        }
+    });
+
+    /**
+     * @property    baseline
+     */
+    tm.display.OutlineLabel.prototype.accessor("baseline", {
+        "get": function() { return this.labels[0].baseline; },
+        "set": function(baseline) {
+            for (var i = 0; i < 9; i++)this.labels[i].baseline = baseline;
+        }
+    });
+
 })();
