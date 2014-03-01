@@ -118,7 +118,7 @@ tm.define("tiger.GameScene", {
                 pl.planet.select = true;
                 var wx = this.toWorldX(sx);
                 var wy = this.toWorldY(sy);
-                this.setupArrow(pl.planet, {x: wx, y:wy});
+                this.arrow = tiger.Arrow(pl.planet, {x: wx, y:wy}).addChildTo(this.world);
                 this.control = CTRL_PLANET;
             } else {
                 this.control = CTRL_MAP;
@@ -257,57 +257,6 @@ tm.define("tiger.GameScene", {
     //ワールド座標への変換
     toWorldX: function(x) {return x-this.world.base.x;},
     toWorldY: function(y) {return y-this.world.base.y;},
-
-    //選択矢印セットアップ
-    setupArrow: function(from, to) {
-        if (this.arrow == null) {
-            this.arrow = tm.display.Sprite("arrow", 160, 16);
-            this.arrow.setPosition(from.x, from.y);
-            this.arrow.originX = 0;
-            this.arrow.foreground = true;
-            this.arrow.from = from;
-            this.arrow.to = to;
-            this.arrow.alpha = 0.0;
-            this.arrow.active = true;
-            this.arrow.update = function() {
-                //中心点からの直線を計算
-                var fx = this.from.x, fy = this.from.y;
-                var tx = this.to.x, ty = this.to.y;
-                var dx = tx-fx, dy = ty-fy;
-
-                //始点が惑星の場合円周上にする
-                if (this.from instanceof tiger.Planet) {
-                    var len = 38*this.from.power/Math.sqrt(dx*dx+dy*dy);
-                    fx = fx*(1-len)+tx*len;
-                    fy = fy*(1-len)+ty*len;
-                    dx = tx-fx, dy = ty-fy;
-                }
-
-                //終点が惑星の場合円周上にする
-                if (this.to instanceof tiger.Planet) {
-                    var len = 38*this.to.power/Math.sqrt(dx*dx+dy*dy);
-                    tx = fx*len+tx*(1-len);
-                    ty = fy*len+ty*(1-len);
-                    dx = tx-fx, dy = ty-fy;
-                }
-
-                //再計算
-                this.x = fx;
-                this.y = fy;
-                this.rotation = Math.atan2(dy, dx)*toDeg;   //二点間の角度
-                this.scaleX = Math.sqrt(dx*dx+dy*dy)/160;
-
-                if (this.active) {
-                    this.alpha += 0.05;
-                    if (this.alpha > 0.7)this.alpha = 0.7;
-                } else {
-                    this.alpha -= 0.05;
-                    if (this.alpha < 0.0)this.remove();
-                }
-            };
-            this.world.addChild(this.arrow);
-        }
-    },
 });
 
 //スクリーン座標操作
