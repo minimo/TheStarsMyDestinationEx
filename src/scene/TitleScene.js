@@ -7,7 +7,7 @@
  */
  
 //タイトルシーン
-tiger.TitleScene = tm.createClass({
+tm.define("tiger.TitleScene", {
     superClass: tm.app.TitleScene,
 
     init: function() {

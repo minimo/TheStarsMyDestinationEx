@@ -11,7 +11,7 @@
  */
 
 //マップ管理クラス
-tiger.World = tm.createClass({
+tm.define("tiger.World", {
     superClass: tm.app.Object2D,
 
     //親シーン

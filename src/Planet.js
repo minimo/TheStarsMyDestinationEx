@@ -7,7 +7,7 @@
  */
 
 //惑星管理クラス
-tiger.Planet = tm.createClass({
+tm.define("tiger.Planet", {
     superClass: tm.display.Sprite,    
 
     //惑星タイプ
@@ -93,7 +93,7 @@ tiger.Planet = tm.createClass({
                     this.fillStyle = "rgba(255, 255, 255, 1.0)";
                     break;
                 case TYPE_PLAYER:
-                    this.fillStyle = "rgba(60, 60, 255, 1.0)";
+                    this.fillStyle = "rgba(0, 60, 255, 1.0)";
                     break;
                 case TYPE_ENEMY:
                     this.fillStyle = "rgba(255, 64, 64, 1.0)";

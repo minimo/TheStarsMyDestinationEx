@@ -8,7 +8,7 @@
  */
 
 //マップ管理クラス
-tiger.Sliderbar = tm.createClass({
+tm.define("tiger.Sliderbar", {
     superClass: tm.app.Object2D,
 
     init: function(scene) {

@@ -20,7 +20,7 @@ tiger = {
     core: null,
 };
 
-tiger.CanvasApp = tm.createClass({
+tm.define("tiger.CanvasApp", {
     superClass: tm.app.CanvasApp,
 
     //オンライン対戦フラグ

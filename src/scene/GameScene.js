@@ -18,7 +18,7 @@ CTRL_RATE = 4;
 CTRL_SCALE = 5;
 
 //ゲームシーン
-tiger.GameScene = tm.createClass({
+tm.define("tiger.GameScene", {
     superClass: tm.app.Scene,
 
     //ポーズフラグ
@@ -137,10 +137,11 @@ tiger.GameScene = tm.createClass({
                     pl.planet.select = true;
                 } else {
                     if (this.selectTo) {
+                        //選択中だったらキャンセル
                         if (this.selectTo instanceof tiger.Planet) {
                             this.selectTo.select = false;
-                            this.selectTo = null;
                         }
+                        this.selectTo = null;
                     }
                     this.arrow.to = {x: this.toWorldX(sx), y: this.toWorldY(sy)};
 

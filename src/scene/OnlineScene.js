@@ -7,7 +7,7 @@
  */
  
 //ロビーシーン
-tiger.RobbyScene = tm.createClass({
+tm.define("tiger.RobbyScene", {
     superClass: tm.app.Scene,
 
     init: function() {

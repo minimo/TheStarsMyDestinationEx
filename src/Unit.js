@@ -7,7 +7,7 @@
  */
  
 //ユニット管理クラス
-tiger.Unit = tm.createClass({
+tm.define("tiger.Unit", {
     superClass: tm.display.Sprite,
 
     //戦力
@@ -20,7 +20,7 @@ tiger.Unit = tm.createClass({
     alignment: 0,   //※仕様上中立は無い（予定）
 
     //所属艦隊ＩＤ
-    group:0,
+    group: 0,
 
     //目的地
     destination: null,
