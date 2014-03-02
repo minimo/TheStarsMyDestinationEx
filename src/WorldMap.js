@@ -18,6 +18,9 @@ tm.define("tiger.WorldMap", {
     //サイズ
     size: 100,
 
+    //マウスオーバーフラグ
+    mouseover: false,
+
     init: function(x, y, size, world) {
         this.superInit();
         this.app = app;
@@ -32,6 +35,13 @@ tm.define("tiger.WorldMap", {
     },
 
     draw: function(canvas) {
+        if (!this.mouseover) {
+            this.alpha+=0.1;
+            if (this.alpha > 1.0)this.alpha = 1.0;
+        } else {
+            this.alpha-=0.1;
+            if (this.alpha < 0.0)this.alpha = 0.0;
+        }
         canvas.lineWidth = 16;
         canvas.globalCompositeOperation = "source-over";
         canvas.fillStyle = "rgba(64, 64, 64, 0.8)";
@@ -71,6 +81,8 @@ tm.define("tiger.WorldMap", {
                 var y = (u.y/this.world.size)*this.size;
                 canvas.fillRect(x-1, y-1, 2, 2);
             }
+
+            //画面範囲枠の描画
         }
     }
 });
