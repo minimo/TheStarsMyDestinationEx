@@ -93,7 +93,7 @@ tm.define("tiger.Planet", {
                     this.fillStyle = "rgba(255, 255, 255, 1.0)";
                     break;
                 case TYPE_PLAYER:
-                    this.fillStyle = "rgba(0, 60, 255, 1.0)";
+                    this.fillStyle = "rgba(0, 64, 255, 1.0)";
                     break;
                 case TYPE_ENEMY:
                     this.fillStyle = "rgba(255, 64, 64, 1.0)";

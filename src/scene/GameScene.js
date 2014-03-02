@@ -24,8 +24,12 @@ tm.define("tiger.GameScene", {
     //ポーズフラグ
     pause: false,
 
-    //マップクラス
+    //ワールド管理
     world: null,
+    base: null,
+
+    //マップビュー
+    map: null,
 
     //準備完了フラグ
     ready: false,
@@ -68,8 +72,9 @@ tm.define("tiger.GameScene", {
     init: function() {
         this.superInit();
 
-        this.world = tiger.World();
-        this.addChild(this.world);
+        this.base = tm.app.Object2D().addChildTo(this);
+        this.world = tiger.World().addChildTo(this.base);
+        this.map = tiger.WorldMap(640-160, 0, 160, this.world).addChildTo(this);
 
         //デバッグ表示
         var sc = tm.app.Label("");
@@ -204,6 +209,13 @@ tm.define("tiger.GameScene", {
 
         //惑星選択
         if (this.control == CTRL_PLANET) {
+        }
+
+        //マップ上マウスオーバー検出
+        if (this.map.x < sx && sx < this.map.x+this.map.size && this.map.y < sy && sy < this.map.y+this.map.size) {
+            this.map.mouseover = true;
+        } else {
+            this.map.mouseover = false;
         }
 
         this.thinkCPU();

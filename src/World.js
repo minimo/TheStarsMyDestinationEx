@@ -20,9 +20,6 @@ tm.define("tiger.World", {
     //マップの一辺のサイズ
     size: 640*2,
 
-    //マップの現在スケール
-    scale: 1,
-
     //ベースレイヤー
     base: null,
 
@@ -58,8 +55,7 @@ tm.define("tiger.World", {
         //表示レイヤー構築（数字が大きい程優先度が高い）
         this.layers = [];
         for (var i = 0; i < LAYER_SYSTEM+1; i++) {
-            var gr = tm.app.Object2D().addChildTo(this.base);
-            this.layers[i] = gr;
+            this.layers[i] = tm.app.Object2D().addChildTo(this.base);
         }
     },
 
