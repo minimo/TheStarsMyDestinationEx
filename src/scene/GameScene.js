@@ -90,6 +90,8 @@ tm.define("tiger.GameScene", {
 //            this.text = "x:"+that.world.base.x+" y:"+that.world.base.y+" size:"+that.world.size;
         }
         this.addChild(sc);
+
+        this.base.setScale(0.5);
     },
 
     update: function() {
@@ -110,19 +112,19 @@ tm.define("tiger.GameScene", {
         //マウスorタッチ情報
         var p = app.pointing;
         var sx = p.position.x, sy = p.position.y;
+        var wx = this.toWorldX(sx), wy = this.toWorldY(sy);
+        var scale = this.base.scaleX;
         var click = p.getPointing();
         var drag = false;
 
         //初回クリック
         if (click && !this.beforePointing.click) {
             //惑星選択チェック
-            var pl = this.world.getPlanet(sx, sy);
+            var pl = this.world.getPlanet(wx, wy);
             if (pl.planet.alignment == TYPE_PLAYER && pl.distance < 32*pl.planet.power) {
                 this.control = CTRL_PLANET;
                 this.selectFrom = pl.planet;
                 pl.planet.select = true;
-                var wx = this.toWorldX(sx);
-                var wy = this.toWorldY(sy);
                 this.arrow = tiger.Arrow(pl.planet, {x: wx, y:wy}).addChildTo(this.world);
                 this.control = CTRL_PLANET;
             } else {
@@ -135,7 +137,7 @@ tm.define("tiger.GameScene", {
             drag = true;
             if (this.arrow) {
                 //惑星選択
-                var pl = this.world.getPlanet(sx, sy);
+                var pl = this.world.getPlanet(wx, wy);
                 if (pl.distance < 32*pl.planet.power && pl.planet != this.selectFrom) {
                     this.selectTo = pl.planet;
                     this.arrow.to = pl.planet;
@@ -148,7 +150,7 @@ tm.define("tiger.GameScene", {
                         }
                         this.selectTo = null;
                     }
-                    this.arrow.to = {x: this.toWorldX(sx), y: this.toWorldY(sy)};
+                    this.arrow.to = {x: wx, y: wy};
 
                     //画面端スクロール
                     if (sx < 120 || sx>SC_W-120 || sy < 120 || sy > SC_H-120) {
@@ -194,7 +196,7 @@ tm.define("tiger.GameScene", {
 
         //非クリック状態
         if (!click && !this.beforePointing.click) {
-            var pl = this.world.getPlanet(sx, sy);
+            var pl = this.world.getPlanet(wx, wy);
             if (pl.distance < 32*pl.planet.power) {
                 pl.planet.mouseover = true;
                 this.mouseoverObject = pl.planet;
@@ -203,8 +205,10 @@ tm.define("tiger.GameScene", {
 
         //マップ操作
         if (this.control == CTRL_MAP) {
-            this.screenX = clamp(this.screenX-(p.position.x-p.prevPosition.x), 0, SC_W);
-            this.screenY = clamp(this.screenY-(p.position.y-p.prevPosition.y), 0, SC_H);
+            var mx = (p.position.x-p.prevPosition.x)/scale;
+            var my = (p.position.y-p.prevPosition.y)/scale;
+            this.screenX = clamp(this.screenX-mx, 0, SC_W/scale);
+            this.screenY = clamp(this.screenY-my, 0, SC_H/scale);
         }
 
         //惑星選択
@@ -267,18 +271,18 @@ tm.define("tiger.GameScene", {
     },
 
     //ワールド座標への変換
-    toWorldX: function(x) {return x-this.world.base.x;},
-    toWorldY: function(y) {return y-this.world.base.y;},
+    toWorldX: function(x) {return (x-this.world.base.x)/this.base.scaleX;},
+    toWorldY: function(y) {return (y-this.world.base.y)/this.base.scaleY;},
 });
 
 //スクリーン座標操作
 tiger.GameScene.prototype.accessor("screenX", {
-    "get": function()   { return -this.world.base.x; },
-    "set": function(x)  { this.world.base.x = -x; }
+    "get": function()   { return -this.world.base.x/this.base.scaleX; },
+    "set": function(x)  { this.world.base.x = -x*this.base.scaleX; }
 });
 tiger.GameScene.prototype.accessor("screenY", {
-    "get": function()   { return -this.world.base.y; },
-    "set": function(y)  { this.world.base.y = -y; }
+    "get": function()   { return -this.world.base.y/this.base.scaleY; },
+    "set": function(y)  { this.world.base.y = -y*this.base.scaleY; }
 });
 
 

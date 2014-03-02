@@ -64,7 +64,7 @@ tm.define("tiger.WorldMap", {
                 }
                 var x = (p.x/this.world.size)*this.size;
                 var y = (p.y/this.world.size)*this.size;
-                canvas.fillRect(x-2, y-2, 4, 4);
+                canvas.fillCircle(x, y, 3*p.power);
             }
             //ユニット位置の描画
             for (var i = 0, len = this.world.units.length; i < len; i++) {
