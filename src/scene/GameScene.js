@@ -143,7 +143,7 @@ tm.define("tiger.GameScene", {
                 } else {
                     if (this.selectTo) {
                         //選択中だったらキャンセル
-                        if (this.selectTo instanceof tiger.Planet) {
+                        if (this.selectTo instanceof tiger.Planet && this.selectTo !== this.selectFrom) {
                             this.selectTo.select = false;
                         }
                         this.selectTo = null;
@@ -275,8 +275,8 @@ tm.define("tiger.GameScene", {
     },
 
     //ワールド座標への変換
-    toWorldX: function(x) {return (this.world.base.x+x)/this.base.scaleX;},
-    toWorldY: function(y) {return (this.world.base.y+y)/this.base.scaleY;},
+    toWorldX: function(x) {return (-this.world.base.x+x)/this.base.scaleX;},
+    toWorldY: function(y) {return (-this.world.base.y+y)/this.base.scaleY;},
 });
 
 //スクリーン座標操作
