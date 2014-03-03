@@ -41,6 +41,32 @@ tm.define("tiger.Unit", {
         this.HP = HP || 1;
         this.power = power || 1;
         this.setFrameIndex(0, 64, 64);
+
+        var that = this;
+        //選択カーソル
+        this.cursol = tm.display.CircleShape(80, 80, {
+            fillStyle: "rgba(0,0,0,0)",
+            strokeStyle: tm.graphics.LinearGradient(0,0,0,80).addColorStopList([
+                { offset:0.0, color:"rgba(0,255,0,0.0)" },
+                { offset:0.3, color:"rgba(0,255,0,0.8)" },
+                { offset:0.5, color:"rgba(0,255,0,1.0)" },
+                { offset:0.7, color:"rgba(0,255,0,0.8)" },
+                { offset:1.0, color:"rgba(0,255,0,0.0)" },
+            ]).toStyle(),
+            lineWidth: 3.0,
+        }).addChildTo(this);
+        this.cursol.blendMode = "lighter";
+        this.cursol.alpha = 0;
+        this.cursol.update = function() {
+            if (that.select) {
+                this.rotation++;
+                this.alpha+=0.05;
+                if (this.alpha > 1.0)this.alpha = 1.0;
+            } else {
+                this.alpha-=0.05;
+                if (this.alpha < 0.0)this.alpha = 0.0;
+            }
+        };
     },
 
     update: function() {
