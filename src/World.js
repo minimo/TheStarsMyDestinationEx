@@ -40,13 +40,11 @@ tm.define("tiger.World", {
 
     //ユニットＩＤ連番
     unitID: 0,
+    unitGroupID: 0,
 
     //艦隊派遣時戦力レート(0.1 - 1.0)
     rate: 0.5,
 
-    //ユニットグループID
-    unitID: 0,
-    
     init: function(scene) {
         this.superInit();
         this.scene = scene;
@@ -66,7 +64,6 @@ tm.define("tiger.World", {
     },
 
     update: function() {
-    
         //ユニット対惑星
         for (var i = 0, len = this.units.length; i < len; i++) {
             var unit = this.units[i];
@@ -140,7 +137,7 @@ tm.define("tiger.World", {
             this.addPlanet(x, y);
         }
     },
-    
+
     //艦隊投入
     enterUnit: function(from, to, rate) {
         rate = rate || this.rate;
@@ -163,24 +160,22 @@ tm.define("tiger.World", {
             var y = from.y + Math.cos(d) * r;
             var unit = tiger.Unit(x, y, from.alignment, unitHP);
             unit.setDestination(to);
-            unit.id = this.unitID;
+            unit.ID = this.unitID;
             this.unitID++;
+            unit.groupID = this.unitGroupID;
             this.addChild(unit);
         }
+        this.unitGroupID++;
     },
 
-    //指定スクリーン座標から一番近い惑星を取得
-    getPlanet: function(screenX, screenY){
-        //スクリーン座標からマップ座標へ変換
-        screenX -= this.base.x;
-        screenY -= this.base.y;
-
+    //指定座標から一番近い惑星を取得
+    getPlanet: function(x, y){
         var bd = 99999999;
         var pl = null;
         for (var i = 0; i < this.planets.length; i++) {
             var p = this.planets[i];
-            var dx = p.x-screenX;
-            var dy = p.y-screenY;
+            var dx = p.x-x;
+            var dy = p.y-y;
             var dis = dx*dx+dy*dy;
             if (dis < bd){
                 pl = p;
@@ -188,6 +183,11 @@ tm.define("tiger.World", {
             }
         }
         return {planet: pl, distance: Math.sqrt(bd)};
+    },
+
+    //指定座標から一番近い艦隊を取得
+    getUnit: function(x, y) {
+        //TODO
     },
 
     //惑星の追加
@@ -198,12 +198,12 @@ tm.define("tiger.World", {
         type = type || rand(0, 5);
 
         var p = tiger.Planet(x, y, alignment, HP, power, type);
-        p.id = this.planetID;
+        p.ID = this.planetID;
         this.planetID++;
         this.addChild(p);
     },
 
-    //戦力合計を算出
+    //惑星戦力合計を算出
     getPowerOfPlanet: function(alignment) {
         var val = 0;
         for (var i = 0, len = this.planets.length; i < len; i++) {
@@ -213,6 +213,7 @@ tm.define("tiger.World", {
         return val;
     },
 
+    //艦隊戦力合計を算出
     getPowerOfUnit: function(alignment) {
         var val = 0;
         for (var i = 0, len = this.unit.length; i < len; i++) {

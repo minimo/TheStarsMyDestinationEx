@@ -136,7 +136,7 @@ tm.define("tiger.GameScene", {
             if (this.arrow) {
                 //惑星選択
                 var pl = this.world.getPlanet(wx, wy);
-                if (pl.distance < 32*pl.planet.power && pl.planet != this.selectFrom) {
+                if (pl.distance < 32*pl.planet.power) {
                     this.selectTo = pl.planet;
                     this.arrow.to = pl.planet;
                     pl.planet.select = true;
@@ -162,11 +162,16 @@ tm.define("tiger.GameScene", {
 
         //クリック終了
         if (!click && this.beforePointing.click) {
-
-            //艦隊派遣
-            if (this.control == CTRL_PLANET) {
-                if (this.selectTo instanceof tiger.Planet) {
-                    this.world.enterUnit(this.selectFrom, this.selectTo);
+            if (this.selectFrom && this.selectFrom !== this.selectTo) {
+                //艦隊派遣
+                if (this.selectFrom instanceof tiger.Planet) {
+                    if (this.selectTo instanceof tiger.Planet) {
+                        this.world.enterUnit(this.selectFrom, this.selectTo);
+                    }
+                }
+                //艦隊進行目標変更
+                if (this.selectFrom instanceof tiger.Unit && this.selectFrom !== this.selectTo) {
+                    //TODO
                 }
             }
 

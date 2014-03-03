@@ -16,7 +16,7 @@ tm.define("tiger.Arrow", {
 
     //アクティブフラグ
     active: true,
-
+    
     //フォアグラウンドレイヤフラグ
     foreground: true,
 
@@ -52,6 +52,12 @@ tm.define("tiger.Arrow", {
             ty = fy*len+ty*(1-len);
             dx = tx-fx, dy = ty-fy;
         }
+        
+        if (this.from === this.to) {
+            this.visible = false;
+        } else {
+            this.visible = true;
+        }
 
         //再計算
         this.x = fx;
@@ -66,5 +72,9 @@ tm.define("tiger.Arrow", {
             this.alpha -= 0.05;
             if (this.alpha < 0.0)this.remove();
         }
+    },
+    
+    getLength: function() {
+        return distance(this.from, this.to);
     },
 });

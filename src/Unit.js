@@ -10,6 +10,12 @@
 tm.define("tiger.Unit", {
     superClass: tm.display.Sprite,
 
+    //ＩＤ
+    ID: 0,
+
+    //所属艦隊ＩＤ
+    groupID: 0,
+
     //戦力
     HP: 0,
 
@@ -18,9 +24,6 @@ tm.define("tiger.Unit", {
 
     //属性（0:中立 1:プレイヤー 2:エネミー）
     alignment: 0,   //※仕様上中立は無い（予定）
-
-    //所属艦隊ＩＤ
-    group: 0,
 
     //目的地
     destination: null,
