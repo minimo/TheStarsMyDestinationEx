@@ -90,8 +90,6 @@ tm.define("tiger.GameScene", {
 //            this.text = "x:"+that.world.base.x+" y:"+that.world.base.y+" size:"+that.world.size;
         }
         this.addChild(sc);
-
-        this.base.setScale(0.5);
     },
 
     update: function() {
@@ -153,10 +151,10 @@ tm.define("tiger.GameScene", {
                     this.arrow.to = {x: wx, y: wy};
 
                     //画面端スクロール
-                    if (sx < 120 || sx>SC_W-120 || sy < 120 || sy > SC_H-120) {
+                    if (sx < 60 || sx>SC_W-60 || sy < 60 || sy > SC_H-60) {
                         //ポインタの位置によりスクロール量を計算
-                        this.screenX = clamp(this.screenX+(sx-SC_W/2)/32, 0, SC_W);
-                        this.screenY = clamp(this.screenY+(sy-SC_H/2)/32, 0, SC_H);
+                        this.screenX = clamp(this.screenX+(sx-SC_W/2)/32, 0, this.world.size*scale-SC_W);
+                        this.screenY = clamp(this.screenY+(sy-SC_H/2)/32, 0, this.world.size*scale-SC_H);
                     }
                 }
             }
@@ -207,8 +205,8 @@ tm.define("tiger.GameScene", {
         if (this.control == CTRL_MAP) {
             var mx = (p.position.x-p.prevPosition.x)/scale;
             var my = (p.position.y-p.prevPosition.y)/scale;
-            this.screenX = clamp(this.screenX-mx, 0, SC_W/scale);
-            this.screenY = clamp(this.screenY-my, 0, SC_H/scale);
+            this.screenX = clamp(this.screenX-mx, 0, this.world.size*scale-SC_W);
+            this.screenY = clamp(this.screenY-my, 0, this.world.size*scale-SC_H);
         }
 
         //惑星選択
@@ -221,7 +219,7 @@ tm.define("tiger.GameScene", {
         } else {
             this.map.mouseover = false;
         }
-
+    
         this.thinkCPU();
         this.world.update();
 
@@ -236,6 +234,7 @@ tm.define("tiger.GameScene", {
 
     //ＣＰＵ思考ルーチン
     thinkCPU: function() {
+        if (this.frame < 300)return;
         //５秒に１回思考する
         if (this.frame % 60 * 5 != 0) return;
 
@@ -271,8 +270,8 @@ tm.define("tiger.GameScene", {
     },
 
     //ワールド座標への変換
-    toWorldX: function(x) {return (x-this.world.base.x)/this.base.scaleX;},
-    toWorldY: function(y) {return (y-this.world.base.y)/this.base.scaleY;},
+    toWorldX: function(x) {return (this.world.base.x+x)/this.base.scaleX;},
+    toWorldY: function(y) {return (this.world.base.y+y)/this.base.scaleY;},
 });
 
 //スクリーン座標操作
@@ -284,6 +283,5 @@ tiger.GameScene.prototype.accessor("screenY", {
     "get": function()   { return -this.world.base.y/this.base.scaleY; },
     "set": function(y)  { this.world.base.y = -y*this.base.scaleY; }
 });
-
 
 

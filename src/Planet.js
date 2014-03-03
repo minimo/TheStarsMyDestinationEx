@@ -10,6 +10,9 @@
 tm.define("tiger.Planet", {
     superClass: tm.display.Sprite,    
 
+    //惑星ＩＤ
+    id: 0,
+
     //惑星タイプ
     //0: 中立
     //1: プレイヤー

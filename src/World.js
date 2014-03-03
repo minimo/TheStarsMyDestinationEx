@@ -28,12 +28,18 @@ tm.define("tiger.World", {
 
     //最大惑星数
     maxPlanets: 20,
-    
+
     //惑星リスト
     planets: null,
 
     //ユニットリスト
     units: null,
+
+    //惑星ＩＤ連番
+    planetID: 0,
+
+    //ユニットＩＤ連番
+    unitID: 0,
 
     //艦隊派遣時戦力レート(0.1 - 1.0)
     rate: 0.5,
@@ -138,6 +144,7 @@ tm.define("tiger.World", {
     //艦隊投入
     enterUnit: function(from, to, rate) {
         rate = rate || this.rate;
+        if (rate > 0.9)rate = 0.9;
 
         if (from.HP < 10)return null;
         var HP = from.HP * rate;
@@ -156,6 +163,8 @@ tm.define("tiger.World", {
             var y = from.y + Math.cos(d) * r;
             var unit = tiger.Unit(x, y, from.alignment, unitHP);
             unit.setDestination(to);
+            unit.id = this.unitID;
+            this.unitID++;
             this.addChild(unit);
         }
     },
@@ -189,6 +198,8 @@ tm.define("tiger.World", {
         type = type || rand(0, 5);
 
         var p = tiger.Planet(x, y, alignment, HP, power, type);
+        p.id = this.planetID;
+        this.planetID++;
         this.addChild(p);
     },
 
