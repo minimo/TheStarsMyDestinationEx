@@ -204,12 +204,22 @@ tm.display = tm.display || {};
     });
 
     /**
-     * @property    blendMode
+     * @property    alpha
      */
     tm.display.OutlineLabel.prototype.accessor("alpha", {
         "get": function() { return this.labels[4].alpha; },
         "set": function(alpha) {
             for (var i = 0; i < 9; i++)this.labels[i].alpha = alpha;
+        }
+    });
+
+    /**
+     * @property    visible
+     */
+    tm.display.OutlineLabel.prototype.accessor("visible", {
+        "get": function() { return this.labels[0].visible; },
+        "set": function(visible) {
+            for (var i = 0; i < 9; i++)this.labels[i].visible = visible;
         }
     });
 
