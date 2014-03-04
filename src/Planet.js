@@ -36,6 +36,9 @@ tm.define("tiger.Planet", {
 
     //経過フレーム数
     frame: 0,
+    
+    //所属ワールド
+    world: null,
 
     init: function(x, y, alignment, HP, power, type) {
         this.alignment = alignment || 0;
@@ -136,6 +139,7 @@ tm.define("tiger.Planet", {
                 this.alignment = alignment;
                 this.image = tm.asset.Manager.get("planet");
                 this.setFrameIndex(this.type, 64, 64);
+                this.world.addChild(tiger.Effect.genShockwave(this.x, this.y, 2));
             }
         }
     },

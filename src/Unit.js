@@ -32,6 +32,9 @@ tm.define("tiger.Unit", {
     vx: 0,
     vy: 0,
     speed: 0.5,
+    
+    //所属ワールド
+    world: null,
 
     init: function(x, y, alignment, HP, power) {
         this.superInit("frigate", 64, 64);
@@ -113,6 +116,7 @@ tm.define("tiger.Unit", {
 
     //破壊処理
     destroy: function() {
+        this.world.addChild(tiger.Effect.genShockwave(this.x, this.y, 1));
     }
 });
 

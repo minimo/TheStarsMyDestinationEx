@@ -108,7 +108,7 @@ tm.define("tiger.World", {
             }
         }
     },
-
+    
     //マップの構築
     build: function() {
         //バックグラウンドの追加
@@ -116,10 +116,10 @@ tm.define("tiger.World", {
         bg.originX = bg.originY = 0;
 
         //プレイヤー主星
-        this.addPlanet(64, 64, TYPE_PLAYER, 100, 1, 3);
+        this.enterPlanet(64, 64, TYPE_PLAYER, 100, 1, 3);
 
         //エネミー主星
-        this.addPlanet(this.size-64, this.size-64, TYPE_ENEMY, 100, 1, 3);
+        this.enterPlanet(this.size-64, this.size-64, TYPE_ENEMY, 100, 1, 3);
 
         //中立惑星配置
         for (var i = 0; i < this.maxPlanets; i++) {
@@ -134,8 +134,20 @@ tm.define("tiger.World", {
                 if (dis < 132*132){ok = false;break;}
             }
             if (!ok) {i--;continue;}
-            this.addPlanet(x, y);
+            this.enterPlanet(x, y);
         }
+    },
+
+    //惑星の追加
+    enterPlanet: function(x, y, alignment, HP, power, type) {
+        alignment = alignment || TYPE_NEUTRAL;
+        power = power || rand(50, 200)/100;
+        HP = HP || ~~(rand(30, 70)*power);
+        type = type || rand(0, 5);
+
+        var p = tiger.Planet(x, y, alignment, HP, power, type).addChildTo(this);
+        p.ID = this.planetID;
+        this.planetID++;
     },
 
     //艦隊投入
@@ -158,12 +170,11 @@ tm.define("tiger.World", {
             var d = rand(0, 360)*toRad;
             var x = from.x + Math.sin(d) * r;
             var y = from.y + Math.cos(d) * r;
-            var unit = tiger.Unit(x, y, from.alignment, unitHP);
+            var unit = tiger.Unit(x, y, from.alignment, unitHP).addChildTo(this);
             unit.setDestination(to);
             unit.ID = this.unitID;
             this.unitID++;
             unit.groupID = this.unitGroupID;
-            this.addChild(unit);
         }
         this.unitGroupID++;
     },
@@ -190,19 +201,6 @@ tm.define("tiger.World", {
         //TODO
     },
 
-    //惑星の追加
-    addPlanet: function(x, y, alignment, HP, power, type) {
-        alignment = alignment || TYPE_NEUTRAL;
-        power = power || rand(50, 200)/100;
-        HP = HP || ~~(rand(30, 70)*power);
-        type = type || rand(0, 5);
-
-        var p = tiger.Planet(x, y, alignment, HP, power, type);
-        p.ID = this.planetID;
-        this.planetID++;
-        this.addChild(p);
-    },
-
     //惑星戦力合計を算出
     getPowerOfPlanet: function(alignment) {
         var val = 0;
@@ -223,10 +221,11 @@ tm.define("tiger.World", {
         return val;
     },
 
-    //addChildオーバーロード
+    //addChildオーバーライド
     addChild: function(child) {
         //ユニットレイヤ
         if (child instanceof tiger.Unit) {
+            child.world = this;
             this.layers[LAYER_UNIT].addChild(child);
             this.units[this.units.length] = child;
             return;
@@ -234,6 +233,7 @@ tm.define("tiger.World", {
 
         //マップレイヤ
         if (child instanceof tiger.Planet) {
+            child.world = this;
             this.layers[LAYER_PLANET].addChild(child);
             this.planets[this.planets.length] = child;
             return;
