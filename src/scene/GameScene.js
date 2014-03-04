@@ -125,7 +125,6 @@ tm.define("tiger.GameScene", {
                 this.selectFrom = pl.planet;
                 pl.planet.select = true;
                 this.arrow = tiger.Arrow(pl.planet, {x: wx, y:wy}).addChildTo(this.world);
-                this.control = CTRL_PLANET;
             } else {
                 var un = this.world.getUnit(wx, wy);
                 if (un.unit.alignment == TYPE_PLAYER && un.distance < 20) {
@@ -134,8 +133,12 @@ tm.define("tiger.GameScene", {
                     this.selectFrom = un.unit;
                     un.unit.select = true;
                     var units = this.world.getUnitGroup(un.unit.groupID);
-                    this.arrow = tiger.Arrow(un.unit, {x: wx, y:wy}).addChildTo(this.world);
-                    this.control = CTRL_PLANET;
+
+                    //選択矢印を配列で持つ
+                    this.arrow = [];
+                    for (var i = 0; i < units.length; i++) {
+                        this.arrow.push(tiger.Arrow(units[i], {x: wx, y:wy}).addChildTo(this.world));
+                    }
                     this.world.selectUnitGroup(un.unit.groupID, true);
                 } else {
                     //どれにも該当しないのでマップ操作
@@ -147,12 +150,16 @@ tm.define("tiger.GameScene", {
         //クリック中
         if (click && this.beforePointing.click) {
             drag = true;
-            //惑星選択中
+            //選択中
             if (this.arrow) {
                 var pl = this.world.getPlanet(wx, wy);
                 if (pl.distance < 32*pl.planet.power) {
                     this.selectTo = pl.planet;
-                    this.arrow.to = pl.planet;
+                    if (this.control == CTRL_PLANET) {
+                        this.arrow.to = pl.planet;
+                    } else {
+                        for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].to = pl.planet;
+                    }
                     pl.planet.select = true;
                 } else {
                     if (this.selectTo) {
@@ -165,7 +172,11 @@ tm.define("tiger.GameScene", {
                         }
                         this.selectTo = null;
                     }
-                    this.arrow.to = {x: wx, y: wy};
+                    if (this.control == CTRL_PLANET) {
+                        this.arrow.to = {x: wx, y: wy};
+                    } else {
+                        for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].to = {x: wx, y: wy};
+                    }
 
                     //画面端スクロール
                     if (sx < 60 || sx>SC_W-60 || sy < 60 || sy > SC_H-60) {
@@ -208,8 +219,15 @@ tm.define("tiger.GameScene", {
 
             //選択矢印解放            
             if (this.arrow) {
-                this.arrow.active = false;
-                this.arrow = null;
+                if (this.control == CTRL_PLANET) {
+                    this.arrow.active = false;
+                    this.arrow = null;
+                } else {
+                    for (var i = 0, len = this.arrow.length; i < len; i++) {
+                        this.arrow[i].active = false;
+                    }
+                    this.arrow = null;
+                }
             }
             this.control = CTRL_NOTHING;
         }
