@@ -20,8 +20,9 @@ tm.define("tiger.Arrow", {
     //フォアグラウンドレイヤフラグ
     foreground: true,
 
-    init: function(from, to) {
-        this.superInit("arrow", 160, 16);
+    init: function(from, to, width) {
+        width = width || 16;
+        this.superInit("arrow", 160, width);
         this.setPosition(from.x, from.y);
 
         this.originX = 0;
@@ -52,7 +53,7 @@ tm.define("tiger.Arrow", {
             ty = fy*len+ty*(1-len);
             dx = tx-fx, dy = ty-fy;
         }
-        
+
         if (this.from === this.to) {
             this.visible = false;
         } else {
