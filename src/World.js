@@ -102,6 +102,7 @@ tm.define("tiger.World", {
         //破壊ユニット掃除
         for (var i = 0; i < len; i++) {
             var unit = this.units[i];
+            if (unit === undefined)continue;
             if (unit.HP <= 0) {
                 unit.remove();
                 this.units.splice(i, 1);
