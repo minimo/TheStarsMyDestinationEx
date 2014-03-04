@@ -198,6 +198,7 @@ tm.define("tiger.World", {
 
     //指定座標から一番近い艦隊を取得
     getUnit: function(x, y) {
+        if (this.units.length == 0)return null;
         var bd = 99999999;
         var unit = null;
         for (var i = 0; i < this.units.length; i++) {
@@ -219,7 +220,7 @@ tm.define("tiger.World", {
         for (var i = 0; i < this.units.length; i++) {
             if (this.units[i].groupID == groupID) units.push(this.units[i]);
         }
-        return units;
+        return units.length == 0? null : units;
     },
 
     //特定のユニットグループを選択／非選択にする

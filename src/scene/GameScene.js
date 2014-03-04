@@ -127,7 +127,7 @@ tm.define("tiger.GameScene", {
                 this.arrow = tiger.Arrow(pl.planet, {x: wx, y:wy}).addChildTo(this.world);
             } else {
                 var un = this.world.getUnit(wx, wy);
-                if (un.unit.alignment == TYPE_PLAYER && un.distance < 20) {
+                if (un && un.unit.alignment == TYPE_PLAYER && un.distance < 20) {
                     //ユニットが選択された
                     this.control = CTRL_UNIT;
                     this.selectFrom = un.unit;
