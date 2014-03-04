@@ -35,6 +35,12 @@ tm.define("tiger.Unit", {
     
     //所属ワールド
     world: null,
+    
+    //選択フラグ
+    select: true,
+
+    //マウスオーバーフラグ
+    mouseover: false,
 
     init: function(x, y, alignment, HP, power) {
         this.superInit("frigate", 64, 64);
@@ -47,9 +53,9 @@ tm.define("tiger.Unit", {
 
         var that = this;
         //選択カーソル
-        this.cursol = tm.display.CircleShape(80, 80, {
+        this.cursol = tm.display.CircleShape(50, 50, {
             fillStyle: "rgba(0,0,0,0)",
-            strokeStyle: tm.graphics.LinearGradient(0,0,0,80).addColorStopList([
+            strokeStyle: tm.graphics.LinearGradient(0,0,0,50).addColorStopList([
                 { offset:0.0, color:"rgba(0,255,0,0.0)" },
                 { offset:0.3, color:"rgba(0,255,0,0.8)" },
                 { offset:0.5, color:"rgba(0,255,0,1.0)" },
@@ -61,7 +67,7 @@ tm.define("tiger.Unit", {
         this.cursol.blendMode = "lighter";
         this.cursol.alpha = 0;
         this.cursol.update = function() {
-            if (that.select) {
+            if (that.select || that.mouseover) {
                 this.rotation++;
                 this.alpha+=0.05;
                 if (this.alpha > 1.0)this.alpha = 1.0;

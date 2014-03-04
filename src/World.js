@@ -198,7 +198,27 @@ tm.define("tiger.World", {
 
     //指定座標から一番近い艦隊を取得
     getUnit: function(x, y) {
-        //TODO
+        var bd = 99999999;
+        var unit = null;
+        for (var i = 0; i < this.units.length; i++) {
+            var u = this.units[i];
+            var dx = u.x-x;
+            var dy = u.y-y;
+            var dis = dx*dx+dy*dy;
+            if (dis < bd){
+                unit = u;
+                bd = dis;
+            }
+        }
+        return {unit: unit, distance: Math.sqrt(bd)};
+    },
+
+    //特定のユニットグループを選択／非選択にする
+    selectUnitGroup: function(groupID, bool) {
+        for (var i = 0, len = this.units.length; i < len; i++) {
+            var u = this.units[i];
+            if (u.groupID == groupID)u.select = bool;
+        }
     },
 
     //惑星戦力合計を算出

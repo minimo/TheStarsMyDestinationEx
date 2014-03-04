@@ -133,8 +133,8 @@ tm.define("tiger.GameScene", {
         //クリック中
         if (click && this.beforePointing.click) {
             drag = true;
-            if (this.arrow) {
-                //惑星選択
+            //惑星選択中
+            if (this.control == CTRL_PLANET && this.arrow) {
                 var pl = this.world.getPlanet(wx, wy);
                 if (pl.distance < 32*pl.planet.power) {
                     this.selectTo = pl.planet;
