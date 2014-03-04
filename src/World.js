@@ -213,11 +213,28 @@ tm.define("tiger.World", {
         return {unit: unit, distance: Math.sqrt(bd)};
     },
 
+    //特定のグループＩＤのユニットを配列で取得
+    getUnitGroup: function(groupID) {
+        var units = [];
+        for (var i = 0; i < this.units.length; i++) {
+            if (this.units[i].groupID == groupID) units.push(this.units[i]);
+        }
+        return units;
+    },
+
     //特定のユニットグループを選択／非選択にする
-    selectUnitGroup: function(groupID, bool) {
+    selectUnitGroup: function(groupID, select) {
         for (var i = 0, len = this.units.length; i < len; i++) {
             var u = this.units[i];
-            if (u.groupID == groupID)u.select = bool;
+            if (u.groupID == groupID)u.select = select;
+        }
+    },
+
+    //特定のユニットグループの目標を変更する
+    setDestinationUnitGroup: function(groupID, destination) {
+        for (var i = 0, len = this.units.length; i < len; i++) {
+            var u = this.units[i];
+            if (u.groupID == groupID)u.setDestination(destination);
         }
     },
 

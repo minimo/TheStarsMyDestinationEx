@@ -117,16 +117,30 @@ tm.define("tiger.GameScene", {
 
         //初回クリック
         if (click && !this.beforePointing.click) {
-            //惑星選択チェック
+            //惑星orユニット選択チェック
             var pl = this.world.getPlanet(wx, wy);
             if (pl.planet.alignment == TYPE_PLAYER && pl.distance < 32*pl.planet.power) {
+                //惑星が選択された
                 this.control = CTRL_PLANET;
                 this.selectFrom = pl.planet;
                 pl.planet.select = true;
                 this.arrow = tiger.Arrow(pl.planet, {x: wx, y:wy}).addChildTo(this.world);
                 this.control = CTRL_PLANET;
             } else {
-                this.control = CTRL_MAP;
+                var un = this.world.getUnit(wx, wy);
+                if (un.unit.alignment == TYPE_PLAYER && un.distance < 20) {
+                    //ユニットが選択された
+                    this.control = CTRL_UNIT;
+                    this.selectFrom = un.unit;
+                    un.unit.select = true;
+                    var units = this.world.getUnitGroup(un.unit.groupID);
+                    this.arrow = tiger.Arrow(un.unit, {x: wx, y:wy}).addChildTo(this.world);
+                    this.control = CTRL_PLANET;
+                    this.world.selectUnitGroup(un.unit.groupID, true);
+                } else {
+                    //どれにも該当しないのでマップ操作
+                    this.control = CTRL_MAP;
+                }
             }
         }
 
@@ -134,7 +148,7 @@ tm.define("tiger.GameScene", {
         if (click && this.beforePointing.click) {
             drag = true;
             //惑星選択中
-            if (this.control == CTRL_PLANET && this.arrow) {
+            if (this.arrow) {
                 var pl = this.world.getPlanet(wx, wy);
                 if (pl.distance < 32*pl.planet.power) {
                     this.selectTo = pl.planet;
@@ -145,6 +159,9 @@ tm.define("tiger.GameScene", {
                         //選択中だったらキャンセル
                         if (this.selectTo instanceof tiger.Planet && this.selectTo !== this.selectFrom) {
                             this.selectTo.select = false;
+                        }
+                        if (this.selectTo instanceof tiger.Unit) {
+                            this.world.selectUnitGroup(this.selectTo.groupID, false);
                         }
                         this.selectTo = null;
                     }
@@ -171,22 +188,22 @@ tm.define("tiger.GameScene", {
                 }
                 //艦隊進行目標変更
                 if (this.selectFrom instanceof tiger.Unit && this.selectFrom !== this.selectTo) {
-                    //TODO
+                    if (this.selectTo instanceof tiger.Planet) {
+                        this.world.setDestinationUnitGroup(this.selectFrom.groupID,this.selectTo);
+                    }
                 }
             }
 
             //選択中オブジェクト解放
             if (this.selectFrom) {
-                if (this.selectFrom instanceof tiger.Planet) {
-                    this.selectFrom.select = false;
-                    this.selectFrom = null;
-                }
+                if (this.selectFrom instanceof tiger.Planet) this.selectFrom.select = false;
+                if (this.selectFrom instanceof tiger.Unit) this.world.selectUnitGroup(this.selectFrom.groupID, false);
+                this.selectFrom = null;
             }
             if (this.selectTo) {
-                if (this.selectTo instanceof tiger.Planet) {
-                    this.selectTo.select = false;
-                    this.selectTo = null;
-                }
+                if (this.selectTo instanceof tiger.Planet) this.selectTo.select = false;
+                if (this.selectTo instanceof tiger.Unit) this.world.selectUnitGroup(this.selectTo.groupID, false);
+                this.selectTo = null;
             }
 
             //選択矢印解放            

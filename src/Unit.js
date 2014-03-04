@@ -37,7 +37,7 @@ tm.define("tiger.Unit", {
     world: null,
     
     //選択フラグ
-    select: true,
+    select: false,
 
     //マウスオーバーフラグ
     mouseover: false,
