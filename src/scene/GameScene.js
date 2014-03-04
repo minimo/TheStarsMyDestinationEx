@@ -137,7 +137,7 @@ tm.define("tiger.GameScene", {
                     //選択矢印を配列で持つ
                     this.arrow = [];
                     for (var i = 0; i < units.length; i++) {
-                        this.arrow.push(tiger.Arrow(units[i], {x: wx, y:wy}).addChildTo(this.world));
+                        this.arrow.push(tiger.Arrow(units[i], {x: wx, y:wy}, 4).addChildTo(this.world));
                     }
                     this.world.selectUnitGroup(un.unit.groupID, true);
                 } else {
