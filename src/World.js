@@ -42,6 +42,9 @@ tm.define("tiger.World", {
     unitID: 0,
     unitGroupID: 0,
 
+    //ハンディキャップ（自分１に対する相手の戦力増加比率）
+    handicap: 1.0,
+
     //艦隊派遣時戦力レート(0.1 - 1.0)
     rate: 0.5,
 
@@ -117,10 +120,10 @@ tm.define("tiger.World", {
         bg.originX = bg.originY = 0;
 
         //プレイヤー主星
-        this.enterPlanet(64, 64, TYPE_PLAYER, 100, 1, 3);
+        this.enterPlanet(64, 64, TYPE_PLAYER, 100, 1.5, 3);
 
         //エネミー主星
-        this.enterPlanet(this.size-64, this.size-64, TYPE_ENEMY, 100, 1, 3);
+        this.enterPlanet(this.size-64, this.size-64, TYPE_ENEMY, 100, 1.5, 3);
 
         //中立惑星配置
         for (var i = 0; i < this.maxPlanets; i++) {

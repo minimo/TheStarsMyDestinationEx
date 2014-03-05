@@ -119,7 +119,7 @@ tm.define("tiger.Planet", {
         if (this.alignment != TYPE_NEUTRAL) {
             var rev = 1;
             if (this.alpha == TYPE_ENEMY) {
-                rev = 0.7;
+                rev = this.world.handicap;
             }
             if (this.frame % 30 == 0){
                 this.HP += this.power * rev * 0.5;
