@@ -25,7 +25,6 @@ Realtime Simulation Game
 
 TODO list
 惑星選択時のマップスクロール改善
-全体マップ
 マップの拡大縮小
 戦闘演出
 艦隊戦
