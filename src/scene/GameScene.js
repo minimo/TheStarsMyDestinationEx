@@ -16,6 +16,7 @@ CTRL_PLANET = 2;
 CTRL_UNIT = 3;
 CTRL_RATE = 4;
 CTRL_SCALE = 5;
+CTRL_ALLPLANETS = 6;
 
 //ゲームシーン
 tm.define("tiger.GameScene", {
@@ -30,6 +31,9 @@ tm.define("tiger.GameScene", {
 
     //マップビュー
     map: null,
+
+    //勢力天秤
+    balance: null,
 
     //準備完了フラグ
     ready: false,
@@ -46,6 +50,9 @@ tm.define("tiger.GameScene", {
 
     //終点選択オブジェクト
     selectTo: null,
+    
+    //全惑星選択フラグ
+    selectAllPlanet: false,
 
     //前フレームポインティングデバイス情報
     beforePointing: {
@@ -56,8 +63,9 @@ tm.define("tiger.GameScene", {
         mouseoverObject: null,
     },
 
-    //クリック間隔
-    clickInterval: 0,
+    //クリック情報等
+    clickInterval: 0,   //間隔
+    clickFrame: 0,      //経過
     
     //矢印的なアレ
     arrow: null,
@@ -75,6 +83,7 @@ tm.define("tiger.GameScene", {
         this.base = tm.app.Object2D().addChildTo(this);
         this.world = tiger.World().addChildTo(this.base);
         this.map = tiger.WorldMap(640-160, 0, 160, this.world).addChildTo(this);
+        this.balance = tiger.CosmicBalance(0, 640-32, 640, this.world).addChildTo(this);
 
         //デバッグ表示
         var sc = tm.app.Label("");
@@ -145,6 +154,7 @@ tm.define("tiger.GameScene", {
                     this.control = CTRL_MAP;
                 }
             }
+            this.clickFrame = 0;
         }
 
         //クリック中
@@ -186,6 +196,7 @@ tm.define("tiger.GameScene", {
                     }
                 }
             }
+            this.clickFrame++;
         }
 
         //クリック終了
@@ -219,15 +230,20 @@ tm.define("tiger.GameScene", {
 
             //選択矢印解放            
             if (this.arrow) {
-                if (this.control == CTRL_PLANET) {
-                    this.arrow.active = false;
-                    this.arrow = null;
-                } else {
-                    for (var i = 0, len = this.arrow.length; i < len; i++) {
-                        this.arrow[i].active = false;
-                    }
-                    this.arrow = null;
+                switch (this.control) {
+                    case CTRL_PLANET:
+                        this.arrow.active = false;
+                        this.arrow = null;
+                    break;
+                    case CTRL_UNIT:
+                    case CTRL_ALLPLANETS:
+                        for (var i = 0, len = this.arrow.length; i < len; i++) {
+                            this.arrow[i].active = false;
+                        }
+                        break;
+                    
                 }
+                this.arrow = null;
             }
             this.control = CTRL_NOTHING;
         }
@@ -253,11 +269,17 @@ tm.define("tiger.GameScene", {
         if (this.control == CTRL_PLANET) {
         }
 
-        //マップ上マウスオーバー検出
+        //マウスオーバー検出
         if (this.map.x < sx && sx < this.map.x+this.map.size && this.map.y < sy && sy < this.map.y+this.map.size) {
             this.map.mouseover = true;
         } else {
             this.map.mouseover = false;
+        }
+        //マウスオーバー検出
+        if (sy > 608) {
+            this.balance.mouseover = true;
+        } else {
+            this.balance.mouseover = false;
         }
     
         this.thinkCPU();
