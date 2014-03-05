@@ -32,12 +32,15 @@ tm.define("tiger.Unit", {
     vx: 0,
     vy: 0,
     speed: 0.5,
-    
+
     //所属ワールド
     world: null,
-    
+
     //選択フラグ
     select: false,
+
+    //有効フラグ
+    active: true,
 
     //マウスオーバーフラグ
     mouseover: false,
