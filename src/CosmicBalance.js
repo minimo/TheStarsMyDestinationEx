@@ -67,7 +67,7 @@ tm.define("tiger.CosmicBalance", {
             var bl = this.width-20;
             canvas.fillStyle = "rgba(0, 64, 255, 0.8)";
             canvas.fillRect(10, 4, bl*player, 32-8);
-            canvas.fillStyle = "rgba(255, 255, 255, 0.8)";
+            canvas.fillStyle = "rgba(180, 180, 180, 0.8)";
             canvas.fillRect(bl*player+10, 4, bl*neutral, 32-8);
             canvas.fillStyle = "rgba(255, 64, 64, 0.8)";
             canvas.fillRect(bl*player+bl*neutral+10, 4, bl*enemy, 32-8);
