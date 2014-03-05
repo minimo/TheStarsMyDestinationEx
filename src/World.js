@@ -42,7 +42,7 @@ tm.define("tiger.World", {
     unitID: 0,
     unitGroupID: 0,
 
-    //ハンディキャップ（自分１に対する相手の戦力増加比率）
+    //ハンディキャップ（相手の戦力増加比率係数）
     handicap: 1.0,
 
     //艦隊派遣時戦力レート(0.1 - 1.0)
@@ -145,7 +145,7 @@ tm.define("tiger.World", {
     //惑星の追加
     enterPlanet: function(x, y, alignment, HP, power, type) {
         alignment = alignment || TYPE_NEUTRAL;
-        power = power || rand(50, 200)/100;
+        power = power || rand(60, 200)/100;
         HP = HP || ~~(rand(30, 70)*power);
         type = type || rand(0, 5);
 
@@ -242,7 +242,7 @@ tm.define("tiger.World", {
             if (u.groupID == groupID)u.setDestination(destination);
         }
     },
-
+    
     //惑星戦力合計を算出
     getPowerOfPlanet: function(alignment) {
         var val = 0;
@@ -256,7 +256,7 @@ tm.define("tiger.World", {
     //艦隊戦力合計を算出
     getPowerOfUnit: function(alignment) {
         var val = 0;
-        for (var i = 0, len = this.unit.length; i < len; i++) {
+        for (var i = 0, len = this.units.length; i < len; i++) {
             var p = this.units[i];
             if (p.alignment == alignment) val += p.HP;
         }

@@ -139,7 +139,7 @@ tm.define("tiger.Planet", {
                 this.alignment = alignment;
                 this.image = tm.asset.Manager.get("planet");
                 this.setFrameIndex(this.type, 64, 64);
-                this.world.addChild(tiger.Effect.genShockwave(this.x, this.y, 2));
+                this.world.addChild(tiger.Effect.genShockwave(this.x, this.y, 3*this.power));
             }
         }
     },
