@@ -67,7 +67,6 @@ tm.define("tiger.World", {
     },
 
     update: function() {
-
         //ユニット到着判定
         for (var i = 0, len = this.units.length; i < len; i++) {
             var unit = this.units[i];
@@ -223,7 +222,7 @@ tm.define("tiger.World", {
                 color = "white";
                 break;
         }
-        tiger.Effect.genLaser(color, {x:fx, y:fy}, {x:tx, y:ty}, 3).addChildTo(this);
+//        tiger.Effect.genLaser(color, {x:fx, y:fy}, {x:tx, y:ty}, 3).addChildTo(this);
     },
 
     //指定座標から一番近い惑星を取得
@@ -241,6 +240,22 @@ tm.define("tiger.World", {
             }
         }
         return {planet: pl, distance: Math.sqrt(bd)};
+    },
+
+    //特定陣営の惑星を配列で取得
+    getPlanetGroup: function(alignment) {
+        var planets = [];
+        for (var i = 0; i < this.planets.length; i++) {
+            if (this.planets[i].alignment == alignment) planets.push(this.planets[i]);
+        }
+        return planets.length == 0? null : planets;
+    },
+
+    //特定陣営の惑星を選択／非選択にする
+    selectPlanetGroup: function(alignment, select) {
+        for (var i = 0; i < this.planets.length; i++) {
+            if (this.planets[i].alignment == alignment) this.planets[i].select = select;
+        }
     },
 
     //指定座標から一番近い艦隊を取得

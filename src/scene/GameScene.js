@@ -61,6 +61,8 @@ tm.define("tiger.GameScene", {
         click: false,
         drag: false,
         mouseoverObject: null,
+        selectFrom: null,
+        selectTo: null,
     },
 
     //クリック情報等
@@ -128,12 +130,13 @@ tm.define("tiger.GameScene", {
         if (click && !this.beforePointing.click) {
             //惑星orユニット選択チェック
             var pl = this.world.getPlanet(wx, wy);
-            if (pl.planet.alignment == TYPE_PLAYER && pl.distance < 32*pl.planet.power) {
+//            if (pl.planet.alignment == TYPE_PLAYER && pl.distance < 32*pl.planet.power) {
+            if (pl.distance < 32*pl.planet.power) {
                 //惑星が選択された
                 this.control = CTRL_PLANET;
                 this.selectFrom = pl.planet;
                 pl.planet.select = true;
-                this.arrow = tiger.Arrow(pl.planet, {x: wx, y:wy}).addChildTo(this.world);
+                if (pl.planet.alignment == TYPE_PLAYER) this.arrow = tiger.Arrow(pl.planet, {x: wx, y:wy}).addChildTo(this.world);
             } else {
                 var un = this.world.getUnit(wx, wy);
                 if (un && un.unit.alignment == TYPE_PLAYER && un.distance < 20) {
@@ -161,16 +164,25 @@ tm.define("tiger.GameScene", {
         if (click && this.beforePointing.click) {
             drag = true;
             //選択中
-            if (this.arrow) {
+            if (this.arrow && this.control != CTRL_ALLPLANETS) {
                 var pl = this.world.getPlanet(wx, wy);
                 if (pl.distance < 32*pl.planet.power) {
                     this.selectTo = pl.planet;
-                    if (this.control == CTRL_PLANET) {
-                        this.arrow.to = pl.planet;
-                    } else {
+                    if (this.control == CTRL_UNIT) {
                         for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].to = pl.planet;
+                    } else {
+                        this.arrow.to = pl.planet;
                     }
                     pl.planet.select = true;
+                    if (this.selectFrom == this.selectTo && this.clickFrame > 90) {
+                        this.control = CTRL_ALLPLANETS;
+                        var planets = this.world.getPlanetGroup(TYPE_PLAYER);
+                        //選択矢印を配列で持つ
+                        this.arrow = [];
+                        for (var i = 0; i < planets.length; i++) {
+                            this.arrow.push(tiger.Arrow(planets[i], this.selectFrom).addChildTo(this.world));
+                        }
+                    }
                 } else {
                     if (this.selectTo) {
                         //選択中だったらキャンセル
@@ -241,7 +253,6 @@ tm.define("tiger.GameScene", {
                             this.arrow[i].active = false;
                         }
                         break;
-                    
                 }
                 this.arrow = null;
             }
@@ -286,7 +297,7 @@ tm.define("tiger.GameScene", {
         this.world.update();
 
         //前フレーム情報保存
-        this.beforePointing = {x: 0, y: 0, click: click, drag: drag};
+        this.beforePointing = {x: 0, y: 0, click: click, drag: drag, selectFrom: this.selectFrom, selectTo: this.selectTo};
         this.frame++;
     },
 
@@ -297,10 +308,10 @@ tm.define("tiger.GameScene", {
     //ＣＰＵ思考ルーチン
     thinkCPU: function() {
         if (this.frame < 300)return;
-        //５秒に１回思考する
-        if (this.frame % 60 * 5 != 0) return;
+        //１０秒に１回思考する
+        if (this.frame % 600 != 0) return;
 
-        //領土に一番近い惑星で自分の７割程度なら艦隊を派遣
+        //領土に一番近い惑星で自分の６割程度なら艦隊を派遣
         var len = this.world.planets.length;
         for (var i = 0; i < len; i++) {
             var p = this.world.planets[i];
@@ -322,10 +333,10 @@ tm.define("tiger.GameScene", {
                     target2 = e;
                 }
             }
-            if (target1 && target1.HP < p.HP * 0.7) {
+            if (target1 && target1.HP < p.HP * 0.6) {
                 this.world.enterUnit(p, target1, 0.7);
                 break;
-            } else if (target2 && target2.HP < p.HP * 0.7) {
+            } else if (target2 && target2.HP < p.HP * 0.6) {
                 this.world.enterUnit(p, target2, 0.7);
             }
         }
