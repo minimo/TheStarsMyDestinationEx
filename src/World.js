@@ -202,12 +202,12 @@ tm.define("tiger.World", {
         var fx = from.x, fy = from.y
         var tx = to.x, ty = to.y;
         if (from instanceof tiger.Planet) {
-            fx += rand(0, 32*from.power)-16*from.power;
-            fy += rand(0, 32*from.power)-16*from.power;
+            fx += rand(0, 64*from.power)-32*from.power;
+            fy += rand(0, 64*from.power)-32*from.power;
         }
         if (to instanceof tiger.Planet) {
-            tx += rand(0, 32*to.power)-16*to.power;
-            ty += rand(0, 32*to.power)-16*to.power;
+            tx += rand(0, 64*to.power)-32*to.power;
+            ty += rand(0, 64*to.power)-32*to.power;
         }
         
         var color;
