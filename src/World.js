@@ -67,7 +67,8 @@ tm.define("tiger.World", {
     },
 
     update: function() {
-        //ユニット対惑星
+
+        //ユニット到着判定
         for (var i = 0, len = this.units.length; i < len; i++) {
             var unit = this.units[i];
             if (unit.HP <= 0)continue;
@@ -77,13 +78,27 @@ tm.define("tiger.World", {
             if (dis < 32*planet.power) {
                 planet.damage(unit.alignment, unit.HP);
                 unit.HP = 0;
+                unit.active = false;
                 if (planet.alignment != unit.alignment) {
                     unit.destroy();
                 }
             }
+        }
 
-            //領空内判定
-            if (dis < 40*planet.power) {
+        //惑星対ユニット攻撃判定
+        for (var i = 0, len = this.planets.length; i < len; i++) {
+            var planet = this.planets[i];
+            for (var j = 0, len2 = this.units.length; j < len2; j++) {
+                var unit = this.units[j];
+                if (!unit.active)continue;
+                if (unit.alignment == planet.alignment)continue;
+                var dis = distance(unit, planet);
+                if (dis < 50*planet.power) {
+                    var dice = rand(0,1000);
+                    if (dice > 900) {
+                        this.enterLaser(planet, unit);
+                    }
+                }
             }
         }
 
@@ -106,7 +121,7 @@ tm.define("tiger.World", {
         for (var i = 0; i < len; i++) {
             var unit = this.units[i];
             if (unit === undefined)continue;
-            if (unit.HP <= 0) {
+            if (unit.HP <= 0 || !unit.active) {
                 unit.remove();
                 this.units.splice(i, 1);
             }
@@ -181,6 +196,34 @@ tm.define("tiger.World", {
             unit.groupID = this.unitGroupID;
         }
         this.unitGroupID++;
+    },
+
+    //レーザーエフェクト投入
+    enterLaser: function(from, to) {
+        var fx = from.x, fy = from.y
+        var tx = to.x, ty = to.y;
+        if (from instanceof tiger.Planet) {
+            fx += rand(0, 32*from.power)-16*from.power;
+            fy += rand(0, 32*from.power)-16*from.power;
+        }
+        if (to instanceof tiger.Planet) {
+            tx += rand(0, 32*to.power)-16*to.power;
+            ty += rand(0, 32*to.power)-16*to.power;
+        }
+        
+        var color;
+        switch (from.alignment) {
+            case TYPE_PLAYER:
+                color = "aqua";
+                break;
+            case TYPE_ENEMY:
+                color = "red";
+                break;
+            case TYPE_NEUTRAL:
+                color = "white";
+                break;
+        }
+        tiger.Effect.genLaser(color, {x:fx, y:fy}, {x:tx, y:ty}, 3).addChildTo(this);
     },
 
     //指定座標から一番近い惑星を取得
