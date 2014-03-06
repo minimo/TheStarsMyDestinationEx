@@ -152,7 +152,8 @@ tm.define("tiger.World", {
                 if (dis < 132*132){ok = false;break;}
             }
             if (!ok) {i--;continue;}
-            this.enterPlanet(x, y);
+//            this.enterPlanet(x, y);
+            this.enterPlanet(x, y, TYPE_PLAYER, 100, 1.5, 3);
         }
     },
 
@@ -196,7 +197,7 @@ tm.define("tiger.World", {
         }
         this.unitGroupID++;
     },
-
+    
     //レーザーエフェクト投入
     enterLaser: function(from, to) {
         var fx = from.x, fy = from.y

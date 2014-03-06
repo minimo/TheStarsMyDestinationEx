@@ -71,10 +71,9 @@ tm.define("tiger.GameScene", {
     
     //矢印的なアレ
     arrow: null,
-    
+
     //勝者決定フラグ
     winner: 0,
-    winCount: 0,
 
     //経過フレーム
     frame: 0,
@@ -163,7 +162,8 @@ tm.define("tiger.GameScene", {
         //クリック中
         if (click && this.beforePointing.click) {
             drag = true;
-            //選択中
+
+            //通常選択モード
             if (this.arrow && this.control != CTRL_ALLPLANETS) {
                 var pl = this.world.getPlanet(wx, wy);
                 if (pl.distance < 32*pl.planet.power) {
@@ -174,7 +174,9 @@ tm.define("tiger.GameScene", {
                         this.arrow.to = pl.planet;
                     }
                     pl.planet.select = true;
-                    if (this.selectFrom == this.selectTo && this.clickFrame > 90) {
+
+                    //２秒長押しで全選択モードに移行
+                    if (this.selectFrom == this.selectTo && this.clickFrame > 60) {
                         this.control = CTRL_ALLPLANETS;
                         var planets = this.world.getPlanetGroup(TYPE_PLAYER);
                         //選択矢印を配列で持つ
@@ -182,6 +184,7 @@ tm.define("tiger.GameScene", {
                         for (var i = 0; i < planets.length; i++) {
                             this.arrow.push(tiger.Arrow(planets[i], this.selectFrom).addChildTo(this.world));
                         }
+                        this.world.selectPlanetGroup(TYPE_PLAYER, true);
                     }
                 } else {
                     if (this.selectTo) {
@@ -207,25 +210,45 @@ tm.define("tiger.GameScene", {
                         this.screenY = clamp(this.screenY+(sy-SC_H/2)/32, 0, this.world.size*scale-SC_H);
                     }
                 }
+                
+                //全選択モード時
+                if (this.arrow && this.control == CTRL_ALLPLANETS) {
+                    var pl = this.world.getPlanet(wx, wy);
+                    if (pl.planet !== this.selectFrom || pl.distance > 32*pl.planet.power) {
+                        //ポインタが外れてたら選択キャンセル
+                        this.control = CTRL_NOTHING;
+                        this.world.selectPlanetGroup(TYPE_PLAYER, false);
+                        for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].active = false;
+                    }
+                }
             }
             this.clickFrame++;
         }
 
         //クリック終了
         if (!click && this.beforePointing.click) {
-            if (this.selectFrom && this.selectFrom !== this.selectTo) {
+            if (this.control == CTRL_PLANET || this.control == CTRL_UNIT) {
+                if (this.selectFrom && this.selectFrom !== this.selectTo) {
+                    //艦隊派遣
+                    if (this.selectFrom instanceof tiger.Planet) {
+                        if (this.selectTo instanceof tiger.Planet) {
+                            this.world.enterUnit(this.selectFrom, this.selectTo);
+                        }
+                    }
+                    //艦隊進行目標変更
+                    if (this.selectFrom instanceof tiger.Unit && this.selectFrom !== this.selectTo) {
+                        if (this.selectTo instanceof tiger.Planet) {
+                            this.world.setDestinationUnitGroup(this.selectFrom.groupID,this.selectTo);
+                        }
+                    }
+                }
+            } else if (this.control == CTRL_ALLPLANETS) {
                 //艦隊派遣
-                if (this.selectFrom instanceof tiger.Planet) {
-                    if (this.selectTo instanceof tiger.Planet) {
-                        this.world.enterUnit(this.selectFrom, this.selectTo);
-                    }
+                var planets = this.world.getPlanetGroup(TYPE_PLAYER);
+                for (var i = 0; i < planets.length; i++) {
+                    if (this.selectFrom != planets[i]) this.world.enterUnit(planets[i], this.selectFrom);
                 }
-                //艦隊進行目標変更
-                if (this.selectFrom instanceof tiger.Unit && this.selectFrom !== this.selectTo) {
-                    if (this.selectTo instanceof tiger.Planet) {
-                        this.world.setDestinationUnitGroup(this.selectFrom.groupID,this.selectTo);
-                    }
-                }
+                this.world.selectPlanetGroup(TYPE_PLAYER, false);
             }
 
             //選択中オブジェクト解放
@@ -280,13 +303,14 @@ tm.define("tiger.GameScene", {
         if (this.control == CTRL_PLANET) {
         }
 
-        //マウスオーバー検出
+        //全体マップマウスオーバー検出
         if (this.map.x < sx && sx < this.map.x+this.map.size && this.map.y < sy && sy < this.map.y+this.map.size) {
             this.map.mouseover = true;
         } else {
             this.map.mouseover = false;
         }
-        //マウスオーバー検出
+
+        //勢力天秤マウスオーバー検出
         if (sy > 608) {
             this.balance.mouseover = true;
         } else {
@@ -295,6 +319,7 @@ tm.define("tiger.GameScene", {
     
         this.thinkCPU();
         this.world.update();
+        this.judgment();
 
         //前フレーム情報保存
         this.beforePointing = {x: 0, y: 0, click: click, drag: drag, selectFrom: this.selectFrom, selectTo: this.selectTo};
@@ -303,6 +328,34 @@ tm.define("tiger.GameScene", {
 
     //勝敗判定
     judgment: function() {
+        if (this.winner != 0)return;
+        var enemy = this.world.getPowerOfPlanet(TYPE_ENEMY)+this.world.getPowerOfUnit(TYPE_ENEMY);
+        if (enemy == 0) {
+            this.winner = TYPE_PLAYER;
+            var label = tm.display.OutlineLabel("WIN!!", 30).addChildTo(this);
+            label.x = 320;
+            label.y = 320;
+            label.fontFamily = "'Orbitron'";
+            label.align     = "center";
+            label.baseline  = "middle";
+            label.fontSize = 100;
+            label.fontWeight = 700;
+            label.outlineWidth = 2;
+        }
+
+        var player = this.world.getPowerOfPlanet(TYPE_PLAYER)+this.world.getPowerOfUnit(TYPE_PLAYER);
+        if (player == 0) {
+            this.winner = TYPE_ENEMY;
+            var label = tm.display.OutlineLabel("LOSE!!", 30).addChildTo(this);
+            label.x = 320;
+            label.y = 320;
+            label.fontFamily = "'Orbitron'";
+            label.align     = "center";
+            label.baseline  = "middle";
+            label.fontSize = 100;
+            label.fontWeight = 700;
+            label.outlineWidth = 2;
+        }
     },
 
     //ＣＰＵ思考ルーチン
