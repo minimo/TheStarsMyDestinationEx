@@ -68,6 +68,7 @@ tm.define("tiger.GameScene", {
     //クリック情報等
     clickInterval: 0,   //間隔
     clickFrame: 0,      //経過
+    clickMove: false,
     
     //矢印的なアレ
     arrow: null,
@@ -229,7 +230,7 @@ tm.define("tiger.GameScene", {
                     }
                 }
             }
-                
+
             //全選択モード時
             if (this.control == CTRL_ALLPLANETS) {
                 var pl = this.world.getPlanet(wx, wy);
@@ -239,6 +240,19 @@ tm.define("tiger.GameScene", {
                     this.world.selectPlanetGroup(TYPE_PLAYER, false);
                     for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].active = false;
                     this.arrow = null;
+                }
+            }
+
+            //マップ操作時に長押しでスケール操作へ移行
+            if (this.control == CTRL_MAP && !this.mapmove) {
+                var bx = this.beforePointing.x;
+                var by = this.beforePointing.y;
+                if (bx-3 < sx && sx < bx+5 && by-3 < sy && sy < by+5) {
+                    if (this.clickFrame > 60) {
+                        this.control = CTRL_SCALE;
+                    }
+                } else {
+                    this.clickFrame = 0;
                 }
             }
             this.clickFrame++;
@@ -341,7 +355,7 @@ tm.define("tiger.GameScene", {
         this.judgment();
 
         //前フレーム情報保存
-        this.beforePointing = {x: 0, y: 0, click: click, drag: drag, selectFrom: this.selectFrom, selectTo: this.selectTo};
+        this.beforePointing = {x: sx, y: sy, click: click, drag: drag, selectFrom: this.selectFrom, selectTo: this.selectTo};
         this.frame++;
     },
 
