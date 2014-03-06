@@ -50,9 +50,6 @@ tm.define("tiger.GameScene", {
 
     //終点選択オブジェクト
     selectTo: null,
-    
-    //全惑星選択フラグ
-    selectAllPlanet: false,
 
     //前フレームポインティングデバイス情報
     beforePointing: {
@@ -164,16 +161,18 @@ tm.define("tiger.GameScene", {
             drag = true;
 
             //通常選択モード
-            if (this.arrow && this.control != CTRL_ALLPLANETS) {
+            if (this.control != CTRL_ALLPLANETS) {
                 var pl = this.world.getPlanet(wx, wy);
                 if (pl.distance < 32*pl.planet.power) {
                     this.selectTo = pl.planet;
-                    if (this.control == CTRL_UNIT) {
-                        for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].to = pl.planet;
-                    } else {
-                        this.arrow.to = pl.planet;
+                    this.selectTo.select = true;
+                    if (this.arrow) {
+                        if (this.control == CTRL_UNIT) {
+                            for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].to = pl.planet;
+                        } else {
+                            this.arrow.to = pl.planet;
+                        }
                     }
-                    pl.planet.select = true;
 
                     //２秒長押しで全選択モードに移行
                     if (this.selectFrom == this.selectTo && this.clickFrame > 60) {
@@ -197,10 +196,12 @@ tm.define("tiger.GameScene", {
                         }
                         this.selectTo = null;
                     }
-                    if (this.control == CTRL_PLANET) {
-                        this.arrow.to = {x: wx, y: wy};
-                    } else {
-                        for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].to = {x: wx, y: wy};
+                    if (this.arrow) {
+                        if (this.control == CTRL_PLANET) {
+                            this.arrow.to = {x: wx, y: wy};
+                        } else {
+                            for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].to = {x: wx, y: wy};
+                        }
                     }
 
                     //画面端スクロール
@@ -210,16 +211,17 @@ tm.define("tiger.GameScene", {
                         this.screenY = clamp(this.screenY+(sy-SC_H/2)/32, 0, this.world.size*scale-SC_H);
                     }
                 }
+            }
                 
-                //全選択モード時
-                if (this.arrow && this.control == CTRL_ALLPLANETS) {
-                    var pl = this.world.getPlanet(wx, wy);
-                    if (pl.planet !== this.selectFrom || pl.distance > 32*pl.planet.power) {
-                        //ポインタが外れてたら選択キャンセル
-                        this.control = CTRL_NOTHING;
-                        this.world.selectPlanetGroup(TYPE_PLAYER, false);
-                        for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].active = false;
-                    }
+            //全選択モード時
+            if (this.control == CTRL_ALLPLANETS) {
+                var pl = this.world.getPlanet(wx, wy);
+                if (!(this.selectFrom == pl.planet && pl.distance < 32*pl.planet.power)) {
+                    //ポインタが外れてたら選択キャンセル
+                    this.control = CTRL_NOTHING;
+                    this.world.selectPlanetGroup(TYPE_PLAYER, false);
+                    for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].active = false;
+                    this.arrow = null;
                 }
             }
             this.clickFrame++;
@@ -335,7 +337,7 @@ tm.define("tiger.GameScene", {
             var label = tm.display.OutlineLabel("WIN!!", 30).addChildTo(this);
             label.x = 320;
             label.y = 320;
-            label.fontFamily = "'Orbitron'";
+            label.fontFamily = "'UbuntuMono'";
             label.align     = "center";
             label.baseline  = "middle";
             label.fontSize = 100;
@@ -349,7 +351,7 @@ tm.define("tiger.GameScene", {
             var label = tm.display.OutlineLabel("LOSE!!", 30).addChildTo(this);
             label.x = 320;
             label.y = 320;
-            label.fontFamily = "'Orbitron'";
+            label.fontFamily = "'UbuntuMono'";
             label.align     = "center";
             label.baseline  = "middle";
             label.fontSize = 100;

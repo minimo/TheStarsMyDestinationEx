@@ -152,8 +152,7 @@ tm.define("tiger.World", {
                 if (dis < 132*132){ok = false;break;}
             }
             if (!ok) {i--;continue;}
-//            this.enterPlanet(x, y);
-            this.enterPlanet(x, y, TYPE_PLAYER, 100, 1.5, 3);
+            this.enterPlanet(x, y);
         }
     },
 

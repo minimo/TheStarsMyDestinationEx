@@ -51,7 +51,7 @@ var distanceSq = function(from, to) {
 }
 //数値の制限
 var clamp = function(x, min, max) {
-        return (x<min)?min:((x>max)?max:x);
+    return (x<min)?min:((x>max)?max:x);
 };
 
 //インスタンス
