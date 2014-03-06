@@ -160,8 +160,8 @@ tm.define("tiger.GameScene", {
         if (click && this.beforePointing.click) {
             drag = true;
 
-            //通常選択モード
-            if (this.control != CTRL_ALLPLANETS) {
+            //通常選択モード（惑星、ユニット）
+            if (this.control == CTRL_PLANET || this.control == CTRL_UNIT) {
                 var pl = this.world.getPlanet(wx, wy);
                 if (pl.distance < 32*pl.planet.power) {
                     this.selectTo = pl.planet;
