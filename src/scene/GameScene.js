@@ -81,7 +81,7 @@ tm.define("tiger.GameScene", {
         this.base = tm.app.Object2D().addChildTo(this);
         this.world = tiger.World().addChildTo(this.base);
         this.map = tiger.WorldMap(640-160, 0, 160, this.world).addChildTo(this);
-        this.balance = tiger.CosmicBalance(0, 640-32, 640, this.world).addChildTo(this);
+        this.balance = tiger.CosmicBalance(0, 640-24, 640, this.world).addChildTo(this);
 
         //デバッグ表示
         var sc = tm.app.Label("");
@@ -96,7 +96,7 @@ tm.define("tiger.GameScene", {
             this.text = "x:"+p.position.x+" y:"+p.position.y+" size:"+that.world.size;
 //            this.text = "x:"+that.world.base.x+" y:"+that.world.base.y+" size:"+that.world.size;
         }
-        this.addChild(sc);
+//        this.addChild(sc);
     },
 
     update: function() {

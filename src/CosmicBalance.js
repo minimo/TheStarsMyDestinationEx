@@ -28,6 +28,7 @@ tm.define("tiger.CosmicBalance", {
         this.x = x || 0;
         this.y = y || 0;
         this.width = width || 640;
+        this.height = 16;
         this.world = world || null;
     },
 
@@ -45,7 +46,7 @@ tm.define("tiger.CosmicBalance", {
         canvas.lineWidth = 16;
         canvas.globalCompositeOperation = "source-over";
         canvas.fillStyle = "rgba(64, 64, 64, 0.8)";
-        canvas.fillRect(0, 0, this.width, 32);
+        canvas.fillRect(0, 0, this.width, this.height);
 
         //勢力図作成
         if (this.world) {
@@ -66,11 +67,11 @@ tm.define("tiger.CosmicBalance", {
 
             var bl = this.width-20;
             canvas.fillStyle = "rgba(0, 64, 255, 0.8)";
-            canvas.fillRect(10, 4, bl*player, 32-8);
+            canvas.fillRect(10, 3, bl*player, this.height-6);
             canvas.fillStyle = "rgba(180, 180, 180, 0.8)";
-            canvas.fillRect(bl*player+10, 4, bl*neutral, 32-8);
+            canvas.fillRect(bl*player+10, 3, bl*neutral, this.height-6);
             canvas.fillStyle = "rgba(255, 64, 64, 0.8)";
-            canvas.fillRect(bl*player+bl*neutral+10, 4, bl*enemy, 32-8);
+            canvas.fillRect(bl*player+bl*neutral+10, 3, bl*enemy, this.height-6);
         }
     }
 });
