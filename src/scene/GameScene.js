@@ -86,7 +86,7 @@ tm.define("tiger.GameScene", {
         this.world = tiger.World().addChildTo(this.base);
         this.map = tiger.WorldMap(640-160, 0, 160, this.world).addChildTo(this);
         this.balance = tiger.CosmicBalance(0, 640-24, 640, this.world).addChildTo(this);
-
+        
         var that = this;
         var lb = this.rateLabel = tm.display.OutlineLabel("50%", 30).addChildTo(this);
         lb.x = 0;
@@ -191,6 +191,8 @@ tm.define("tiger.GameScene", {
                             this.arrow.to = pl.planet;
                         }
                     }
+                    
+                    if (this.selectFrom == this.selectTo)this.clickFrame++;
 
                     //２秒長押しで全選択モードに移行
                     if (this.selectFrom == this.selectTo && this.clickFrame > 60) {
@@ -255,7 +257,6 @@ tm.define("tiger.GameScene", {
                     this.clickFrame = 0;
                 }
             }
-            this.clickFrame++;
         }
 
         //クリック終了
