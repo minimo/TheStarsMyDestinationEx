@@ -45,8 +45,8 @@ tm.define("tiger.World", {
     //ハンディキャップ（相手の戦力増加比率係数）
     handicap: 1.0,
 
-    //艦隊派遣時戦力レート(0.1 - 1.0)
-    rate: 0.5,
+    //艦隊派遣時戦力レート(10 - 90)
+    rate: 50,
 
     init: function(scene) {
         this.superInit();
@@ -170,7 +170,7 @@ tm.define("tiger.World", {
 
     //艦隊投入
     enterUnit: function(from, to, rate) {
-        rate = rate || this.rate;
+        rate = rate/100 || this.rate/100;
         if (rate > 0.9)rate = 0.9;
 
         if (from.HP < 10)return null;

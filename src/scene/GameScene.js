@@ -68,7 +68,10 @@ tm.define("tiger.GameScene", {
     //クリック情報等
     clickInterval: 0,   //間隔
     clickFrame: 0,      //経過
-    clickMove: false,
+    moveCheck: false,   //ポインタ移動検出等
+    startX: 0,          //クリック始点等
+    startY: 0,
+    rateTemp: 0.5,      //派兵レートテンポラリ
     
     //矢印的なアレ
     arrow: null,
@@ -85,20 +88,26 @@ tm.define("tiger.GameScene", {
         this.base = tm.app.Object2D().addChildTo(this);
         this.world = tiger.World().addChildTo(this.base);
         this.map = tiger.WorldMap(640-160, 0, 160, this.world).addChildTo(this);
-        this.balance = tiger.CosmicBalance(0, 640-24, 640, this.world).addChildTo(this);
-        
+        this.balance = tiger.CosmicBalance(0, 640-24, 500, this.world).addChildTo(this);
+
         var that = this;
         var lb = this.rateLabel = tm.display.OutlineLabel("50%", 30).addChildTo(this);
-        lb.x = 0;
-        lb.y = 0;
+        lb.x = 580;
+        lb.y = 620;
         lb.fontFamily = "'Orbitron'";
-        lb.align     = "left";
-        lb.baseline  = "top";
+        lb.align     = "center";
+        lb.baseline  = "middle";
         lb.fontSize = 30;
         lb.fontWeight = 700;
         lb.outlineWidth = 2;
         lb.update = function() {
-            this.text = (that.world.rate*100) + "%";
+            if (that.control == CTRL_RATE) {
+                this.fontSize++;
+            } else {
+                this.fontSize--;
+            }
+            this.fontSize = clamp(this.fontSize, 30, 40);
+            this.text = that.world.rate + "%";
         };
 
         //デバッグ表示
@@ -140,18 +149,29 @@ tm.define("tiger.GameScene", {
         var click = p.getPointing();
         var drag = false;
 
-        //初回クリック
+        //クリック開始
         if (click && !this.beforePointing.click) {
+            //派兵レート変更
+            if (500 < sx && 600 < sy) {
+                this.control = CTRL_RATE;
+                //始点を記録
+                this.startX = sx;
+                this.startY = sy;
+                this.rateTemp = this.world.rate;
+            }
+
             //惑星orユニット選択チェック
             var pl = this.world.getPlanet(wx, wy);
-//            if (pl.planet.alignment == TYPE_PLAYER && pl.distance < 32*pl.planet.power) {
-            if (pl.distance < 32*pl.planet.power) {
+            if (pl.distance < 32*pl.planet.power && this.control == CTRL_NOTHING) {
                 //惑星が選択された
                 this.control = CTRL_PLANET;
                 this.selectFrom = pl.planet;
                 pl.planet.select = true;
                 if (pl.planet.alignment == TYPE_PLAYER) this.arrow = tiger.Arrow(pl.planet, {x: wx, y:wy}).addChildTo(this.world);
-            } else {
+            }
+
+            //ユニット選択チェック
+            if (this.control == CTRL_NOTHING) {
                 var un = this.world.getUnit(wx, wy);
                 if (un && un.unit.alignment == TYPE_PLAYER && un.distance < 20) {
                     //ユニットが選択された
@@ -166,12 +186,16 @@ tm.define("tiger.GameScene", {
                         this.arrow.push(tiger.Arrow(units[i], {x: wx, y:wy}, 4).addChildTo(this.world));
                     }
                     this.world.selectUnitGroup(un.unit.groupID, true);
-                } else {
-                    //どれにも該当しないのでマップ操作
-                    this.control = CTRL_MAP;
                 }
             }
+
+            //どれにも該当しない場合はマップ操作
+            if (this.control == CTRL_NOTHING) {
+                this.control = CTRL_MAP;
+            }
+
             this.clickFrame = 0;
+            this.moveCheck = true;
         }
 
         //クリック中
@@ -191,11 +215,13 @@ tm.define("tiger.GameScene", {
                             this.arrow.to = pl.planet;
                         }
                     }
-                    
-                    if (this.selectFrom == this.selectTo)this.clickFrame++;
 
+                    if (this.selectFrom != this.selectTo) {
+                        this.moveCheck = false;
+                    }
+                    
                     //２秒長押しで全選択モードに移行
-                    if (this.selectFrom == this.selectTo && this.clickFrame > 60) {
+                    if (this.selectFrom == this.selectTo && this.clickFrame > 60 && this.moveCheck) {
                         this.control = CTRL_ALLPLANETS;
                         var planets = this.world.getPlanetGroup(TYPE_PLAYER);
                         //選択矢印を配列で持つ
@@ -245,8 +271,17 @@ tm.define("tiger.GameScene", {
                 }
             }
 
+            //マップ操作時ポインタ移動検出
+            if (this.control == CTRL_MAP) {
+                var bx = Math.abs(this.beforePointing.x-sx);
+                var by = Math.abs(this.beforePointing.y-sy);
+                if (bx > 3 || by > 3) {
+                    this.moveCheck = false;
+                }
+            }
+
             //マップ操作時に長押しでスケール操作へ移行
-            if (this.control == CTRL_MAP && !this.mapmove) {
+            if (this.control == CTRL_MAP && this.moveCheck) {
                 var bx = this.beforePointing.x;
                 var by = this.beforePointing.y;
                 if (bx-3 < sx && sx < bx+5 && by-3 < sy && sy < by+5) {
@@ -257,6 +292,14 @@ tm.define("tiger.GameScene", {
                     this.clickFrame = 0;
                 }
             }
+
+            //派兵レート変更
+            if (this.control == CTRL_RATE) {
+                var v = sx - this.startX;
+                this.world.rate = ~~(this.rateTemp+(v/2));
+                this.world.rate = clamp(this.world.rate, 10, 90);
+            }
+            this.clickFrame++;
         }
 
         //クリック終了
@@ -345,7 +388,7 @@ tm.define("tiger.GameScene", {
         }
 
         //勢力天秤マウスオーバー検出
-        if (sy > 608) {
+        if (sy > 608 && sx < 500) {
             this.balance.mouseover = true;
         } else {
             this.balance.mouseover = false;
