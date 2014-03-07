@@ -12,22 +12,40 @@ tm.define("tiger.Sliderbar", {
     superClass: "tm.display.CanvasElement",
 
     //現在値
-    value: 50,
+    _value: 50,
 
     //最小値
-    min: 0,
+    _min: 0,
 
     //最大値
-    max: 100,
+    _max: 100,
 
-    init: function(width, height) {
+    init: function(x, y, width, height) {
         this.superInit();
+        this.x = x || 0;
+        this.y = y || 0;
         this.width = width || 100;
         this.height = height || 16;
+
+        this.interactive = true;
     },
 
     draw: function(canvas) {
-        canvas.fillStyle = "rgba(0, 64, 255, 0.8)";
-        canvas.fillRoundRect(0, this.height/3, this.width, this.height/3, this.height/6);
+        var now = this._value/(this._max-this._min);
+
+        canvas.lineWidth = 3;
+        canvas.globalCompositeOperation = "source-over";
+
+        canvas.fillStyle = "rgba(100, 100, 100, 1.0)";
+        canvas.fillRoundRect(0, this.height/3, this.width*now, this.height/3, this.height/6);
+        canvas.fillStyle = "rgba(128, 128, 128, 1.0)";
+        canvas.fillRoundRect(this.width*now, this.height/3, this.width*(1-now), this.height/3, this.height/6);
+
+        canvas.fillStyle = "rgba(200, 200, 200, 1.0)";
+        canvas.fillCircle(this.width*now, this.height/2, this.height/2);
+    },
+
+    pointing: function(e) {
     },
 });
+
