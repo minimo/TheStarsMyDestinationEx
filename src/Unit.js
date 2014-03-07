@@ -31,7 +31,7 @@ tm.define("tiger.Unit", {
     //進行用パラメータ
     vx: 0,
     vy: 0,
-    speed: 0.5,
+    speed: 1,
 
     //所属ワールド
     world: null,
