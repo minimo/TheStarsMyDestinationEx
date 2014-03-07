@@ -464,10 +464,10 @@ tm.define("tiger.GameScene", {
                 }
             }
             if (target1 && target1.HP < p.HP * 0.6) {
-                this.world.enterUnit(p, target1, 0.7);
+                this.world.enterUnit(p, target1, 70);
                 break;
             } else if (target2 && target2.HP < p.HP * 0.6) {
-                this.world.enterUnit(p, target2, 0.7);
+                this.world.enterUnit(p, target2, 70);
             }
         }
     },
