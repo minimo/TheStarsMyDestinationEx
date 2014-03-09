@@ -12,7 +12,8 @@ var assets = {
     "planet":       "assets/planet.png",
     "planet_mono":  "assets/planet_mono.png",
     "frigate":      "assets/frigate1.png",
-    "bg1":          "assets/background.jpg",
+    "bg1":          "assets/5212712025_93cca9e023_o.jpg",
+    "bg2":          "assets/201106290800.jpg",
 }
 
 //namespace tiger

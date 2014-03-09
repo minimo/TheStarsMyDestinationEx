@@ -130,7 +130,10 @@ tm.define("tiger.World", {
     //マップの構築
     build: function() {
         //バックグラウンドの追加
-        var bg = tm.display.Sprite("bg1", this.size, this.size).addChildTo(this);
+//        var bg = tm.display.Sprite("bg1",3007*1.5, 1000*1.5).addChildTo(this);
+        var bg = tm.display.Sprite("bg2",2408, 1884).addChildTo(this);
+//        bg.x = -rand(0,1000);
+//       bg.y = -rand(0,600);
         bg.originX = bg.originY = 0;
 
         //プレイヤー主星
