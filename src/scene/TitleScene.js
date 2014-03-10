@@ -51,19 +51,17 @@ tm.define("tiger.TitleScene", {
         t3.fontWeight = 700;
         t3.outlineWidth = 2;
     },
+
     update: function() {
         this.bg.x -=0.5;
         if (this.bg.x < -2000)this.bg.x = 0;
 
         this.time++;
     },
+
     ontouchend: function() {
-        app.background = "rgba(0, 0, 16, 0.8)";
-        app.replaceScene(app.gameScene);
+        app.background = "rgba(0, 0, 0, 0.8)";
+        app.replaceScene(tiger.TutorialScene());
     },
-    onnextscene: function() {
-        app.background = "rgba(0, 0, 16, 0.8)";
-        app.replaceScene(app.gameScene);
-    }
 });
 
