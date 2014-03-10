@@ -15,28 +15,50 @@ tm.define("tiger.TitleScene", {
         this.time = 0;
         app.background = "rgba(0,0,0,0.2)";
 
-        this.title1 = tm.display.OutlineLabel("The stars", 30).addChildTo(this);
-        this.title1.x = 100;
-        this.title1.y = 100;
-        this.title1.fontFamily = "'Orbitron'";
-        this.title1.align     = "left";
-        this.title1.baseline  = "middle";
-        this.title1.fontSize = 50;
-        this.title1.fontWeight = 700;
-        this.title1.outlineWidth = 2;
+        //バックグラウンドの追加
+        this.bg = tm.display.Sprite("bg1",3848, 1280).addChildTo(this);
+        this.bg.x = 0;
+        this.bg.y = 0;
+        this.bg.originX = this.bg.originY = 0;
 
-        this.title2 = tm.display.OutlineLabel("My destination", 30).addChildTo(this);
-        this.title2.x = this.title1.x + 50;
-        this.title2.y = this.title1.y + 50;
-        this.title2.fontFamily = "'Orbitron'";
-        this.title2.align     = "left";
-        this.title2.baseline  = "middle";
-        this.title2.fontSize = 50;
-        this.title2.fontWeight = 700;
-        this.title2.outlineWidth = 2;
+        var t1 = this.title1 = tm.display.OutlineLabel("The stars", 30).addChildTo(this);
+        t1.x = 50;
+        t1.y = 150;
+        t1.fontFamily = "'Orbitron'";
+        t1.align     = "left";
+        t1.baseline  = "middle";
+        t1.fontSize = 60;
+        t1.fontWeight = 700;
+        t1.outlineWidth = 2;
+
+        var t2 = this.title2 = tm.display.OutlineLabel("My destination", 30).addChildTo(this);
+        t2.x = this.title1.x + 50;
+        t2.y = this.title1.y + 100;
+        t2.fontFamily = "'Orbitron'";
+        t2.align     = "left";
+        t2.baseline  = "middle";
+        t2.fontSize = 60;
+        t2.fontWeight = 700;
+        t2.outlineWidth = 2;
+
+        var t3 = this.title2 = tm.display.OutlineLabel("Click or Touch", 30).addChildTo(this);
+        t3.x = 320;
+        t3.y = 500;
+        t3.fontFamily = "'Orbitron'";
+        t3.align     = "center";
+        t3.baseline  = "middle";
+        t3.fontSize = 40;
+        t3.fontWeight = 700;
+        t3.outlineWidth = 2;
     },
     update: function() {
+        this.bg.x -=0.5;
+        if (this.bg.x < -2000)this.bg.x = 0;
+
         this.time++;
+    },
+    ontouchend: function() {
+        app.background = "rgba(0, 0, 16, 0.8)";
         app.replaceScene(app.gameScene);
     },
     onnextscene: function() {
