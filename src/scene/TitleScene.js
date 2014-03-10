@@ -44,7 +44,7 @@ tm.define("tiger.TitleScene", {
         var t3 = this.title2 = tm.display.OutlineLabel("Click or Touch", 30).addChildTo(this);
         t3.x = 320;
         t3.y = 500;
-        t3.fontFamily = "'Orbitron'";
+        t3.fontFamily = "'UbuntuMono'";
         t3.align     = "center";
         t3.baseline  = "middle";
         t3.fontSize = 40;
