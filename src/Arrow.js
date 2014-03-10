@@ -18,7 +18,7 @@ tm.define("tiger.Arrow", {
     active: true,
     
     //フォアグラウンドレイヤフラグ
-    foreground: true,
+    isForeground: true,
 
     init: function(from, to, width) {
         width = width || 16;
