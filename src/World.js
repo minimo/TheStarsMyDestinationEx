@@ -128,7 +128,9 @@ tm.define("tiger.World", {
     },
     
     //マップの構築
-    build: function() {
+    build: function(seed) {
+        seed = seed || 0;
+        var rn = new MersenneTwister(seed);
         //バックグラウンドの追加
         var bg = tm.display.Sprite("bg1",3848, 1280).addChildTo(this);
 //        var bg = tm.display.Sprite("bg2",2408, 1884).addChildTo(this);
@@ -144,18 +146,22 @@ tm.define("tiger.World", {
 
         //中立惑星配置
         for (var i = 0; i < this.maxPlanets; i++) {
-            var x = rand(64, this.size-64);
-            var y = rand(64, this.size-64);
+            var x = rn.nextInt(64, this.size-64);
+            var y = rn.nextInt(64, this.size-64);
             var ok = true;
             //一定距離内に配置済み惑星が無いか確認
             for (var j = 0; j < this.planets.length; j++) {
                 var p = this.planets[j];
                 var dx = p.x-x, dy = p.y-y;
                 var dis = dx*dx+dy*dy;
-                if (dis < 132*132){ok = false;break;}
+                if (dis < 17424){ok = false;break;} //132*132
             }
             if (!ok) {i--;continue;}
-            this.enterPlanet(x, y);
+
+            var power = rn.nextInt(60, 200)/100;
+            var HP = ~~(rn.nextInt(30, 70)*power);
+            var type = rn.nextInt(0, 5);
+            this.enterPlanet(x, y, TYPE_NEUTRAL, power, HP, type);
         }
     },
 

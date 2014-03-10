@@ -7,7 +7,7 @@
  */
  
 //乱数発生器
-var mt = new MersenneTwister(1);
+var mt = new MersenneTwister();
 
 //定数
 //デバッグフラグ
