@@ -129,8 +129,10 @@ tm.define("tiger.World", {
     
     //マップの構築
     build: function(seed) {
-        seed = seed || 0;
+        //マップ構築は専用の乱数体系を使用
+        seed = seed || rand(0,65536);
         var rn = new MersenneTwister(seed);
+
         //バックグラウンドの追加
         var bg = tm.display.Sprite("bg1",3848, 1280).addChildTo(this);
 //        var bg = tm.display.Sprite("bg2",2408, 1884).addChildTo(this);
@@ -139,10 +141,10 @@ tm.define("tiger.World", {
         bg.originX = bg.originY = 0;
 
         //プレイヤー主星
-        this.enterPlanet(64, 64, TYPE_PLAYER, 100, 1.5, 3);
+        this.enterPlanet(64, 64, TYPE_PLAYER, 100, 1.5, PLANET_EARTH);
 
         //エネミー主星
-        this.enterPlanet(this.size-64, this.size-64, TYPE_ENEMY, 100, 1.5, 3);
+        this.enterPlanet(this.size-64, this.size-64, TYPE_ENEMY, 100, 1.5, PLANET_MARS);
 
         //中立惑星配置
         for (var i = 0; i < this.maxPlanets; i++) {
@@ -158,10 +160,10 @@ tm.define("tiger.World", {
             }
             if (!ok) {i--;continue;}
 
-            var power = rn.nextInt(60, 200)/100;
-            var HP = ~~(rn.nextInt(30, 70)*power);
-            var type = rn.nextInt(0, 5);
-            this.enterPlanet(x, y, TYPE_NEUTRAL, power, HP, type);
+            var power = rn.nextInt(80, 200)/100;
+            var HP = ~~(rn.nextInt(30, 50)*power);
+            var type = solarSystem[rn.nextInt(0, 9)];
+            this.enterPlanet(x, y, TYPE_NEUTRAL, HP, power, type);
         }
     },
 

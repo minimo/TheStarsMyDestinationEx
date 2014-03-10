@@ -31,6 +31,22 @@ LAYER_EFFECT_LOWER = 2;     //エフェクト下位
 LAYER_PLANET = 1;           //惑星
 LAYER_BACKGROUND = 0;       //バックグラウンド
 
+//惑星名
+PLANET_SUN = 0;
+PLANET_MERCURY = 1;
+PLANET_VENUS = 2;
+PLANET_EARTH = 3;
+PLANET_MOON = 4;
+PLANET_MARS = 5;
+PLANET_JUPITER = 6;
+PLANET_SATURN = 7;
+PLANET_URANUS = 8;
+PLANET_NEPTUNE = 9;
+PLANET_PLUTO = 10;
+
+//太陽系配列
+solarSystem = [1,2,3,5,6,7,8,9,10];
+
 var toRad = 3.14159/180;    //弧度法toラジアン変換
 var toDeg = 180/3.14159;    //ラジアンto弧度法変換
 var sec = function(s) { return ~~(60 * s) };               //秒からフレーム数へ変換
