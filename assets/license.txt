@@ -1,4 +1,4 @@
-以下のファイルは併記するライセンスに従います。
+﻿以下のファイルは併記するライセンスに従います。
 
 
 5212712025_93cca9e023_o.jpg
@@ -12,8 +12,9 @@
 
 
 laser_b.png
-laser_head.png
 laser_r.png
+laser_h.png
+laser_head.png
 著作権者：daishihmr
 ライセンス：MITライセンス
 
