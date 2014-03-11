@@ -1,7 +1,5 @@
-TheStarsMyDestination
-=====================
-
-Realtime Simulation Game
+# The stars my destination
+## Realtime Simulation Game on tmlib.js
 
 <img src="screenshot.png" />
 
@@ -17,12 +15,3 @@ Realtime Simulation Game
 派兵レートは右下のスライダーバーで調整可能です。
 プレイヤーまたはＣＰＵの総戦力が０になったらゲームオーバーとなります。
 
-＜おまけ＞
-ＣＰＵのアルゴリズムは単純に一番近い惑星の戦力差が一定以上になったら艦隊を派遣するという、かなり単純なアルゴリズムになってます。
-なので、ＣＰＵ側と接する惑星を壁として奥の惑星から艦隊を送ると楽に攻略出来ます。
-
-TODO list
-マップの拡大縮小
-戦闘演出
-艦隊戦
-ＣＰＵ思考ルーチン
