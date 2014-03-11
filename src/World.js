@@ -74,7 +74,7 @@ tm.define("tiger.World", {
             var planet = unit.destination;
             //到着判定
             var dis = distance(unit, planet);
-            if (dis < 32*planet.power) {
+            if (dis < 16*planet.power) {
                 planet.damage(unit.alignment, unit.HP);
                 unit.HP = 0;
                 unit.active = false;
@@ -92,7 +92,7 @@ tm.define("tiger.World", {
                 if (!unit.active)continue;
                 if (unit.alignment == planet.alignment)continue;
                 var dis = distance(unit, planet);
-                if (dis < 50*planet.power) {
+                if (dis < 64*planet.power) {
                     var dice = rand(0,1000);
                     if (dice > 900) {
                         this.enterLaser(planet, unit);
@@ -221,19 +221,40 @@ tm.define("tiger.World", {
             ty += rand(0, 64*to.power)-32*to.power;
         }
         
-        var color;
+        var laserType;
         switch (from.alignment) {
             case TYPE_PLAYER:
-                color = "aqua";
+                laserType = "laser_b";
                 break;
             case TYPE_ENEMY:
-                color = "red";
+                laserType = "laser_r";
                 break;
             case TYPE_NEUTRAL:
-                color = "white";
+                laserType = "laser_h";
                 break;
         }
-//        tiger.Effect.genLaser(color, {x:fx, y:fy}, {x:tx, y:ty}, 3).addChildTo(this);
+        var laser = tm.display.Sprite(laserType, 80, 640);
+        laser.setPosition(fx, fy);
+        laser.originX = 0.5;
+        laser.originY = 1.0;
+        laser.from = {x: fx, y: fy};
+        laser.to = {x: tx, y: ty};
+        laser.isEffect = true;
+        laser.scaleX = 0.1;
+        laser.update = function() {
+            //中心点からの直線を計算
+            var fx = this.from.x, fy = this.from.y;
+            var tx = this.to.x, ty = this.to.y;
+            var dx = tx-fx, dy = ty-fy;
+
+            this.x = fx;
+            this.y = fy;
+            this.rotation = Math.atan2(dy, dx)*toDeg+90;   //二点間の角度
+            this.scaleY = Math.sqrt(dx*dx+dy*dy)/640;
+            this.alpha -= 0.1;
+            if (this.alpha < 0.0)this.remove();
+        }
+        laser.addChildTo(this);
     },
 
     //指定座標から一番近い惑星を取得

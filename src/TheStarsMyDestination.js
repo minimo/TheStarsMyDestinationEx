@@ -12,6 +12,12 @@ var assets = {
     "planet":       "assets/planet.png",
     "planet_mono":  "assets/planet_mono.png",
     "frigate":      "assets/frigate1.png",
+
+    "laser_b":      "assets/laser_b.png",
+    "laser_r":      "assets/laser_r.png",
+    "laser_h":      "assets/laser_h.png",
+    "laser_head":   "assets/laser_head.png",
+
     "bg1":          "assets/5212712025_93cca9e023_o.jpg",
     "bg2":          "assets/201106290800.jpg",
 }
