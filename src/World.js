@@ -94,7 +94,7 @@ tm.define("tiger.World", {
                 var dis = distance(unit, planet);
                 if (dis < 64*planet.power) {
                     var dice = rand(0,1000);
-                    if (dice > 900) {
+                    if (dice > 950) {
                         this.enterLaser(planet, unit);
                     }
                 }
@@ -220,7 +220,6 @@ tm.define("tiger.World", {
             tx += rand(0, 64*to.power)-32*to.power;
             ty += rand(0, 64*to.power)-32*to.power;
         }
-        
         var laserType;
         switch (from.alignment) {
             case TYPE_PLAYER:
@@ -246,9 +245,6 @@ tm.define("tiger.World", {
             var fx = this.from.x, fy = this.from.y;
             var tx = this.to.x, ty = this.to.y;
             var dx = tx-fx, dy = ty-fy;
-
-            this.x = fx;
-            this.y = fy;
             this.rotation = Math.atan2(dy, dx)*toDeg+90;   //二点間の角度
             this.scaleY = Math.sqrt(dx*dx+dy*dy)/640;
             this.alpha -= 0.1;
