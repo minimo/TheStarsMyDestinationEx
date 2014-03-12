@@ -28,6 +28,7 @@ tm.define("tiger.GameScene", {
     //ワールド管理
     world: null,
     base: null,
+    overlap: null,  //最上位レイヤ
 
     //マップビュー
     map: null,
@@ -89,6 +90,7 @@ tm.define("tiger.GameScene", {
         this.world = tiger.World().addChildTo(this.base);
         this.map = tiger.WorldMap(640-160, 0, 160, this.world).addChildTo(this);
         this.balance = tiger.CosmicBalance(0, 640-24, 500, this.world).addChildTo(this);
+        this.overlap = tm.app.Object2D().addChildTo(this);
 
         var that = this;
         var lb = this.rateLabel = tm.display.OutlineLabel("50%", 30).addChildTo(this);
