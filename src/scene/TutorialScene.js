@@ -9,6 +9,9 @@
 //チュートリアルシーン
 tm.define("tiger.TutorialScene", {
     superClass: tm.app.Scene,
+    
+    //マップ
+    world: null,
 
     //チュートリアルフェーズ
     phase: 0,

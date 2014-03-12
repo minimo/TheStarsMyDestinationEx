@@ -167,6 +167,10 @@ tm.define("tiger.World", {
         }
     },
 
+    //チュートリアル用マップの構築
+    buildTutorial: function(phase, width, height) {
+    },
+
     //惑星の追加
     enterPlanet: function(x, y, alignment, HP, power, type) {
         alignment = alignment || TYPE_NEUTRAL;
