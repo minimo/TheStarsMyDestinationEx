@@ -58,7 +58,7 @@ tm.define("tiger.Planet", {
 
         var that = this;
         //選択カーソル
-        this.cursol = tm.display.CircleShape(80, 80, {
+        this.cursor = tm.display.CircleShape(80, 80, {
             fillStyle: "rgba(0,0,0,0)",
             strokeStyle: tm.graphics.LinearGradient(0,0,0,80).addColorStopList([
                 { offset:0.0, color:"rgba(0,255,0,0.0)" },
@@ -69,9 +69,9 @@ tm.define("tiger.Planet", {
             ]).toStyle(),
             lineWidth: 4.0,
         }).addChildTo(this);
-        this.cursol.blendMode = "lighter";
-        this.cursol.alpha = 0;
-        this.cursol.update = function() {
+        this.cursor.blendMode = "lighter";
+        this.cursor.alpha = 0;
+        this.cursor.update = function() {
             if (that.select) {
                 this.rotation++;
                 this.alpha+=0.05;
@@ -153,7 +153,7 @@ tm.define("tiger.Planet", {
     //選択カーソル色変更
     changeCursolColor: function(color) {
         if (color == "green") {
-            this.cursol.strokeStyle = tm.graphics.LinearGradient(0,0,0,80).addColorStopList([
+            this.cursor.strokeStyle = tm.graphics.LinearGradient(0,0,0,80).addColorStopList([
                 { offset:0.0, color:"rgba(0,255,0,0.0)" },
                 { offset:0.3, color:"rgba(0,255,0,0.8)" },
                 { offset:0.5, color:"rgba(0,255,0,1.0)" },
@@ -162,7 +162,7 @@ tm.define("tiger.Planet", {
             ]).toStyle();
         }
         if (color == "red") {
-            this.cursol.strokeStyle = tm.graphics.LinearGradient(0,0,0,80).addColorStopList([
+            this.cursor.strokeStyle = tm.graphics.LinearGradient(0,0,0,80).addColorStopList([
                 { offset:0.0, color:"rgba(255,0,0,0.0)" },
                 { offset:0.3, color:"rgba(255,0,0,0.8)" },
                 { offset:0.5, color:"rgba(255,0,0,1.0)" },

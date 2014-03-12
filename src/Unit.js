@@ -56,7 +56,7 @@ tm.define("tiger.Unit", {
 
         var that = this;
         //選択カーソル
-        this.cursol = tm.display.CircleShape(50, 50, {
+        this.cursor = tm.display.CircleShape(50, 50, {
             fillStyle: "rgba(0,0,0,0)",
             strokeStyle: tm.graphics.LinearGradient(0,0,0,50).addColorStopList([
                 { offset:0.0, color:"rgba(0,255,0,0.0)" },
@@ -67,9 +67,9 @@ tm.define("tiger.Unit", {
             ]).toStyle(),
             lineWidth: 3.0,
         }).addChildTo(this);
-        this.cursol.blendMode = "lighter";
-        this.cursol.alpha = 0;
-        this.cursol.update = function() {
+        this.cursor.blendMode = "lighter";
+        this.cursor.alpha = 0;
+        this.cursor.update = function() {
             if (that.select || that.mouseover) {
                 this.rotation++;
                 this.alpha+=0.05;
