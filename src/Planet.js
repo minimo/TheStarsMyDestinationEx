@@ -47,7 +47,6 @@ tm.define("tiger.Planet", {
         } else {
             this.superInit("planet", 64, 64);
         }
-        //this.image = tm.asset.AssetManager.get(obj.imagename);
         this.x = x || 0;
         this.y = y || 0;
         this.HP = HP || 100;
@@ -68,7 +67,7 @@ tm.define("tiger.Planet", {
                 { offset:0.7, color:"rgba(0,255,0,0.8)" },
                 { offset:1.0, color:"rgba(0,255,0,0.0)" },
             ]).toStyle(),
-            lineWidth: 6.0,
+            lineWidth: 4.0,
         }).addChildTo(this);
         this.cursol.blendMode = "lighter";
         this.cursol.alpha = 0;
