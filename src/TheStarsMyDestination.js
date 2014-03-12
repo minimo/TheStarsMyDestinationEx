@@ -18,6 +18,8 @@ var assets = {
     "laser_h":      "assets/laser_h.png",
     "laser_head":   "assets/laser_head.png",
 
+    "explode":      "assets/explode.png",
+
     "bg1":          "assets/5212712025_93cca9e023_o.jpg",
     "bg2":          "assets/201106290800.jpg",
 }

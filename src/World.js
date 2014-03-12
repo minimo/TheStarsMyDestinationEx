@@ -96,6 +96,10 @@ tm.define("tiger.World", {
                     var dice = rand(0,1000);
                     if (dice > 950) {
                         this.enterLaser(planet, unit);
+                        if (rand(0,1000) > 900) {
+                            this.enterExplode(unit);
+                            unit.damage(1);
+                        }
                     }
                 }
             }
@@ -211,7 +215,7 @@ tm.define("tiger.World", {
         }
         this.unitGroupID++;
     },
-    
+
     //レーザーエフェクト投入
     enterLaser: function(from, to) {
         var fx = from.x, fy = from.y
@@ -236,7 +240,7 @@ tm.define("tiger.World", {
                 laserType = "laser_h";
                 break;
         }
-        var laser = tm.display.Sprite(laserType, 80, 640);
+        var laser = tm.display.Sprite(laserType, 50, 640);
         laser.setPosition(fx, fy);
         laser.originX = 0.5;
         laser.originY = 1.0;
@@ -244,6 +248,7 @@ tm.define("tiger.World", {
         laser.to = {x: tx, y: ty};
         laser.isEffect = true;
         laser.scaleX = 0.1;
+        laser.setFrameIndex(0, 50, 640);
         laser.update = function() {
             //中心点からの直線を計算
             var fx = this.from.x, fy = this.from.y;
@@ -255,6 +260,25 @@ tm.define("tiger.World", {
             if (this.alpha < 0.0)this.remove();
         }
         laser.addChildTo(this);
+    },
+
+    //爆発エフェクト投入
+    enterExplode: function(target) {
+        var exp = tm.display.Sprite("explode", 64, 64);
+        exp.setPosition(target.x, target.y);
+        exp.isEffect = true;
+        exp.setFrameIndex(0, 64, 64);
+        exp.frame = 1;
+        exp.age = 1;
+        exp.update = function() {
+            if (this.age % 3 == 0) {
+                this.setFrameIndex(this.frame, 64, 64);
+                this.frame++;
+                if (this.frame > 18)this.remove();
+            }
+            this.age++;
+        }
+        exp.addChildTo(this);
     },
 
     //指定座標から一番近い惑星を取得
