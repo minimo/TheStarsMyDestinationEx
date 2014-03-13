@@ -1,26 +1,53 @@
 /*
  *  TheStarsMyDestination tmlib.js version
- *  Arrow.js
+ *  Cursor.js
  *  2014/03/01
  *  @auther minimo  
  *  This Program is MIT license.
  */
  
-//選択矢印
-tm.define("tiger.Cursor", {
+//スケール用カーソル
+tm.define("tiger.ScaleCursor", {
     superClass:  tm.display.CanvasElement,
+
+    //アクティブフラグ
+    active: false,
+
+    //始点
+    start:0,
+
+    //終点
+    end: 360,
 
     init: function() {
         this.superInit();
+        
+        this.alpha = 0;
     },
 
-    draw: function() {
-        canvas.lineWidth = 10;
-        canvas.globalCompositeOperation = "source-over";
-        canvas.fillStyle = "rgba(0, 0, 0, 0)";
-        canvas.strokeStyle =  tm.graphics.LinearGradient( 0, 0, 0, 100).addColorStopList([
-                { offset:0.0, color:"rgba(0, 255, 0, 1.0)" },
-                { offset:1.0, color:"rgba(0, 255, 0, 1.0)" },
-        ]).toStyle()
+    update: function() {
+        if (this.active) {
+            this.alpha+=0.05;
+            if (this.alpha > 1.0)this.alpha = 1.0;
+        } else {
+            this.alpha-=0.05;
+            if (this.alpha < 0.0)this.alpha = 0.0;
+        }
+    },
+
+    draw: function(canvas) {
+        canvas.lineWidth = 30;
+        canvas.globalCompositeOperation = "lighter";
+        
+        var start = this.start*toRad;
+        var end = this.end*toRad;
+        var clock = true;
+        if (start<0)clock = false;
+
+        canvas.strokeStyle = 'red';
+        canvas.strokeArc(0, 0, 40, end, start, clock);
+
+        canvas.strokeStyle = 'lime';
+        canvas.strokeArc(0, 0, 40, start, 0, clock);
     },
 });

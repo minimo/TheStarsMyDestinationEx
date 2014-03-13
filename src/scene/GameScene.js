@@ -28,7 +28,6 @@ tm.define("tiger.GameScene", {
     //ワールド管理
     world: null,
     base: null,
-    overlap: null,  //最上位レイヤ
 
     //マップビュー
     map: null,
@@ -66,16 +65,24 @@ tm.define("tiger.GameScene", {
         selectTo: null,
     },
 
+    //長押し中フラグ
+    longpress: false,
+
+    //長押しフレーム数
+    longPressFrame: 45,
+
     //クリック情報等
     clickInterval: 0,   //間隔
     clickFrame: 0,      //経過
-    moveCheck: false,   //ポインタ移動検出等
     startX: 0,          //クリック始点等
     startY: 0,
     rateTemp: 0.5,      //派兵レートテンポラリ
     
     //矢印的なアレ
     arrow: null,
+
+    //スケール用カーソル
+    scaleCursor: null,
 
     //勝者決定フラグ
     winner: 0,
@@ -88,9 +95,10 @@ tm.define("tiger.GameScene", {
 
         this.base = tm.app.Object2D().addChildTo(this);
         this.world = tiger.World().addChildTo(this.base);
+
+        this.scaleCursor = tiger.ScaleCursor().addChildTo(this);
         this.map = tiger.WorldMap(640-160, 0, 160, this.world).addChildTo(this);
         this.balance = tiger.CosmicBalance(0, 640-24, 500, this.world).addChildTo(this);
-        this.overlap = tm.app.Object2D().addChildTo(this);
 
         var that = this;
         var lb = this.rateLabel = tm.display.OutlineLabel("50%", 30).addChildTo(this);
@@ -150,7 +158,7 @@ tm.define("tiger.GameScene", {
         var scale = this.base.scaleX;
         var click = p.getPointing();
         var drag = false;
-
+        
         //クリック開始
         if (click && !this.beforePointing.click) {
             //派兵レート変更
@@ -197,7 +205,7 @@ tm.define("tiger.GameScene", {
             }
 
             this.clickFrame = 0;
-            this.moveCheck = true;
+            this.longPress = true;
         }
 
         //クリック中
@@ -219,11 +227,11 @@ tm.define("tiger.GameScene", {
                     }
 
                     if (this.selectFrom != this.selectTo) {
-                        this.moveCheck = false;
+                        this.longPress = false;
                     }
                     
-                    //２秒長押しで全選択モードに移行
-                    if (this.selectFrom == this.selectTo && this.clickFrame > 60 && this.moveCheck) {
+                    //長押しで全選択モードに移行
+                    if (this.selectFrom == this.selectTo && this.longPress && this.clickFrame > this.longPressFrame) {
                         this.control = CTRL_ALLPLANETS;
                         var planets = this.world.getPlanetGroup(TYPE_PLAYER);
                         //選択矢印を配列で持つ
@@ -258,6 +266,9 @@ tm.define("tiger.GameScene", {
                         this.screenX = clamp(this.screenX+(sx-SC_W/2)/32, 0, this.world.size*scale-SC_W);
                         this.screenY = clamp(this.screenY+(sy-SC_H/2)/32, 0, this.world.size*scale-SC_H);
                     }
+
+                    //移動したので長押し状態はキャンセル
+                    this.longPress = false;
                 }
             }
 
@@ -278,17 +289,19 @@ tm.define("tiger.GameScene", {
                 var bx = Math.abs(this.beforePointing.x-sx);
                 var by = Math.abs(this.beforePointing.y-sy);
                 if (bx > 3 || by > 3) {
-                    this.moveCheck = false;
+                    this.longPress = false;
                 }
             }
 
             //マップ操作時に長押しでスケール操作へ移行
-            if (this.control == CTRL_MAP && this.moveCheck) {
+            if (this.control == CTRL_MAP && this.longPress) {
                 var bx = this.beforePointing.x;
                 var by = this.beforePointing.y;
                 if (bx-3 < sx && sx < bx+5 && by-3 < sy && sy < by+5) {
-                    if (this.clickFrame > 60) {
+                    if (this.clickFrame > this.longPressFrame) {
                         this.control = CTRL_SCALE;
+                        this.scaleCursor.active = true;
+                        this.scaleCursor.setPosition(sx, sy);
                     }
                 } else {
                     this.clickFrame = 0;
@@ -358,6 +371,7 @@ tm.define("tiger.GameScene", {
                 }
                 this.arrow = null;
             }
+            this.scaleCursor.active = false;
             this.control = CTRL_NOTHING;
         }
 
