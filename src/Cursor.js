@@ -13,16 +13,32 @@ tm.define("tiger.ScaleCursor", {
     //アクティブフラグ
     active: false,
 
-    //始点
-    start:0,
+    //最小値
+    min: 50,
 
-    //終点
-    end: 360,
+    //最大値
+    max: 150,
+
+    //現在値
+    _value: 100,
 
     init: function() {
         this.superInit();
-        
         this.alpha = 0;
+
+        //スケール表示
+        var that = this;
+        this.label = tm.display.OutlineLabel("", 30).addChildTo(this);
+        this.label.fontFamily = "'Orbitron'";
+        this.label.align     = "center";
+        this.label.baseline  = "middle";
+        this.label.fontSize = 30;
+        this.label.fontWeight = 700;
+        this.label.outlineWidth = 2;
+        this.fillStyle = "rgba(255, 255, 255, 1.0)";
+        this.label.update = function() {
+            this.text = ~~(that.value) + "%";
+        };
     },
 
     update: function() {
@@ -38,16 +54,21 @@ tm.define("tiger.ScaleCursor", {
     draw: function(canvas) {
         canvas.lineWidth = 30;
         canvas.globalCompositeOperation = "lighter";
-        
-        var start = this.start*toRad;
-        var end = this.end*toRad;
+
+        var center = (this.max-this.min)/2;
+        var value = (this._value-center)*toRad;
         var clock = true;
-        if (start<0)clock = false;
+        if (value < 0)clock = false;
 
         canvas.strokeStyle = 'red';
-        canvas.strokeArc(0, 0, 40, end, start, clock);
+        canvas.strokeArc(0, 0, 40, Math.PI*2, value, clock);
 
         canvas.strokeStyle = 'lime';
-        canvas.strokeArc(0, 0, 40, start, 0, clock);
+        canvas.strokeArc(0, 0, 40, value, 0, clock);
     },
+});
+
+tiger.ScaleCursor.prototype.accessor("value", {
+    "get": function()   { return this._value; },
+    "set": function(v)  { this._value = clamp(v, this.min, this.max); }
 });

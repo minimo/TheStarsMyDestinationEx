@@ -77,6 +77,7 @@ tm.define("tiger.GameScene", {
     startX: 0,          //クリック始点等
     startY: 0,
     rateTemp: 0.5,      //派兵レートテンポラリ
+    scaleTemp: 1,       //スケールテンポラリ
     
     //矢印的なアレ
     arrow: null,
@@ -302,6 +303,10 @@ tm.define("tiger.GameScene", {
                         this.control = CTRL_SCALE;
                         this.scaleCursor.active = true;
                         this.scaleCursor.setPosition(sx, sy);
+                        //初期位置を記録
+                        this.startX = sx;
+                        this.startY = sy;
+                        this.scaleTemp = this.world.base.scaleX*100;
                     }
                 } else {
                     this.clickFrame = 0;
@@ -314,6 +319,14 @@ tm.define("tiger.GameScene", {
                 this.world.rate = ~~(this.rateTemp+(v/2));
                 this.world.rate = clamp(this.world.rate, 10, 90);
             }
+
+            //スケール変更
+            if (this.control == CTRL_SCALE) {
+                var v = sy - this.startY;
+                var v = clamp(v, -200, 200);
+                this.scaleCursor.value = v;
+            }
+
             this.clickFrame++;
         }
 
