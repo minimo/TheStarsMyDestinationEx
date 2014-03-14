@@ -34,9 +34,12 @@ tm.define("tiger.GameScene", {
 
     //勢力天秤
     balance: null,
-    
+
     //派兵レート表示
     rateLabel: null,
+
+    //時間表示
+    timeLabel: null,
 
     //準備完了フラグ
     ready: false,
@@ -102,6 +105,7 @@ tm.define("tiger.GameScene", {
         this.balance = tiger.CosmicBalance(0, 640-24, 500, this.world).addChildTo(this);
 
         var that = this;
+        //派兵レートラベル
         var lb = this.rateLabel = tm.display.OutlineLabel("50%", 30).addChildTo(this);
         lb.x = 580;
         lb.y = 620;
@@ -119,6 +123,25 @@ tm.define("tiger.GameScene", {
             }
             this.fontSize = clamp(this.fontSize, 30, 40);
             this.text = that.world.rate + "%";
+        };
+
+        //時間表示ラベル
+        var tl = this.timeLabel = tm.display.OutlineLabel("00:00", 30).addChildTo(this);
+        tl.x = 10;
+        tl.y = 10;
+        tl.fontFamily = "'Orbitron'";
+        tl.align     = "left";
+        tl.baseline  = "top";
+        tl.fontSize = 20;
+        tl.fontWeight = 700;
+        tl.outlineWidth = 2;
+        tl.update = function() {
+            var sec = ~~(that.frame/60);
+            var min = ""+~~(sec/60);
+            sec = ""+sec%60;
+            if (min.length == 1)min = "0"+min;
+            if (sec.length == 1)sec = "0"+sec;
+            this.text = min+":"+sec;
         };
 
         //デバッグ用
