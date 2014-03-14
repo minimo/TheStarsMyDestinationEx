@@ -159,7 +159,11 @@ tm.define("tiger.GameScene", {
         var scale = this.base.scaleX;
         var click = p.getPointing();
         var drag = false;
-        
+
+        if (DEBUG) {
+            this.debugCursor.setPosition(wx, wy);
+        }
+
         //クリック開始
         if (click && !this.beforePointing.click) {
             //派兵レート変更
