@@ -303,10 +303,11 @@ tm.define("tiger.GameScene", {
                         this.control = CTRL_SCALE;
                         this.scaleCursor.active = true;
                         this.scaleCursor.setPosition(sx, sy);
+                        this.scaleCursor.value = this.world.scaleX*100;
                         //初期位置を記録
                         this.startX = sx;
                         this.startY = sy;
-                        this.scaleTemp = this.world.base.scaleX*100;
+                        this.scaleTemp = this.world.scaleX*100;
                     }
                 } else {
                     this.clickFrame = 0;
@@ -322,9 +323,11 @@ tm.define("tiger.GameScene", {
 
             //スケール変更
             if (this.control == CTRL_SCALE) {
-                var v = sy - this.startY;
-                var v = clamp(v, -200, 200);
-                this.scaleCursor.value = v;
+                var v = (sy - this.startY)/2;
+                var v = clamp(v, -100, 100);
+                var sc = clamp(this.scaleTemp+v, 50, 200);
+                this.world.setScale(sc/100);
+                this.scaleCursor.value = sc;
             }
 
             this.clickFrame++;

@@ -16,8 +16,11 @@ tm.define("tiger.ScaleCursor", {
     //最小値
     min: 50,
 
+    //中央値
+    center: 100,
+
     //最大値
-    max: 150,
+    max: 200,
 
     //現在値
     _value: 100,
@@ -55,16 +58,25 @@ tm.define("tiger.ScaleCursor", {
         canvas.lineWidth = 30;
         canvas.globalCompositeOperation = "lighter";
 
-        var center = (this.max-this.min)/2;
-        var value = (this._value-center)*toRad;
+        var rad = 0;
+        var value = (this._value-this.center);
         var clock = true;
-        if (value < 0)clock = false;
+        var color = 'lime'
+        if (value < 0) {
+            clock = false;
+            color = 'blue';
+            var u = this.center - this.min;
+            rad = (360/u)*toRad*value;
+        } else {
+            var u = this.max - this.center;
+            rad = (360/u)*toRad*value;
+        }
 
         canvas.strokeStyle = 'red';
-        canvas.strokeArc(0, 0, 40, Math.PI*2, value, clock);
+        canvas.strokeArc(0, 0, 40, Math.PI*2, rad, clock);
 
-        canvas.strokeStyle = 'lime';
-        canvas.strokeArc(0, 0, 40, value, 0, clock);
+        canvas.strokeStyle = color;
+        canvas.strokeArc(0, 0, 40, rad, 0, clock);
     },
 });
 

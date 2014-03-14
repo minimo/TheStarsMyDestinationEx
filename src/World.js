@@ -20,6 +20,9 @@ tm.define("tiger.World", {
     //マップの一辺のサイズ
     size: 640*2,
 
+    //マップ番号
+    number: 0,
+
     //ベースレイヤー
     base: null,
 
@@ -136,6 +139,7 @@ tm.define("tiger.World", {
         //マップ構築は専用の乱数体系を使用
         seed = seed || rand(0,65536);
         var rn = new MersenneTwister(seed);
+        this.number = seed;
 
         //バックグラウンドの追加
         var bg = tm.display.Sprite("bg1",3848, 1280).addChildTo(this);
