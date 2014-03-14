@@ -324,7 +324,6 @@ tm.define("tiger.GameScene", {
             //スケール変更
             if (this.control == CTRL_SCALE) {
                 var v = (sy - this.startY)/2;
-                var v = clamp(v, -100, 100);
                 var sc = clamp(this.scaleTemp+v, 50, 200);
                 this.world.setScale(sc/100);
                 this.scaleCursor.value = sc;
