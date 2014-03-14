@@ -121,20 +121,25 @@ tm.define("tiger.GameScene", {
             this.text = that.world.rate + "%";
         };
 
-        //デバッグ表示
-        var sc = tm.app.Label("");
-        sc.fillStyle = "white";
-        sc.fontSize = 15;
-        sc.x = 0;
-        sc.y = 13;
-        sc.width = 200;
-        var that = this;
-        sc.update = function() {
-            var p = app.pointing;
-            this.text = "x:"+p.position.x+" y:"+p.position.y+" size:"+that.world.size;
-//            this.text = "x:"+that.world.base.x+" y:"+that.world.base.y+" size:"+that.world.size;
+        //デバッグ用
+        if (DEBUG) {
+            this.debugCursor = tm.display.CircleShape(30, 30, {
+                fillStyle: "rgba(0,0,0,0)",
+                strokeStyle: tm.graphics.LinearGradient(0,0,0,30).addColorStopList([
+                    { offset:0.0, color:"rgba(0,255,0,0.0)" },
+                    { offset:0.3, color:"rgba(0,255,0,0.8)" },
+                    { offset:0.5, color:"rgba(0,255,0,1.0)" },
+                    { offset:0.7, color:"rgba(0,255,0,0.8)" },
+                    { offset:1.0, color:"rgba(0,255,0,0.0)" },
+                ]).toStyle(),
+                lineWidth: 4.0,
+            });
+            this.debugCursor.isForeground = true;
+            this.debugCursor.update = function() {
+                this.rotation++;
+            };
+            this.debugCursor.addChildTo(this.world)
         }
-//        this.addChild(sc);
     },
 
     update: function() {
@@ -508,8 +513,8 @@ tm.define("tiger.GameScene", {
     },
 
     //ワールド座標への変換
-    toWorldX: function(x) {return (-this.world.base.x+x)/this.base.scaleX;},
-    toWorldY: function(y) {return (-this.world.base.y+y)/this.base.scaleY;},
+    toWorldX: function(x) {return -this.world.base.x+(x/this.world.scaleX);},
+    toWorldY: function(y) {return -this.world.base.y+(y/this.world.scaleY);},
 });
 
 //スクリーン座標操作
