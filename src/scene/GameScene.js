@@ -127,10 +127,10 @@ tm.define("tiger.GameScene", {
 
         //時間表示ラベル
         var tl = this.timeLabel = tm.display.OutlineLabel("00:00", 30).addChildTo(this);
-        tl.x = 10;
+        tl.x = 320;
         tl.y = 10;
         tl.fontFamily = "'Orbitron'";
-        tl.align     = "left";
+        tl.align     = "center";
         tl.baseline  = "top";
         tl.fontSize = 20;
         tl.fontWeight = 700;
