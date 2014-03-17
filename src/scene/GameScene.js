@@ -184,7 +184,7 @@ tm.define("tiger.GameScene", {
         var p = app.pointing;
         var sx = p.position.x, sy = p.position.y;
         var wx = this.toWorldX(sx), wy = this.toWorldY(sy);
-        var scale = this.base.scaleX;
+        var scale = this.world.scaleX;
         var click = p.getPointing();
         var drag = false;
 
@@ -317,8 +317,14 @@ tm.define("tiger.GameScene", {
                 }
             }
 
-            //マップ操作時ポインタ移動検出
+            //マップ操作
             if (this.control == CTRL_MAP) {
+                var mx = (p.position.x-p.prevPosition.x)/scale;
+                var my = (p.position.y-p.prevPosition.y)/scale;
+                this.screenX = clamp(this.screenX-mx, 0, this.world.size-SC_W/scale);
+                this.screenY = clamp(this.screenY-my, 0, this.world.size-SC_H/scale);
+
+                //マップ操作時ポインタ移動検出
                 var bx = Math.abs(this.beforePointing.x-sx);
                 var by = Math.abs(this.beforePointing.y-sy);
                 if (bx > 3 || by > 3) {
@@ -359,6 +365,9 @@ tm.define("tiger.GameScene", {
                 var sc = clamp(this.scaleTemp+v, 50, 200);
                 this.world.setScale(sc/100);
                 this.scaleCursor.value = sc;
+
+                this.screenX = clamp(this.screenX, 0, this.world.size-SC_W/scale);
+                this.screenY = clamp(this.screenY, 0, this.world.size-SC_H/scale);
             }
 
             this.clickFrame++;
@@ -429,14 +438,6 @@ tm.define("tiger.GameScene", {
                 pl.planet.mouseover = true;
                 this.mouseoverObject = pl.planet;
             }
-        }
-
-        //マップ操作
-        if (this.control == CTRL_MAP) {
-            var mx = (p.position.x-p.prevPosition.x)/scale;
-            var my = (p.position.y-p.prevPosition.y)/scale;
-            this.screenX = clamp(this.screenX-mx, 0, this.world.size*scale-SC_W);
-            this.screenY = clamp(this.screenY-my, 0, this.world.size*scale-SC_H);
         }
 
         //惑星選択
