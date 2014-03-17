@@ -21,7 +21,7 @@ tm.define("tiger.Arrow", {
     isForeground: true,
 
     init: function(from, to, width) {
-        width = width || 16;
+        width = width || 8;
         this.superInit("arrow", 160, width);
         this.setPosition(from.x, from.y);
 
