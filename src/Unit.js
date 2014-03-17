@@ -126,6 +126,7 @@ tm.define("tiger.Unit", {
     //破壊処理
     destroy: function() {
         this.world.addChild(tiger.Effect.genShockwave(this.x, this.y, 1));
+        this.active = false;
     }
 });
 
