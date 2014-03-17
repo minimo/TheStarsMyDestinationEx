@@ -17,6 +17,7 @@ CTRL_UNIT = 3;
 CTRL_RATE = 4;
 CTRL_SCALE = 5;
 CTRL_ALLPLANETS = 6;
+CTRL_SELECTLIST = 7;
 
 //ゲームシーン
 tm.define("tiger.GameScene", {
@@ -56,6 +57,9 @@ tm.define("tiger.GameScene", {
 
     //終点選択オブジェクト
     selectTo: null,
+
+    //選択リスト
+    selectList: null,
 
     //前フレームポインティングデバイス情報
     beforePointing: {
@@ -390,6 +394,15 @@ tm.define("tiger.GameScene", {
                         }
                     }
                 }
+                if (this.selectFrom && this.selectFrom.alignment == TYPE_PLAYER && this.selectFrom == this.selectTo) {
+                    //選択リストに追加
+                    this.control = CTRL_SELECTLIST;
+                    if (this.selectList == null) {
+                        this.selectList = [];
+                    }
+                    this.selectList.push(this.selectFrom);
+                    this.selectFrom = this.selectTo = null; //選択中の為後続の解放処理をしないようにする
+                }
             } else if (this.control == CTRL_ALLPLANETS) {
                 //艦隊派遣
                 var planets = this.world.getPlanetGroup(TYPE_PLAYER);
@@ -411,19 +424,13 @@ tm.define("tiger.GameScene", {
                 this.selectTo = null;
             }
 
-            //選択矢印解放            
+            //選択矢印解放
             if (this.arrow) {
-                switch (this.control) {
-                    case CTRL_PLANET:
-                        this.arrow.active = false;
-                        this.arrow = null;
-                    break;
-                    case CTRL_UNIT:
-                    case CTRL_ALLPLANETS:
-                        for (var i = 0, len = this.arrow.length; i < len; i++) {
-                            this.arrow[i].active = false;
-                        }
-                        break;
+                if (this.arrow instanceof Array) {
+                    for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].active = false;
+                } else {
+                    this.arrow.active = false;
+                    this.arrow = null;
                 }
                 this.arrow = null;
             }
