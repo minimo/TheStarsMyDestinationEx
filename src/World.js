@@ -149,15 +149,15 @@ tm.define("tiger.World", {
         bg.originX = bg.originY = 0;
 
         //プレイヤー主星
-        this.enterPlanet(64, 64, TYPE_PLAYER, 100, 1.5, PLANET_EARTH);
+        this.enterPlanet(96, 96, TYPE_PLAYER, 100, 1.5, PLANET_EARTH);
 
         //エネミー主星
-        this.enterPlanet(this.size-64, this.size-64, TYPE_ENEMY, 100, 1.5, PLANET_MARS);
+        this.enterPlanet(this.size-96, this.size-96, TYPE_ENEMY, 100, 1.5, PLANET_MARS);
 
         //中立惑星配置
         for (var i = 0; i < this.maxPlanets; i++) {
-            var x = rn.nextInt(64, this.size-64);
-            var y = rn.nextInt(64, this.size-64);
+            var x = rn.nextInt(96, this.size-96);
+            var y = rn.nextInt(96, this.size-96);
             var ok = true;
             //一定距離内に配置済み惑星が無いか確認
             for (var j = 0; j < this.planets.length; j++) {
