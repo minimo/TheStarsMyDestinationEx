@@ -214,7 +214,18 @@ tm.define("tiger.GameScene", {
                     this.control = CTRL_PLANET;
                     this.selectFrom = pl.planet;
                     pl.planet.select = true;
-                    if (pl.planet.alignment == TYPE_PLAYER) this.arrow = tiger.Arrow(pl.planet, {x: wx, y:wy}).addChildTo(this.world);
+                    if (pl.planet.alignment == TYPE_PLAYER) {
+                        if (!this.selectList) {
+                            //単独選択
+                            this.arrow = tiger.Arrow(pl.planet, {x: wx, y:wy}).addChildTo(this.world);
+                        } else {
+                            //選択矢印を配列で持つ
+                            this.arrow = [];
+                            for (var i = 0; i < this.selectList.length; i++) {
+                                this.arrow.push(tiger.Arrow(this.selectList[i], this.selectFrom).addChildTo(this.world));
+                            }
+                        }
+                    }
                 }
             }
 
@@ -256,12 +267,10 @@ tm.define("tiger.GameScene", {
                 if (pl.distance < 32*pl.planet.power) {
                     this.selectTo = pl.planet;
                     this.selectTo.select = true;
-                    if (this.arrow) {
-                        if (this.control == CTRL_UNIT) {
-                            for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].to = pl.planet;
-                        } else {
-                            this.arrow.to = pl.planet;
-                        }
+                    if (this.arrow instanceof Array) {
+                        for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].to = pl.planet;
+                    } else {
+                        this.arrow.to = pl.planet;
                     }
 
                     if (this.selectFrom != this.selectTo) {
@@ -332,6 +341,7 @@ tm.define("tiger.GameScene", {
 
             //マップ操作
             if (this.control == CTRL_MAP) {
+                this.control = CTRL_MAP;
                 var mx = (p.position.x-p.prevPosition.x)/scale;
                 var my = (p.position.y-p.prevPosition.y)/scale;
                 this.screenX = clamp(this.screenX-mx, 0, this.world.size-SC_W/scale);
@@ -345,7 +355,7 @@ tm.define("tiger.GameScene", {
                 }
             }
 
-            //マップ操作時に長押しでスケール操作へ移行
+            //マップ操作時長押しでスケール操作へ移行
             if (this.control == CTRL_MAP && this.longPress) {
                 var bx = this.beforePointing.x;
                 var by = this.beforePointing.y;
@@ -409,7 +419,16 @@ tm.define("tiger.GameScene", {
                     if (this.selectList == null) {
                         this.selectList = [];
                     }
-                    this.selectList.push(this.selectFrom);
+                    var found = -1;
+                    var len = this.selectList.length;
+                    for (var i = 0; i < len; i++) {
+                        if (this.selectFrom === this.selectList[i]) found = i;
+                    }
+                    if (found == -1) {
+                        this.selectList.push(this.selectFrom);
+                    } else {
+                        this.selectList.splice(found, 1);
+                    }
                     this.selectFrom = this.selectTo = null; //選択中の為後続の解放処理をしないようにする
                 }
             } else if (this.control == CTRL_ALLPLANETS) {
@@ -423,12 +442,21 @@ tm.define("tiger.GameScene", {
                 } else {
                     for (var i = 0; i < this.selectList.length; i++) {
                         var sl = this.selectList[i];
+                        sl.select = false;
+                        if (sl.alignment != TYPE_PLAYER) continue;
                         if (sl instanceof tiger.Planet) {
                             if (this.selectFrom != sl) this.world.enterUnit(sl, this.selectFrom);
                         }
-                        sl.select = false;
                     }
-                    this.world.selectPlanetGroup(TYPE_PLAYER, false);
+                }
+                //選択リスト解除
+                for (var i = 0; i < this.selectList.length; i++) this.selectList[i].select = false;
+                this.selectList = null;
+            } else if (this.control == CTRL_MAP) {
+                if (this.longPress && this.selectList) {   //長押し中フラグが立っている＆マップ操作＝マウス移動無し
+                    //選択リスト解除
+                    for (var i = 0; i < this.selectList.length; i++) this.selectList[i].select = false;
+                    this.selectList = null;
                 }
             }
 
