@@ -33,6 +33,20 @@ tm.define("tiger.Arrow", {
     },
 
     update: function() {
+        //始点または終点が非アクティブな場合は非表示
+        if (this.from instanceof tiger.Unit) {
+            if (!this.from.active) {
+                this.visible = false;
+                return;
+            }
+        }
+        if (this.to instanceof tiger.Unit) {
+            if (!this.to.active) {
+                this.visible = false;
+                return;
+            }
+        }
+
         //中心点からの直線を計算
         var fx = this.from.x, fy = this.from.y;
         var tx = this.to.x, ty = this.to.y;
@@ -44,6 +58,12 @@ tm.define("tiger.Arrow", {
             fx = fx*(1-len)+tx*len;
             fy = fy*(1-len)+ty*len;
             dx = tx-fx, dy = ty-fy;
+
+            //始点が敵惑星の場合非表示する
+            if (this.from.alignment != TYPE_PLAYER) {
+                this.visible = false;
+                return;
+            }
         }
 
         //終点が惑星の場合円周上にする
