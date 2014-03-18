@@ -47,16 +47,17 @@ tm.define("tiger.Arrow", {
             }
         }
         
-        //始点と終点が同じ場合には非表示
-        if (this.from === this.to) {
-            this.visible = false;
-            return;
-        }
-
         //終点がNULLの場合非表示
         if (!this.to) {
             this.visible = false;
             return;
+        }
+
+        //始点と終点が同じ場合には非表示
+        if (this.from === this.to) {
+            this.visible = false;
+        } else {
+            this.visible = true;
         }
 
         //中心点からの直線を計算
@@ -84,12 +85,6 @@ tm.define("tiger.Arrow", {
             tx = fx*len+tx*(1-len);
             ty = fy*len+ty*(1-len);
             dx = tx-fx, dy = ty-fy;
-        }
-
-        if (this.from === this.to) {
-            this.visible = false;
-        } else {
-            this.visible = true;
         }
 
         //再計算
