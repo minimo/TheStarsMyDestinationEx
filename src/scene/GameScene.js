@@ -165,6 +165,39 @@ tm.define("tiger.GameScene", {
                 this.rotation++;
             };
             this.debugCursor.addChildTo(this.world)
+
+            var d1 = this.debug1 = tm.display.OutlineLabel("00:00", 30).addChildTo(this);
+            d1.x = 0;
+            d1.y = 200;
+            d1.fontFamily = "'Orbitron'";
+            d1.align     = "left";
+            d1.baseline  = "top";
+            d1.fontSize = 20;
+            d1.fontWeight = 700;
+            d1.outlineWidth = 2;
+            d1.update = function() {
+                if (that.arrow) {
+                    this.text = "arrow:"+that.arrow.length;
+                } else {
+                    this.text = "arrow:nothing";
+                }
+            };
+            var d2 = this.debug2 = tm.display.OutlineLabel("00:00", 30).addChildTo(this);
+            d2.x = 0;
+            d2.y = 280;
+            d2.fontFamily = "'Orbitron'";
+            d2.align     = "left";
+            d2.baseline  = "top";
+            d2.fontSize = 20;
+            d2.fontWeight = 700;
+            d2.outlineWidth = 2;
+            d2.update = function() {
+                if (that.selectList) {
+                    this.text = "select:"+that.selectList.length;
+                } else {
+                    this.text = "select:nothing";
+                }
+            };
         }
     },
 
