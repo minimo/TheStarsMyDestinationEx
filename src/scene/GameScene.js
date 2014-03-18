@@ -259,7 +259,7 @@ tm.define("tiger.GameScene", {
                 if (pl.distance < 32*pl.planet.power) {
                     this.selectTo = pl.planet;
                     this.selectTo.select = true;
-//                    if (this.arrow) for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].to = pl.planet;
+                    if (this.arrow) for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].to = pl.planet;
 
                     //選択元と先が違う場合、長押し状態キャンセル
                     if (this.selectFrom != this.selectTo) {
@@ -321,6 +321,7 @@ tm.define("tiger.GameScene", {
                     this.world.selectPlanetGroup(TYPE_PLAYER, false);
                     for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].active = false;
                     this.arrow = null;
+                    this.selectList = null;
                 }
             }
 
@@ -387,9 +388,19 @@ tm.define("tiger.GameScene", {
                 //惑星、ユニット操作処理
                 if (this.selectFrom && this.selectFrom !== this.selectTo) {
                     //艦隊派遣
-                    if (this.selectFrom instanceof tiger.Planet) {
-                        if (this.selectTo instanceof tiger.Planet) {
+                    if (!this.selecList) {
+                        //単独選択
+                        if (this.selectFrom instanceof tiger.Planet && this.selectTo instanceof tiger.Planet) {
                             this.world.enterUnit(this.selectFrom, this.selectTo);
+                        }
+                    } else {
+                        //選択リスト解除
+                        if (this.selectList) {
+                            for (var i = 0; i < this.selectList.length; i++) {
+                                this.world.enterUnit(this.selectList[i], this.selectTo);
+                                this.selectList[i].select = false;
+                            }
+                            this.selectList = null;
                         }
                     }
                     //艦隊進行目標変更
