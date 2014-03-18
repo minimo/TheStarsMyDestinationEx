@@ -49,10 +49,14 @@ tm.define("tiger.Arrow", {
         
         //始点と終点が同じ場合には非表示
         if (this.from === this.to) {
-            if (!this.to.active) {
-                this.visible = false;
-                return;
-            }
+            this.visible = false;
+            return;
+        }
+
+        //終点がNULLの場合非表示
+        if (!this.to) {
+            this.visible = false;
+            return;
         }
 
         //中心点からの直線を計算
