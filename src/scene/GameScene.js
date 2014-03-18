@@ -394,14 +394,12 @@ tm.define("tiger.GameScene", {
                             this.world.enterUnit(this.selectFrom, this.selectTo);
                         }
                     } else {
-                        //選択リスト解除
-                        if (this.selectList) {
-                            for (var i = 0; i < this.selectList.length; i++) {
-                                this.world.enterUnit(this.selectList[i], this.selectTo);
-                                this.selectList[i].select = false;
-                            }
-                            this.selectList = null;
+                        //複数選択
+                        for (var i = 0; i < this.selectList.length; i++) {
+                            this.world.enterUnit(this.selectList[i], this.selectTo);
+                            this.selectList[i].select = false;
                         }
+                        this.selectList = null;
                     }
                     //艦隊進行目標変更
                     if (this.selectFrom instanceof tiger.Unit && this.selectFrom !== this.selectTo) {
