@@ -270,6 +270,12 @@ tm.define("tiger.GameScene", {
                         this.arrow.push(tiger.Arrow(units[i], {x: wx, y:wy}, 4).addChildTo(this.world));
                     }
                     this.world.selectUnitGroup(un.unit.groupID, true);
+
+                    //選択リスト解除
+                    if (this.selectList) {
+                        for (var i = 0; i < this.selectList.length; i++) this.selectList[i].select = false;
+                        this.selectList = null;
+                    }
                 }
             }
 
@@ -430,9 +436,7 @@ tm.define("tiger.GameScene", {
                         //複数選択
                         for (var i = 0; i < this.selectList.length; i++) {
                             this.world.enterUnit(this.selectList[i], this.selectTo);
-                            this.selectList[i].select = false;
                         }
-                        this.selectList = null;
                     }
                     //艦隊進行目標変更
                     if (this.selectFrom instanceof tiger.Unit && this.selectFrom !== this.selectTo) {
@@ -440,6 +444,7 @@ tm.define("tiger.GameScene", {
                             this.world.setDestinationUnitGroup(this.selectFrom.groupID,this.selectTo);
                         }
                     }
+                    this.clearSelectList();
                 }
                 //選択リスト追加／削除
                 if (this.selectFrom && this.selectFrom.alignment == TYPE_PLAYER && this.selectFrom === this.selectTo) {
@@ -458,6 +463,7 @@ tm.define("tiger.GameScene", {
                         //リスト内にある場合は削除
                         this.selectList[found].select = false;
                         this.selectList.splice(found, 1);
+                        if (this.selectList.length == 0)this.selectList = null;
                     }
                     this.selectFrom = this.selectTo = null; //選択中の為後続の解放処理をしないようにする
                 }
@@ -479,17 +485,10 @@ tm.define("tiger.GameScene", {
                         }
                     }
                 }
-                //選択リスト解除
-                if (this.selectList) {
-                    for (var i = 0; i < this.selectList.length; i++) this.selectList[i].select = false;
-                    this.selectList = null;
-                }
+                this.clearSelectList();
             } else if (this.control == CTRL_MAP) {
-                if (this.longPress && this.selectList) {   //長押し中フラグが立っている＆マップ操作＝マウス移動無し
-                    //選択リスト解除
-                    for (var i = 0; i < this.selectList.length; i++) this.selectList[i].select = false;
-                    this.selectList = null;
-                }
+                //長押し中フラグが立っている＆マップ操作＝マウス移動無し
+                if (this.longPress && this.selectList) this.clearSelectList();
             }
 
             //選択中オブジェクト解放
@@ -505,10 +504,7 @@ tm.define("tiger.GameScene", {
             }
 
             //選択矢印解放
-            if (this.arrow) {
-                for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].active = false;
-                this.arrow = null;
-            }
+            this.clearArrow();
             this.scaleCursor.active = false;
             this.control = CTRL_NOTHING;
         }
@@ -547,6 +543,22 @@ tm.define("tiger.GameScene", {
         //前フレーム情報保存
         this.beforePointing = {x: sx, y: sy, click: click, drag: drag, selectFrom: this.selectFrom, selectTo: this.selectTo};
         this.frame++;
+    },
+
+    //選択矢印解放
+    clearArrow: function() {
+        if (this.arrow) {
+            for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].active = false;
+            this.arrow = null;
+        }
+    },
+
+    //選択リストクリア
+    clearSelectList: function() {
+        if (this.selectList) {
+            for (var i = 0; i < this.selectList.length; i++) this.selectList[i].select = false;
+            this.selectList = null;
+        }
     },
 
     //勝敗判定
