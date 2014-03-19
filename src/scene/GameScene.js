@@ -306,10 +306,7 @@ tm.define("tiger.GameScene", {
                 this.control = CTRL_PLANET;
                 this.selectFrom = pl.planet;
                 pl.planet.select = true;
-                if (pl.planet.alignment == TYPE_PLAYER) {
-                    if (!this.arrow) this.arrow = [];
-                    this.arrow.push(tiger.Arrow(pl.planet, {x: wx, y:wy}).addChildTo(this.world));
-                }
+                if (pl.planet.alignment == TYPE_PLAYER) this.addArrow(pl.planet, {x: wx, y:wy});
             }
         }
 
@@ -326,9 +323,7 @@ tm.define("tiger.GameScene", {
                 //選択矢印
                 this.clearArrow();
                 this.arrow = [];
-                for (var i = 0; i < units.length; i++) {
-                    this.arrow.push(tiger.Arrow(units[i], {x: wx, y:wy}, 4).addChildTo(this.world));
-                }
+                for (var i = 0; i < units.length; i++) this.addArrow(units[i], {x: wx, y:wy}, 4);
                 this.world.selectUnitGroup(un.unit.groupID, true);
                 this.clearSelectList();
             }
@@ -542,6 +537,7 @@ tm.define("tiger.GameScene", {
                     this.selectList[found].select = false;
                     this.selectList.splice(found, 1);
                     if (this.selectList.length == 0)this.selectList = null;
+                    this.removeArrow(this.selectFrom);
                 }
                 this.selectFrom = this.selectTo = null; //選択中の為後続の解放処理をしないようにする
             }
@@ -584,6 +580,28 @@ tm.define("tiger.GameScene", {
 
         this.scaleCursor.active = false;
         this.control = CTRL_NOTHING;
+    },
+
+    //選択矢印追加
+    addArrow: function(from, to, width) {
+        if (!this.arrow)this.arrow = [];
+        for (var i = 0, len = this.arrow.length; i < len; i++) {
+            if (from === this.arrow[i].from)return;
+        }
+        this.arrow.push(tiger.Arrow(from, to, width).addChildTo(this.world));
+    },
+
+    //選択矢印削除
+    removeArrow: function(from, to) {
+        if (!this.arrow)return;
+        for (var i = 0; i < this.arrow.length; i++) {
+            if (from === this.arrow[i].from) {
+                this.arrow[i].active = false;
+                this.arrow.splice(i, 1);
+                if (this.arrow.length == 0) this.arrow = null;
+                return;
+            }
+        }
     },
 
     //選択矢印解放
