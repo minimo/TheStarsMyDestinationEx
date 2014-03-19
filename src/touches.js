@@ -30,7 +30,7 @@ tm.define("tiger.Touches", {
         scene.addEventListener("touchstart", function(e) {
             if (!self.single) {
                 self.touchList.push({ id: self.touchID, pointing: e.pointing, time:0 });
-                e.ID = this.touchID;
+                e.ID = self.touchID;
                 this.ontouchesstart(e);
                 self.touchID++;
             } else {
@@ -81,7 +81,7 @@ tm.define("tiger.Touches", {
                 e.ID = self.touchList[target].id;
                 this.ontouchesmove(e);
                 self.touchList.splice(target, 1);
-                if (self.touchList.length == 0)this.touchID = 0;
+                if (self.touchList.length == 0)self.touchID = 0;
             } else {
                 e.ID = 0;
                 this.ontouchesmove(e);
