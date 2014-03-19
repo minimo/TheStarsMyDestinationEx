@@ -265,6 +265,7 @@ tm.define("tiger.GameScene", {
                     var units = this.world.getUnitGroup(un.unit.groupID);
 
                     //選択矢印
+                    if (this.arrow) this.clearArrow();
                     this.arrow = [];
                     for (var i = 0; i < units.length; i++) {
                         this.arrow.push(tiger.Arrow(units[i], {x: wx, y:wy}, 4).addChildTo(this.world));
