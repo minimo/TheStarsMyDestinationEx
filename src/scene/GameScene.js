@@ -84,7 +84,7 @@ tm.define("tiger.GameScene", {
     startY: 0,
     rateTemp: 0.5,      //派兵レートテンポラリ
     scaleTemp: 1,       //スケールテンポラリ
-    
+
     //矢印的なアレ
     arrow: null,
 
@@ -265,18 +265,13 @@ tm.define("tiger.GameScene", {
                     var units = this.world.getUnitGroup(un.unit.groupID);
 
                     //選択矢印
-                    if (this.arrow) this.clearArrow();
+                    this.clearArrow();
                     this.arrow = [];
                     for (var i = 0; i < units.length; i++) {
                         this.arrow.push(tiger.Arrow(units[i], {x: wx, y:wy}, 4).addChildTo(this.world));
                     }
                     this.world.selectUnitGroup(un.unit.groupID, true);
-
-                    //選択リスト解除
-                    if (this.selectList) {
-                        for (var i = 0; i < this.selectList.length; i++) this.selectList[i].select = false;
-                        this.selectList = null;
-                    }
+                    this.clearSelectList();
                 }
             }
 
@@ -299,7 +294,9 @@ tm.define("tiger.GameScene", {
                 if (pl.distance < 32*pl.planet.power) {
                     this.selectTo = pl.planet;
                     this.selectTo.select = true;
-                    if (this.arrow) for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].to = pl.planet;
+                    if (this.arrow) {
+                        for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].to = pl.planet;
+                    }
 
                     //選択元と先が違う場合、長押し状態キャンセル
                     if (this.selectFrom != this.selectTo) {
@@ -310,6 +307,7 @@ tm.define("tiger.GameScene", {
                     if (this.selectFrom == this.selectTo && this.longPress && this.clickFrame > this.longPressFrame) {
                         this.control = CTRL_ALLPLANETS;
                         //選択矢印
+                        this.clearArrow();
                         this.arrow = [];
                         if (!this.selectList) {
                             //全選択
@@ -359,9 +357,8 @@ tm.define("tiger.GameScene", {
                     //ポインタが外れてたら選択キャンセル
                     this.control = CTRL_NOTHING;
                     this.world.selectPlanetGroup(TYPE_PLAYER, false);
-                    for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].active = false;
-                    this.arrow = null;
-                    this.selectList = null;
+                    this.clearArrow();
+                    this.clearSelectList();
                 }
             }
 
@@ -445,6 +442,7 @@ tm.define("tiger.GameScene", {
                             this.world.setDestinationUnitGroup(this.selectFrom.groupID,this.selectTo);
                         }
                     }
+                    this.clearArrow();
                     this.clearSelectList();
                 }
                 //選択リスト追加／削除
@@ -486,6 +484,7 @@ tm.define("tiger.GameScene", {
                         }
                     }
                 }
+                this.clearArrow();
                 this.clearSelectList();
             } else if (this.control == CTRL_MAP) {
                 //長押し中フラグが立っている＆マップ操作＝マウス移動無し
@@ -504,8 +503,6 @@ tm.define("tiger.GameScene", {
                 this.selectTo = null;
             }
 
-            //選択矢印解放
-            this.clearArrow();
             this.scaleCursor.active = false;
             this.control = CTRL_NOTHING;
         }
