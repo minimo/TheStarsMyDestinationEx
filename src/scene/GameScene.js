@@ -543,6 +543,18 @@ tm.define("tiger.GameScene", {
         this.frame++;
     },
 
+    //タッチorクリック開始処理
+    ontouchstart: function(e) {
+    },
+
+    //タッチorクリック移動処理
+    ontouchmove: function(e) {
+    },
+
+    //タッチorクリック終了処理
+    ontouchend: function(e) {
+    },
+
     //選択矢印解放
     clearArrow: function() {
         if (this.arrow) {
