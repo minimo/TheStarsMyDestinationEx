@@ -22,6 +22,9 @@ CTRL_ALLPLANETS = 6;
 tm.define("tiger.GameScene", {
     superClass: tm.app.Scene,
 
+    //マルチタッチ補助クラス
+    touches: null,
+
     //ポーズフラグ
     pause: false,
 
@@ -98,6 +101,8 @@ tm.define("tiger.GameScene", {
 
     init: function() {
         this.superInit();
+
+        this.touches = tiger.Touches(this);
 
         this.base = tm.app.Object2D().addChildTo(this);
         this.world = tiger.World().addChildTo(this.base);
@@ -289,6 +294,7 @@ tm.define("tiger.GameScene", {
             this.startY = sy;
             this.rateTemp = this.world.rate;
         }
+
         //惑星orユニット選択チェック
         var pl = this.world.getPlanet(wx, wy);
         if (pl.distance < 32*pl.planet.power) {
@@ -418,8 +424,8 @@ tm.define("tiger.GameScene", {
         //マップ操作
         if (this.control == CTRL_MAP) {
             this.control = CTRL_MAP;
-            var mx = (e.position.x-e.prevPosition.x)/scale;
-            var my = (e.position.y-e.prevPosition.y)/scale;
+            var mx = (e.pointing.x-e.pointing.prevPosition.x)/scale;
+            var my = (e.pointing.y-e.pointing.prevPosition.y)/scale;
             this.screenX = clamp(this.screenX-mx, 0, this.world.size-SC_W/scale);
             this.screenY = clamp(this.screenY-my, 0, this.world.size-SC_H/scale);
 
