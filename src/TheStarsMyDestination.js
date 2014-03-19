@@ -46,6 +46,11 @@ tm.define("tiger.CanvasApp", {
     //難易度
     difficulty: 0,
 
+    //実行環境情報
+    userAgent: "",
+    soundEnable: false,
+    smartphone: false,
+
     init: function(id) {
         this.superInit(id);
 
@@ -53,7 +58,9 @@ tm.define("tiger.CanvasApp", {
         this.resize(SC_W, SC_H).fitWindow();
         this.fps = 60;
         this.background = "rgba(0, 0, 0, 0)";
-        
+
+        this.detectEnvironment();
+
         this.keyboard = tm.input.Keyboard(window);
         this.gameScene = tiger.GameScene();
 
@@ -76,5 +83,40 @@ tm.define("tiger.CanvasApp", {
     exitApp: function() {
         this.stop();
         tm.social.Nineleap.postRanking(this.highScore, "");
-    }
+    },
+
+    //実行環境取得
+    detectEnvironment: function() {
+        if ((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') == -1) || navigator.userAgent.indexOf('iPod') > 0) {
+            this.userAgent = "iOS";
+            this.soundEnable = false;
+            this.smartphone = true;
+        } else if (navigator.userAgent.indexOf('Android') > 0) {
+            this.userAgent = "Android";
+            this.soundEnable = false;
+            this.smartphone = true;
+        } else if (navigator.userAgent.indexOf('Chrome') > 0) {
+            this.userAgent = "Chrome";
+            this.soundEnable = true;
+            this.smartphone = false;
+        } else if (navigator.userAgent.indexOf('Firefox') > 0) {
+            this.userAgent = "Firefox";
+            this.soundEnable = false;
+            this.smartphone = false;
+        } else if (navigator.userAgent.indexOf('Safari') > 0) {
+            this.userAgent = "Safari";
+            this.soundEnable = false;
+            this.smartphone = false;
+        } else if (navigator.userAgent.indexOf('IE') > 0) {
+            this.userAgent = "IE";
+            this.soundEnable = false;
+            this.smartphone = false;
+        } else {
+            this.userAgent = "unknown";
+            this.soundEnable = false;
+            this.smartphone = false;
+        }
+    },
 });
+
+
