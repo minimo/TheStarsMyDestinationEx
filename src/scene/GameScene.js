@@ -24,6 +24,7 @@ tm.define("tiger.GameScene", {
 
     //マルチタッチ補助クラス
     touches: null,
+    touchID: -1,
 
     //ポーズフラグ
     pause: false,
@@ -281,6 +282,8 @@ tm.define("tiger.GameScene", {
 
     //タッチorクリック開始処理
     ontouchesstart: function(e) {
+        this.touchID = e.ID;
+
         var sx = e.pointing.x;
         var sy = e.pointing.y;
         var wx = this.toWorldX(sx), wy = this.toWorldY(sy);
@@ -342,6 +345,8 @@ tm.define("tiger.GameScene", {
 
     //タッチorクリック移動処理
     ontouchesmove: function(e) {
+        if (this.touchID != e.ID)return;
+
         var sx = e.pointing.x;
         var sy = e.pointing.y;
         var wx = this.toWorldX(sx), wy = this.toWorldY(sy);
@@ -474,11 +479,22 @@ tm.define("tiger.GameScene", {
             this.screenX = clamp(this.screenX, 0, this.world.size-SC_W/scale);
             this.screenY = clamp(this.screenY, 0, this.world.size-SC_H/scale);
         }
+
+        //移動量検出
+        var mx = (e.pointing.x-e.pointing.prevPosition.x);
+        var my = (e.pointing.y-e.pointing.prevPosition.y);
+        if (mx < -2 || mx > 2 || my < -2 || my > 2) {
+            //ある程度動いていたら長押しはキャンセル
+            this.longPress = false;
+        }
+
         this.clickFrame++;
     },
 
     //タッチorクリック終了処理
     ontouchesend: function(e) {
+        if (this.touchID != e.ID)return;
+
         var sx = e.pointing.x;
         var sy = e.pointing.y;
         var wx = this.toWorldX(sx), wy = this.toWorldY(sy);
