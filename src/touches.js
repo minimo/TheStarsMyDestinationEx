@@ -79,12 +79,12 @@ tm.define("tiger.Touches", {
                 self.touchList[target].pointing = e.pointing;
  
                 e.ID = self.touchList[target].id;
-                this.ontouchesmove(e);
+                this.ontouchesend(e);
                 self.touchList.splice(target, 1);
                 if (self.touchList.length == 0)self.touchID = 0;
             } else {
                 e.ID = 0;
-                this.ontouchesmove(e);
+                this.ontouchesend(e);
                 self.touchList = [];
             }
         });
