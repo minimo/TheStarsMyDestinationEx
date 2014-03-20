@@ -171,7 +171,7 @@ tm.define("tiger.GameScene", {
             };
             this.debugCursor.addChildTo(this.world)
 
-            var d1 = this.debug1 = tm.display.OutlineLabel("00:00", 30).addChildTo(this);
+            var d1 = this.debug1 = tm.display.OutlineLabel("", 30).addChildTo(this);
             d1.x = 0;
             d1.y = 200;
             d1.fontFamily = "'Orbitron'";
@@ -187,7 +187,7 @@ tm.define("tiger.GameScene", {
                     this.text = "arrow:nothing";
                 }
             };
-            var d2 = this.debug2 = tm.display.OutlineLabel("00:00", 30).addChildTo(this);
+            var d2 = this.debug2 = tm.display.OutlineLabel("", 30).addChildTo(this);
             d2.x = 0;
             d2.y = 280;
             d2.fontFamily = "'Orbitron'";
@@ -202,6 +202,19 @@ tm.define("tiger.GameScene", {
                 } else {
                     this.text = "select:nothing";
                 }
+            };
+
+            var d3 = this.debug2 = tm.display.OutlineLabel("", 30).addChildTo(this);
+            d3.x = 0;
+            d3.y = 320;
+            d3.fontFamily = "'Orbitron'";
+            d3.align     = "left";
+            d3.baseline  = "top";
+            d3.fontSize = 20;
+            d3.fontWeight = 700;
+            d3.outlineWidth = 2;
+            d3.update = function() {
+                this.text = "select:"+that.clickFrame;
             };
         }
     },
@@ -230,18 +243,6 @@ tm.define("tiger.GameScene", {
 
         if (DEBUG) {
             this.debugCursor.setPosition(wx, wy);
-        }
-
-        //クリック開始
-        if (click && !this.beforePointing.click) {
-        }
-
-        //クリック中
-        if (click && this.beforePointing.click) {
-        }
-
-        //クリック終了
-        if (!click && this.beforePointing.click) {
         }
 
         //非クリック状態
@@ -306,7 +307,7 @@ tm.define("tiger.GameScene", {
                 this.control = CTRL_PLANET;
                 this.selectFrom = pl.planet;
                 pl.planet.select = true;
-                if (pl.planet.alignment == TYPE_PLAYER) this.addArrow(pl.planet, {x: wx, y:wy});
+//                if (pl.planet.alignment == TYPE_PLAYER) this.addArrow(pl.planet, {x: wx, y:wy});
             }
         }
 
@@ -346,13 +347,24 @@ tm.define("tiger.GameScene", {
         var sy = e.pointing.y;
         var wx = this.toWorldX(sx), wy = this.toWorldY(sy);
         var scale = this.world.scaleX;
-
+        
         //通常選択モード（惑星、ユニット）
         if (this.control == CTRL_PLANET || this.control == CTRL_UNIT) {
+            if (!this.arrow) {
+                if (!this.selectList) {
+                    //単独選択時
+                    this.addArrow(this.selectFrom, this.selectFrom);
+                } else {
+                     for (var i = 0; i < this.selectList.length; i++) this.addArrow(this.selectList[i], this.selectFrom);
+                }
+            }
+
             var pl = this.world.getPlanet(wx, wy);
             if (pl.distance < 32*pl.planet.power) {
+                //ポインタが惑星上にある
                 this.selectTo = pl.planet;
                 this.selectTo.select = true;
+
                 if (this.arrow) {
                     for (var i = 0, len = this.arrow.length; i < len; i++) this.arrow[i].to = pl.planet;
                 }
@@ -371,18 +383,15 @@ tm.define("tiger.GameScene", {
                     if (!this.selectList) {
                         //全選択
                         var planets = this.world.getPlanetGroup(TYPE_PLAYER);
-                        for (var i = 0; i < planets.length; i++) {
-                            this.arrow.push(tiger.Arrow(planets[i], this.selectFrom).addChildTo(this.world));
-                        }
+                        for (var i = 0; i < planets.length; i++) this.addArrow(planets[i], this.selectFrom);
                         this.world.selectPlanetGroup(TYPE_PLAYER, true);
                     } else {
                         //部分選択
-                        for (var i = 0; i < this.selectList.length; i++) {
-                            this.arrow.push(tiger.Arrow(this.selectList[i], this.selectFrom).addChildTo(this.world));
-                        }
+                        for (var i = 0; i < this.selectList.length; i++) this.addArrow(this.selectList[i], this.selectFrom);
                     }
                 }
             } else {
+                //ポインタが惑星上に無い
                 if (this.selectTo) {
                     //選択中だったらキャンセル
                     if (this.selectTo instanceof tiger.Planet && this.selectTo !== this.selectFrom) {
@@ -578,6 +587,7 @@ tm.define("tiger.GameScene", {
             this.selectTo = null;
         }
 
+        this.clearArrow();
         this.scaleCursor.active = false;
         this.control = CTRL_NOTHING;
     },
