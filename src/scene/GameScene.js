@@ -307,7 +307,6 @@ tm.define("tiger.GameScene", {
                 this.control = CTRL_PLANET;
                 this.selectFrom = pl.planet;
                 pl.planet.select = true;
-//                if (pl.planet.alignment == TYPE_PLAYER) this.addArrow(pl.planet, {x: wx, y:wy});
             }
         }
 
@@ -347,9 +346,10 @@ tm.define("tiger.GameScene", {
         var sy = e.pointing.y;
         var wx = this.toWorldX(sx), wy = this.toWorldY(sy);
         var scale = this.world.scaleX;
-        
+
         //通常選択モード（惑星、ユニット）
         if (this.control == CTRL_PLANET || this.control == CTRL_UNIT) {
+
             if (!this.arrow) {
                 if (!this.selectList) {
                     //単独選択時
