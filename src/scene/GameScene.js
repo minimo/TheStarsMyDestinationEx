@@ -218,7 +218,7 @@ tm.define("tiger.GameScene", {
             d3.fontWeight = 700;
             d3.outlineWidth = 2;
             d3.update = function() {
-                this.text = "select:"+that.clickFrame;
+                this.text = "click:"+that.clickFrame;
             };
         }
     },
@@ -305,14 +305,6 @@ tm.define("tiger.GameScene", {
                 this.control = CTRL_PLANET;
                 this.selectFrom = pl.planet;
                 pl.planet.select = true;
-                //プレイヤ側の場合選択リストに加える
-                if (pl.planet.alignment == TYPE_PLAYER) {
-                    if (this.checkSelectList(pl.planet)) {
-                        this.removeSelectList(pl.planet);
-                    } else {
-                        this.addSelectList(pl.planet);
-                    }
-                }
             }
         }
 
@@ -440,10 +432,29 @@ tm.define("tiger.GameScene", {
         var scale = this.world.scaleX;
 
         if (this.control == CTRL_PLANET || this.control == CTRL_UNIT) {
+            //クリック終点チェック
             var pl = this.world.getPlanet(wx, wy);
             if (pl.distance < 32*pl.planet.power) {
-//                if (pl.planet !== this.selectFrom) this.removeSelectList(pl.planet);
+                //クリック終点が惑星の場合
                 this.selectTo = pl.planet;
+
+                //プレイヤ側の場合選択リストに加える
+                if (this.selectFrom === this.selectTo) {
+                    if (pl.planet.alignment == TYPE_PLAYER) {
+                        if (!this.checkSelectList(pl.planet)) {
+                            this.addSelectList(pl.planet);
+                        } else {
+                            this.removeSelectList(pl.planet);
+                        }
+                    }
+                } else {
+                    this.selectFrom.select = false;
+                }
+            } else {
+                //クリック終点に何も無い場合
+                if (!this.checkSelectList(this.selectFrom)) {
+                    this.selectFrom.select = false;
+                }
             }
         }
 
