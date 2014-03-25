@@ -468,13 +468,19 @@ tm.define("tiger.GameScene", {
                         }
                     }
                 } else {
+                    //選択リストに無い惑星の場合ユニット派遣
+                    if (!this.checkSelectList(pl.planet)) {
+                        this.world.enterUnit(this.selectFrom, this.selectTo);
+                        for (var i = 0; i < this.selectList.length; i++) {
+                            if (this.selectFrom != this.selectList[i]) this.world.enterUnit(this.selectList[i], this.selectTo);
+                        }
+                        this.clearSelectList();
+                    }
                     this.selectFrom.select = false;
                 }
             } else {
                 //クリック終点に何も無い場合
-                if (!this.checkSelectList(this.selectFrom)) {
-                    this.selectFrom.select = false;
-                }
+                if (!this.checkSelectList(this.selectFrom)) this.selectFrom.select = false;
             }
         }
 
