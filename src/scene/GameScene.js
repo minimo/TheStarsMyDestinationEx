@@ -309,7 +309,7 @@ tm.define("tiger.GameScene", {
         }
 
         //ユニット選択チェック
-        if (this.control == CTRL_NOTHING || !this.selctList) {
+        if (this.control == CTRL_NOTHING || !this.selectList) {
             var un = this.world.getUnit(wx, wy);
             if (un && un.unit.alignment == TYPE_PLAYER && un.distance < 20) {
                 //ユニットが選択された
