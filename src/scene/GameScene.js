@@ -348,7 +348,7 @@ tm.define("tiger.GameScene", {
         //通常選択モード（惑星、ユニット）
         if (this.control == CTRL_PLANET || this.control == CTRL_UNIT) {
             if (this.selectTo && this.selectFrom != this.selectTo) this.selectTo.select = false;
-
+            
             var pl = this.world.getPlanet(wx, wy);
             if (pl.distance < 32*pl.planet.power) {
                 this.selectTo = pl.planet;
@@ -374,6 +374,33 @@ tm.define("tiger.GameScene", {
                         this.arrow[i].to = this.selectTo;
                     }
                 }
+            }
+
+            //長押しで全選択モードへ移行
+            if (this.longPress && this.clickFrame > this.longPressFrame) {
+                this.control = CTRL_ALLPLANETS;
+                if (this.selectList.length == 0) {
+                    //全選択
+                    var planets = this.world.getPlanetGroup(TYPE_PLAYER);
+                    for (var i = 0; i < planets.length; i++) this.addArrow(planets[i], this.selectFrom);
+                    this.world.selectPlanetGroup(TYPE_PLAYER, true);
+                } else {
+                    //選択リストによる選択
+                    for (var i = 0; i < this.selectList.length; i++) this.addArrow(this.selectList[i], this.selectFrom);
+                }
+            }
+        }
+
+        //全選択モード時
+        if (this.control == CTRL_ALLPLANETS) {
+            var pl = this.world.getPlanet(wx, wy);
+            if (!(this.selectFrom == pl.planet && pl.distance < 32*pl.planet.power)) {
+                //ポインタが外れてたら選択キャンセル
+                this.control = CTRL_NOTHING;
+                this.world.selectPlanetGroup(TYPE_PLAYER, false);
+                this.clearArrow();
+                this.clearSelectList();
+                this.selectFrom.select = false;
             }
         }
 
@@ -482,6 +509,25 @@ tm.define("tiger.GameScene", {
                 //クリック終点に何も無い場合
                 if (!this.checkSelectList(this.selectFrom)) this.selectFrom.select = false;
             }
+        }
+
+        //全選択時
+        if (this.control == CTRL_ALLPLANETS) {
+            if (this.selectList.length == 0) {
+                //全体
+                var planets = this.world.getPlanetGroup(TYPE_PLAYER);
+                for (var i = 0; i < planets.length; i++) {
+                    if (this.selectFrom != planets[i]) this.world.enterUnit(planets[i], this.selectFrom);
+                }
+                this.world.selectPlanetGroup(TYPE_PLAYER, false);
+            } else {
+                //選択リスト
+                for (var i = 0; i < this.selectList.length; i++) {
+                    this.world.enterUnit(this.selectList[i], this.selectFrom);
+                }
+            }
+            this.world.selectPlanetGroup(TYPE_PLAYER, false);
+            this.clearSelectList();
         }
 
         if (this.control == CTRL_MAP) {
