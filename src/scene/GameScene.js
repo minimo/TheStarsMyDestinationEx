@@ -478,7 +478,8 @@ tm.define("tiger.GameScene", {
         var wx = this.toWorldX(sx), wy = this.toWorldY(sy);
         var scale = this.world.scaleX;
 
-        if (this.control == CTRL_PLANET || this.control == CTRL_UNIT) {
+        //惑星操作
+        if (this.control == CTRL_PLANET) {
             //クリック終点チェック
             var pl = this.world.getPlanet(wx, wy);
             if (pl.distance < 32*pl.planet.power) {
@@ -507,7 +508,28 @@ tm.define("tiger.GameScene", {
                 }
             } else {
                 //クリック終点に何も無い場合
-                if (!this.checkSelectList(this.selectFrom)) this.selectFrom.select = false;
+                if (!this.checkSelectList(this.selectFrom)) {
+                    //選択リストが無い場合は選択無しにする
+                    if (this.selectList.length == 0) {
+                        this.selectFrom.select = false;
+                    } else {
+                        //選択リストに追加する
+                        this.addSelectList(this.selectFrom);
+                    }
+                }
+            }
+        }
+        
+        //ユニット操作
+        if (this.control == CTRL_UNIT) {
+            //クリック終点チェック
+            var pl = this.world.getPlanet(wx, wy);
+            if (pl.distance < 32*pl.planet.power) {
+                //ユニットの行き先変更
+                this.world.setDestinationUnitGroup(this.selectFrom.groupID, pl.planet);
+                this.world.selectUnitGroup(this.selectFrom.groupID, false);
+            } else {
+                this.world.selectUnitGroup(this.selectFrom.groupID, false);
             }
         }
 
