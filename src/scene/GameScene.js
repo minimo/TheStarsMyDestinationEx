@@ -283,8 +283,8 @@ tm.define("tiger.GameScene", {
     ontouchesstart: function(e) {
         this.touchID = e.ID;
 
-        var sx = e.pointing.x;
-        var sy = e.pointing.y;
+        var sx = this.startX = e.pointing.x;
+        var sy = this.startY = e.pointing.y;
         var wx = this.toWorldX(sx), wy = this.toWorldY(sy);
         var scale = this.world.scaleX;
 
@@ -347,13 +347,33 @@ tm.define("tiger.GameScene", {
 
         //通常選択モード（惑星、ユニット）
         if (this.control == CTRL_PLANET || this.control == CTRL_UNIT) {
+            if (this.selectTo && this.selectFrom != this.selectTo) this.selectTo.select = false;
+
             var pl = this.world.getPlanet(wx, wy);
             if (pl.distance < 32*pl.planet.power) {
-                if (!this.checkSelectList(pl.planet)) {
-                    this.selectTo = pl.planet;
+                this.selectTo = pl.planet;
+                this.selectTo.select = true;
+
+                //矢印がある場合は終点の設定                
+                if (this.arrow.length != 0) {
+                    for (var i = 0, len = this.arrow.length; i < len; i++) {
+                        this.arrow[i].to = this.selectTo;
+                    }
                 }
             } else {
                 this.selectTo = {x: wx, y: wy};
+
+                //矢印を作成
+                if (this.arrow.length == 0) {
+                    this.addArrow(this.selectFrom, this.selectTo);
+                    for (var i = 0, len = this.selectList.length; i < len; i++) {
+                        this.addArrow(this.selectList[i], this.selectTo);
+                    }
+                } else {
+                    for (var i = 0, len = this.arrow.length; i < len; i++) {
+                        this.arrow[i].to = this.selectTo;
+                    }
+                }
             }
         }
 
@@ -456,6 +476,13 @@ tm.define("tiger.GameScene", {
                     this.selectFrom.select = false;
                 }
             }
+        }
+
+        if (this.control == CTRL_MAP) {
+            //なにも無い場所でクリックの場合＝選択リスト全消し
+            var mx = sx - this.startX;
+            var my = sy - this.startY;
+            if ( -1 < mx && mx < 1 && -1 < my && my < 1) this.clearSelectList();
         }
 
         //選択中オブジェクト解放
