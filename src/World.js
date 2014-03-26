@@ -83,6 +83,7 @@ tm.define("tiger.World", {
                 unit.active = false;
                 if (planet.alignment != unit.alignment) {
                     unit.destroy();
+                } else {
                 }
             }
         }
@@ -98,7 +99,11 @@ tm.define("tiger.World", {
                 if (dis < 64*planet.power) {
                     var dice = rand(0,1000);
                     if (dice > 950) {
-                        this.enterLaser(planet, unit);
+                        if (rand(0,1000) > 400) {
+                            this.enterLaser(planet, unit);
+                        } else {
+                            this.enterBeam(planet, unit, 10, 5);
+                        }
                         if (rand(0,1000) > 900) {
                             this.enterExplode(unit);
                             unit.damage(1);
@@ -113,16 +118,23 @@ tm.define("tiger.World", {
         for (var i = 0; i < len; i++) {
             var unit1 = this.units[i];
             if (unit1.HP <= 0)continue;
+            if (rand(0,1000) < 950)continue;
             for (var j = 0; j < len; j++) {
-                if (i == j)continue;
                 var unit2 = this.units[j];
+                if (unit1.alignment == unit2.alignment) continue;
+
+                var dis = distanceSq(unit1, unit2);
+                if (dis > 1600) continue;
+
+                if (rand(0,1000) < 950)continue;
                 if (unit2.HP <= 0)continue;
-                var dis = distance(unit1, unit2);
-                if (dis < 40) {
+                this.enterLaser(unit1, unit2);
+                if (rand(0,1000) > 900) {
+                    this.enterExplode(unit2);
+                    unit2.damage(1);
                 }
             }
         }
-
         //破壊ユニット掃除
         for (var i = 0; i < len; i++) {
             var unit = this.units[i];
@@ -225,12 +237,16 @@ tm.define("tiger.World", {
         var fx = from.x, fy = from.y
         var tx = to.x, ty = to.y;
         if (from instanceof tiger.Planet) {
-            fx += rand(0, 64*from.power)-32*from.power;
-            fy += rand(0, 64*from.power)-32*from.power;
+            var r = rand(0, 359)*toRad;
+            var l = rand(0, 40*from.power);
+            fx += Math.sin(r)*l;
+            fy += Math.cos(r)*l;
         }
         if (to instanceof tiger.Planet) {
-            tx += rand(0, 64*to.power)-32*to.power;
-            ty += rand(0, 64*to.power)-32*to.power;
+            var r = rand(0, 359)*toRad;
+            var l = rand(0, 40*from.power);
+            tx += Math.sin(r)*l;
+            ty += Math.cos(r)*l;
         }
         var laserType;
         switch (from.alignment) {
@@ -266,10 +282,69 @@ tm.define("tiger.World", {
         laser.addChildTo(this);
     },
 
+    //ビームエフェクト投入
+    enterBeam: function(from, to, length, speed) {
+        length = length || 10;
+        speed = speed || 5;
+
+        var fx = from.x, fy = from.y
+        var tx = to.x, ty = to.y;
+        if (from instanceof tiger.Planet) {
+            fx += rand(0, 64*from.power)-32*from.power;
+            fy += rand(0, 64*from.power)-32*from.power;
+        }
+        if (to instanceof tiger.Planet) {
+            tx += rand(0, 64*to.power)-32*to.power;
+            ty += rand(0, 64*to.power)-32*to.power;
+        }
+        var beamType;
+        switch (from.alignment) {
+            case TYPE_PLAYER:
+                beamType = "laser_b";
+                break;
+            case TYPE_ENEMY:
+                beamType = "laser_r";
+                break;
+            case TYPE_NEUTRAL:
+                beamType = "laser_h";
+                break;
+        }
+        var beam = tm.display.Sprite(beamType, 50, 640);
+        beam.setPosition(fx, fy);
+        beam.originX = 0.5;
+        beam.originY = 1.0;
+        beam.from = {x: fx, y: fy};
+        beam.to = {x: tx, y: ty};
+        beam.isEffect = true;
+        beam.scaleX = 0.1;
+        beam.scaleY = 1/640*length;
+        beam.setFrameIndex(0, 50, 640);
+        var dis = Math.sqrt((tx-fx)*(tx-fx) + (ty-fy)*(ty-fy));
+        beam.vx = (tx-fx)/dis*speed;
+        beam.vy = (ty-fy)/dis*speed;
+        beam.limit = ~~(dis/speed);
+        beam.time = 0;
+        var dx = tx-fx, dy = ty-fy;
+        beam.rotation = Math.atan2(dy, dx)*toDeg+90;   //二点間の角度
+        var that = this;
+        beam.update = function() {
+            this.x += this.vx;
+            this.y += this.vy;
+            if (this.time > this.limit) {
+                that.enterExplode({x: this.x, y: this.y}, 0.5);
+                this.remove();
+            }
+            this.time++;
+        }
+        beam.addChildTo(this);
+    },
+
     //爆発エフェクト投入
-    enterExplode: function(target) {
+    enterExplode: function(target, scale) {
+        scale = scale || 1.0;
         var exp = tm.display.Sprite("explode", 64, 64);
         exp.setPosition(target.x, target.y);
+        exp.setScale(scale);
         exp.isEffect = true;
         exp.setFrameIndex(0, 64, 64);
         exp.frame = 1;
