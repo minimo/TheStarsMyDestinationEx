@@ -656,8 +656,11 @@ tm.define("tiger.GameScene", {
         if (this.winner != 0)return;
         var finish = false;
         var score = 0;
-        var result = 0;
+        var result = "";
         var enemy = this.world.getPowerOfPlanet(TYPE_ENEMY)+this.world.getPowerOfUnit(TYPE_ENEMY);
+        var player = this.world.getPowerOfPlanet(TYPE_PLAYER)+this.world.getPowerOfUnit(TYPE_PLAYER);
+
+        //プレイヤー側勝利
         if (enemy == 0) {
             this.winner = TYPE_PLAYER;
             var label = tm.display.OutlineLabel("WIN!!", 30).addChildTo(this);
@@ -669,11 +672,13 @@ tm.define("tiger.GameScene", {
             label.fontSize = 100;
             label.fontWeight = 700;
             label.outlineWidth = 2;
+            
+            score = 
 
             finish = true;
         }
 
-        var player = this.world.getPowerOfPlanet(TYPE_PLAYER)+this.world.getPowerOfUnit(TYPE_PLAYER);
+        //敵側勝利
         if (player == 0) {
             this.winner = TYPE_ENEMY;
             var label = tm.display.OutlineLabel("LOSE!!", 30).addChildTo(this);
@@ -686,12 +691,20 @@ tm.define("tiger.GameScene", {
             label.fontWeight = 700;
             label.outlineWidth = 2;
 
+            score = 0;
+            result = "LOSE!!";
+
             finish = true;
         }
 
-        //9leapへ投稿            
+        //9leapへ投稿
         if (finish) {
-//            tm.social.Nineleap.postRanking(score, result);
+            this.tweener
+                .clear()
+                .wait(2000)
+                .call(function() {
+                    tm.social.Nineleap.postRanking(score, result);
+                }.bind(this));
         }
     },
 
