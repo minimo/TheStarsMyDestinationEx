@@ -96,13 +96,13 @@ tm.define("tiger.World", {
                 if (!unit.active)continue;
                 if (unit.alignment == planet.alignment)continue;
                 var dis = distance(unit, planet);
-                if (dis < 64*planet.power) {
+                if (dis < 70*planet.power) {
                     var dice = rand(0,1000);
                     if (dice > 950) {
                         if (rand(0,1000) > 400) {
                             this.enterLaser(planet, unit);
                         } else {
-                            this.enterBeam(planet, unit, 10, 5);
+                            this.enterBeam(planet, unit, rand(10,20), rand(3,15));
                         }
                         if (rand(0,1000) > 900) {
                             this.enterExplode(unit);
@@ -135,6 +135,7 @@ tm.define("tiger.World", {
                 }
             }
         }
+
         //破壊ユニット掃除
         for (var i = 0; i < len; i++) {
             var unit = this.units[i];
@@ -331,7 +332,7 @@ tm.define("tiger.World", {
             this.x += this.vx;
             this.y += this.vy;
             if (this.time > this.limit) {
-                that.enterExplode({x: this.x, y: this.y}, 0.5);
+                if (rand(0,1000) > 800) that.enterExplode({x: this.x, y: this.y}, 0.5);
                 this.remove();
             }
             this.time++;
