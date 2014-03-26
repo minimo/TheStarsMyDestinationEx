@@ -9,7 +9,11 @@
 //チュートリアルシーン
 tm.define("tiger.TutorialScene", {
     superClass: tm.app.Scene,
-    
+
+    //マルチタッチ補助クラス
+    touches: null,
+    touchID: -1,
+
     //マップ
     world: null,
 
@@ -53,3 +57,4 @@ tm.define("tiger.TutorialScene", {
         if (this.phase == this.phaseMax) app.replaceScene(app.gameScene);
     },
 });
+
