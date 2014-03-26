@@ -81,9 +81,10 @@ tm.define("tiger.World", {
                 planet.damage(unit.alignment, unit.HP);
                 unit.HP = 0;
                 unit.active = false;
-                if (planet.alignment != unit.alignment) {
-                    unit.destroy();
+                if (planet.alignment == unit.alignment) {
+                    unit.arrival();
                 } else {
+                    unit.destroy();
                 }
             }
         }
@@ -124,7 +125,7 @@ tm.define("tiger.World", {
                 if (unit1.alignment == unit2.alignment) continue;
 
                 var dis = distanceSq(unit1, unit2);
-                if (dis > 1600) continue;
+                if (dis > 3600) continue;
 
                 if (rand(0,1000) < 950)continue;
                 if (unit2.HP <= 0)continue;
@@ -350,6 +351,7 @@ tm.define("tiger.World", {
         exp.setFrameIndex(0, 64, 64);
         exp.frame = 1;
         exp.age = 1;
+        exp.rotation = rand(0,360);
         exp.update = function() {
             if (this.age % 3 == 0) {
                 this.setFrameIndex(this.frame, 64, 64);

@@ -123,9 +123,15 @@ tm.define("tiger.Unit", {
         if (this.HP < 0)this.destroy();
     },
 
+    //目標到着処理
+    arrival: function() {
+        this.world.addChild(tiger.Effect.genShockwave(this.x, this.y, 1));
+        this.active = false;
+    },
+
     //破壊処理
     destroy: function() {
-        this.world.addChild(tiger.Effect.genShockwave(this.x, this.y, 1));
+        this.world.enterExplode(this);
         this.active = false;
     }
 });
