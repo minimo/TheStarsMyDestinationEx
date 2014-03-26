@@ -103,7 +103,7 @@ tm.define("tiger.World", {
                         if (rand(0,1000) > 400) {
                             this.enterLaser(planet, unit);
                         } else {
-                            this.enterBeam(planet, unit, rand(10,20), rand(3,15));
+                            this.enterBeam(planet, unit, rand(10,30), rand(3,15));
                         }
                         if (rand(0,1000) > 900) {
                             this.enterExplode(unit);
@@ -127,7 +127,7 @@ tm.define("tiger.World", {
                 var dis = distanceSq(unit1, unit2);
                 if (dis > 3600) continue;
 
-                if (rand(0,1000) < 950)continue;
+                if (rand(0,1000) < 700)continue;
                 if (unit2.HP <= 0)continue;
                 this.enterLaser(unit1, unit2);
                 if (rand(0,1000) > 900) {
@@ -235,7 +235,8 @@ tm.define("tiger.World", {
     },
 
     //レーザーエフェクト投入
-    enterLaser: function(from, to) {
+    enterLaser: function(from, to, scale) {
+        scale = scale || 1.0;
         var fx = from.x, fy = from.y
         var tx = to.x, ty = to.y;
         if (from instanceof tiger.Planet) {
@@ -269,7 +270,7 @@ tm.define("tiger.World", {
         laser.from = {x: fx, y: fy};
         laser.to = {x: tx, y: ty};
         laser.isEffect = true;
-        laser.scaleX = 0.1;
+        laser.scaleX = 0.1*scale;
         laser.setFrameIndex(0, 50, 640);
         laser.update = function() {
             //中心点からの直線を計算
