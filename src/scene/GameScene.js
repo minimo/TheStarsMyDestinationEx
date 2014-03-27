@@ -44,6 +44,7 @@ tm.define("tiger.GameScene", {
     rateLabel: null,
 
     //時間表示
+    time: 0,
     timeLabel: null,
 
     //準備完了フラグ
@@ -98,9 +99,6 @@ tm.define("tiger.GameScene", {
     //勝者決定フラグ
     winner: 0,
 
-    //経過フレーム
-    frame: 0,
-
     init: function() {
         this.superInit();
 
@@ -148,7 +146,7 @@ tm.define("tiger.GameScene", {
         tl.fontWeight = 700;
         tl.outlineWidth = 2;
         tl.update = function() {
-            var sec = ~~(that.frame/60);
+            var sec = ~~(that.time/60);
             var min = ""+~~(sec/60);
             sec = ""+sec%60;
             if (min.length == 1)min = "0"+min;
@@ -230,6 +228,7 @@ tm.define("tiger.GameScene", {
 
             //準備完了
             this.ready = true;
+            this.time = 0;
             return;
         }
 
@@ -276,7 +275,7 @@ tm.define("tiger.GameScene", {
 
         //前フレーム情報保存
         this.beforePointing = {x: sx, y: sy, click: click, selectFrom: this.selectFrom, selectTo: this.selectTo};
-        this.frame++;
+        this.time++;
     },
 
     //タッチorクリック開始処理
@@ -672,8 +671,9 @@ tm.define("tiger.GameScene", {
             label.fontSize = 100;
             label.fontWeight = 700;
             label.outlineWidth = 2;
-            
-            score = 
+
+            score = ((10*60*60-this.time)<0 ? 0 : (10*60*60-this.time))+((player>3000) ? 3000 : player);
+            result = "Win!! Score:"+score;
 
             finish = true;
         }
@@ -691,7 +691,7 @@ tm.define("tiger.GameScene", {
             label.fontWeight = 700;
             label.outlineWidth = 2;
 
-            score = 0;
+            score = -1;
             result = "LOSE!!";
 
             finish = true;
