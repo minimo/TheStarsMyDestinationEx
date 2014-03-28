@@ -111,12 +111,9 @@ tm.define("tiger.GameScene", {
         this.scaleCursor = tiger.ScaleCursor().addChildTo(this);
         this.map = tiger.WorldMap(640-160, 0, 160, this.world).addChildTo(this);
         this.balance = tiger.CosmicBalance(0, 640-24, 500, this.world).addChildTo(this);
-        
+
         this.arrow = [];
         this.selectList = [];
-        
-        this.startup = true;
-        this.ready = false;
 
         var that = this;
         //派兵レートラベル
@@ -157,7 +154,7 @@ tm.define("tiger.GameScene", {
             if (sec.length == 1)sec = "0"+sec;
             this.text = min+":"+sec;
         };
-        
+
         //Ready表示
         var rd = this.readyLabel = tm.display.OutlineLabel("Ready", 30).addChildTo(this);
         rd.x = 320;
@@ -170,8 +167,13 @@ tm.define("tiger.GameScene", {
         rd.outlineWidth = 2;
         rd.frame = 0;
         rd.visible = false;
+        rd.active = true;
         rd.update = function() {
-            if (this.frame %
+            if (this.frame%30 == 0) {
+                if (this.visible) this.visible = false;
+                else this.visible = true;
+            }
+            this.frame++;
         }
 
         //デバッグ用
