@@ -48,6 +48,17 @@ tm.define("tiger.WorldMap", {
         canvas.fillRect(0, 0, this.size, this.size);
 
         if (this.world) {
+            //画面範囲の描画
+            canvas.fillStyle = "rgba(100, 100, 100, 0.9)";
+            var rateW = this.size/this.world.size/this.world.scaleX;      //全体マップと表示マップの比率
+            var rateH = this.size/this.world.size/this.world.scaleY;
+
+            var sx = -this.world.base.x*rateW;
+            var sy = -this.world.base.y*rateH;
+            var sw = SC_W*rateW;
+            var sh = SC_H*rateH;
+            canvas.fillRect(sx, sy, sw, sh);
+
             //惑星位置の描画
             for (var i = 0, len = this.world.planets.length; i < len; i++) {
                 var p = this.world.planets[i];
@@ -81,8 +92,6 @@ tm.define("tiger.WorldMap", {
                 var y = (u.y/this.world.size)*this.size;
                 canvas.fillRect(x-1, y-1, 2, 2);
             }
-
-            //画面範囲枠の描画
         }
     }
 });
