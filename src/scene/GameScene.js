@@ -672,7 +672,7 @@ tm.define("tiger.GameScene", {
             label.fontWeight = 700;
             label.outlineWidth = 2;
 
-            score = ((10*60*60-this.time)<0 ? 0 : (10*60*60-this.time))+((player>3000) ? 3000 : player);
+            score = ~~(((10*60*60-this.time)<0 ? 0 : (10*60*60-this.time))+((player>5000) ? 5000 : player));
             result = "Win!! Score:"+score;
 
             finish = true;
