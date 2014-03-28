@@ -98,14 +98,14 @@ tm.define("tiger.World", {
                 if (unit.alignment == planet.alignment)continue;
                 var dis = distance(unit, planet);
                 if (dis < 70*planet.power) {
-                    var dice = rand(0,1000);
-                    if (dice > 950) {
-                        if (rand(0,1000) > 400) {
+                    var dice = rand(0,100);
+                    if (dice > 98 || unit.destination == planet && dice > 95) {
+                        if (rand(0,100) > 40) {
                             this.enterLaser(planet, unit);
                         } else {
                             this.enterBeam(planet, unit, rand(10,30), rand(3,15));
                         }
-                        if (rand(0,1000) > 900) {
+                        if (rand(0,100) > 90) {
                             this.enterExplode(unit);
                             unit.damage(1);
                         }
@@ -114,25 +114,42 @@ tm.define("tiger.World", {
             }
         }
 
-        //ユニット対ユニット
+        //ユニット対ユニットor惑星
         len = this.units.length;
         for (var i = 0; i < len; i++) {
             var unit1 = this.units[i];
             if (unit1.HP <= 0)continue;
-            if (rand(0,1000) < 950)continue;
-            for (var j = 0; j < len; j++) {
-                var unit2 = this.units[j];
-                if (unit1.alignment == unit2.alignment) continue;
+            //対ユニット戦闘
+            if (rand(0,100) > 95) {
+                for (var j = 0; j < len; j++) {
+                    var unit2 = this.units[j];
+                    if (unit1.alignment == unit2.alignment) continue;
 
-                var dis = distanceSq(unit1, unit2);
-                if (dis > 3600) continue;
+                    var dis = distanceSq(unit1, unit2);
+                    if (dis > 3600) continue;
 
-                if (rand(0,1000) < 700)continue;
-                if (unit2.HP <= 0)continue;
-                this.enterLaser(unit1, unit2);
-                if (rand(0,1000) > 900) {
-                    this.enterExplode(unit2);
-                    unit2.damage(1);
+                    if (rand(0,100) < 70)continue;
+                    if (unit2.HP <= 0)continue;
+                    this.enterLaser(unit1, unit2);
+                    if (rand(0,100) > 90) {
+                        this.enterExplode(unit2);
+                        unit2.damage(1);
+                    }
+                }
+            }
+            //対惑星戦闘
+            var planet = unit1.destination;
+            if (unit1.alignment != planet.alignment) {
+                var dis = distance(unit1, planet);
+                if (dis < 60 * planet.power &&  rand(0,100) > 95) {
+                    if (rand(0,100) > 40) {
+                        this.enterLaser(unit1, planet);
+                    } else {
+                        this.enterBeam(unit1, planet, rand(10,30), rand(3,15));
+                    }
+                    if (rand(0, 100) > 98) {
+                        planet.damage(unit1.alignment, 1);
+                    }
                 }
             }
         }
