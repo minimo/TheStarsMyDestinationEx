@@ -48,6 +48,7 @@ tm.define("tiger.GameScene", {
     timeLabel: null,
 
     //準備完了フラグ
+    startup: true,
     ready: false,
 
     //操作中フラグ
@@ -113,6 +114,9 @@ tm.define("tiger.GameScene", {
         
         this.arrow = [];
         this.selectList = [];
+        
+        this.startup = true;
+        this.ready = false;
 
         var that = this;
         //派兵レートラベル
@@ -153,6 +157,22 @@ tm.define("tiger.GameScene", {
             if (sec.length == 1)sec = "0"+sec;
             this.text = min+":"+sec;
         };
+        
+        //Ready表示
+        var rd = this.readyLabel = tm.display.OutlineLabel("Ready", 30).addChildTo(this);
+        rd.x = 320;
+        rd.y = 320;
+        rd.fontFamily = "'Orbitron'";
+        rd.align     = "center";
+        rd.baseline  = "middle";
+        rd.fontSize = 60;
+        rd.fontWeight = 700;
+        rd.outlineWidth = 2;
+        rd.frame = 0;
+        rd.visible = false;
+        rd.update = function() {
+            if (this.frame %
+        }
 
         //デバッグ用
         if (DEBUG) {
@@ -222,15 +242,20 @@ tm.define("tiger.GameScene", {
     },
 
     update: function() {
-        if (!this.ready) {
+        //初期化処理
+        if (this.startup) {
             //マップ構築
             this.world.build();
 
             //準備完了
             this.ready = true;
             this.time = 0;
+            this.startup = false;
             return;
         }
+
+        //準備完了
+        if (!this.ready)return;
 
         if (this.mouseoverObject) {
             this.mouseoverObject.mouseover = false;
