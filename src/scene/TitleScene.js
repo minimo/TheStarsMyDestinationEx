@@ -21,35 +21,38 @@ tm.define("tiger.TitleScene", {
         this.bg.y = 0;
         this.bg.originX = this.bg.originY = 0;
 
-        var t1 = this.title1 = tm.display.OutlineLabel("The stars", 30).addChildTo(this);
-        t1.x = 50;
-        t1.y = 150;
-        t1.fontFamily = "'Orbitron'";
-        t1.align     = "left";
+        var baseY = 200;
+
+        var t1 = this.title1 = tm.display.OutlineLabel("我赴くは星の大海", 30).addChildTo(this);
+        t1.x = 320;
+        t1.y = baseY;
+        t1.fontFamily = "'UbuntuMono'";
+        t1.align     = "center";
         t1.baseline  = "middle";
-        t1.fontSize = 60;
+        t1.fontSize = 70;
         t1.fontWeight = 700;
         t1.outlineWidth = 2;
 
-        var t2 = this.title2 = tm.display.OutlineLabel("My destination", 30).addChildTo(this);
-        t2.x = this.title1.x + 50;
-        t2.y = this.title1.y + 100;
+        var t2 = this.title2 = tm.display.OutlineLabel("～The stars my destination～", 30).addChildTo(this);
+        t2.x = 320;
+        t2.y = baseY+100;
         t2.fontFamily = "'Orbitron'";
-        t2.align     = "left";
+        t2.align     = "center";
         t2.baseline  = "middle";
-        t2.fontSize = 60;
+        t2.fontSize = 30;
         t2.fontWeight = 700;
         t2.outlineWidth = 2;
+        t2.fillStyle = "aqua";
 
-        var t3 = this.title2 = tm.display.OutlineLabel("Click or Touch", 30).addChildTo(this);
-        t3.x = 320;
-        t3.y = 500;
-        t3.fontFamily = "'UbuntuMono'";
-        t3.align     = "center";
-        t3.baseline  = "middle";
-        t3.fontSize = 40;
-        t3.fontWeight = 700;
-        t3.outlineWidth = 2;
+        var ct = this.clickortouch = tm.display.OutlineLabel("Click or Touch", 30).addChildTo(this);
+        ct.x = 320;
+        ct.y = 500;
+        ct.fontFamily = "'UbuntuMono'";
+        ct.align     = "center";
+        ct.baseline  = "middle";
+        ct.fontSize = 40;
+        ct.fontWeight = 700;
+        ct.outlineWidth = 2;
     },
 
     update: function() {
