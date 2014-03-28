@@ -390,10 +390,12 @@ tm.define("tiger.GameScene", {
             }
 
             //画面端スクロール
-            if (sx < 60 || sx>SC_W-60 || sy < 60 || sy > SC_H-60) {
-                //ポインタの位置によりスクロール量を計算
-                this.screenX = clamp(this.screenX+(sx-SC_W/2)/32, 0, this.world.size*scale-SC_W);
-                this.screenY = clamp(this.screenY+(sy-SC_H/2)/32, 0, this.world.size*scale-SC_H);
+            if (this.arrow.length != 0) {
+                if (sx < 60 || sx>SC_W-60 || sy < 60 || sy > SC_H-60) {
+                    //ポインタの位置によりスクロール量を計算
+                    this.screenX = clamp(this.screenX+(sx-SC_W/2)/32, 0, this.world.size*scale-SC_W);
+                    this.screenY = clamp(this.screenY+(sy-SC_H/2)/32, 0, this.world.size*scale-SC_H);
+                }
             }
         }
 
