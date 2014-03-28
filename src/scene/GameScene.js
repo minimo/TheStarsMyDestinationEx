@@ -162,18 +162,12 @@ tm.define("tiger.GameScene", {
         rd.fontFamily = "'Orbitron'";
         rd.align     = "center";
         rd.baseline  = "middle";
-        rd.fontSize = 60;
+        rd.fontSize = 50;
         rd.fontWeight = 700;
         rd.outlineWidth = 2;
-        rd.frame = 0;
         rd.visible = false;
-        rd.active = true;
         rd.update = function() {
-            if (this.frame%30 == 0) {
-                if (this.visible) this.visible = false;
-                else this.visible = true;
-            }
-            this.frame++;
+            this.fontSize = clamp(this.fontSize, 30, 60);
         }
 
         //デバッグ用
@@ -532,7 +526,7 @@ tm.define("tiger.GameScene", {
                     }
                 } else {
                     //選択リストに無い惑星の場合ユニット派遣
-                    if (!this.checkSelectList(pl.planet)) {
+                    if (!this.checkSelectList(pl.planet) && this.selectFrom.alignment == TYPE_PLAYER) {
                         this.world.enterUnit(this.selectFrom, this.selectTo);
                         for (var i = 0; i < this.selectList.length; i++) {
                             if (this.selectFrom != this.selectList[i]) this.world.enterUnit(this.selectList[i], this.selectTo);
@@ -643,6 +637,7 @@ tm.define("tiger.GameScene", {
 
     //選択リストに追加
     addSelectList: function(obj) {
+        if (obj.alignment != TYPE_PLAYER)return;
         for (var i = 0, len = this.selectList.length; i < len; i++) {
             if (obj === this.selectList[i])return true;
         }
