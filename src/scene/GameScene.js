@@ -710,9 +710,9 @@ tm.define("tiger.GameScene", {
 
     //ＣＰＵ思考ルーチン
     thinkCPU: function() {
-        if (this.frame < 300)return;
+        if (this.time < 300)return;
         //１０秒に１回思考する
-        if (this.frame % 600 != 0) return;
+        if (this.time % 600 != 0) return;
 
         //領土に一番近い惑星で自分の６割程度なら艦隊を派遣
         var len = this.world.planets.length;
