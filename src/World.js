@@ -351,7 +351,7 @@ tm.define("tiger.World", {
             this.x += this.vx;
             this.y += this.vy;
             if (this.time > this.limit) {
-                if (rand(0,1000) > 800) that.enterExplode({x: this.x, y: this.y}, 0.5);
+                if (rand(0,100) > 80) that.enterExplode({x: this.x, y: this.y}, 0.5);
                 this.remove();
             }
             this.time++;
@@ -369,7 +369,7 @@ tm.define("tiger.World", {
         exp.setFrameIndex(0, 64, 64);
         exp.frame = 1;
         exp.age = 1;
-        exp.rotation = rand(0,360);
+        exp.rotation = rand(0, 360);
         exp.update = function() {
             if (this.age % 3 == 0) {
                 this.setFrameIndex(this.frame, 64, 64);
