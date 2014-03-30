@@ -23,7 +23,7 @@ tm.define("tiger.TitleScene", {
 
         var baseY = 200;
 
-        var t1 = this.title1 = tm.display.OutlineLabel("我赴くは星の大海", 30).addChildTo(this);
+        var t1 = this.title1 = tm.display.OutlineLabel("我赴くは星の群れ", 30).addChildTo(this);
         t1.x = 320;
         t1.y = baseY;
         t1.fontFamily = "'UbuntuMono'";

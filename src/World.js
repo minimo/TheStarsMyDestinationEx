@@ -238,12 +238,12 @@ tm.define("tiger.World", {
             num = ~~(num/2)+1;
         }
         for (var i = 0; i < num; i++) {
-            var r = 24 * from.power+rand(0, 20);
-            var d = rand(0, 360)*toRad;
-            var x = from.x + Math.sin(d) * r;
-            var y = from.y + Math.cos(d) * r;
+            var r = rand(0, 360)*toRad;
+            var d = rand(0, 32);
+            var x = from.x + Math.sin(r)*d*from.power;
+            var y = from.y + Math.cos(r)*d*from.power;
             var unit = tiger.Unit(x, y, from.alignment, unitHP).addChildTo(this);
-            unit.setDestination(to);
+            unit.setDestination(to, r, d);
             unit.ID = this.unitID;
             this.unitID++;
             unit.groupID = this.unitGroupID;

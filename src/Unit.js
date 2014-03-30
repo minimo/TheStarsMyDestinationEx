@@ -98,12 +98,17 @@ tm.define("tiger.Unit", {
     },
 
     //目的地座標設定
-    setDestination: function(d) {
-        this.destination = d;
+    setDestination: function(dest, r, d) {
+        this.destination = dest;
+        r = r || rand(0, 359)*toRad;
+        d = d || rand(0, 32);
+        var tx = Math.sin(r)*d*dest.power;
+        var ty = Math.cos(r)*d*dest.power;
+
         var gx = this.x;
         var gy = this.y;
-        var tx = d.x;
-        var ty = d.y;
+        var tx = d.x+tx;
+        var ty = d.y+ty;
         var dis = Math.sqrt((tx-gx)*(tx-gx) + (ty-gy)*(ty-gy));
         if (dis == 0)return;
         this.vx = (tx-gx)/dis*this.speed;
