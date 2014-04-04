@@ -77,7 +77,7 @@ tm.define("tiger.World", {
             var planet = unit.destination;
             //到着判定
             var dis = distance(unit, planet);
-            if (dis < 16*planet.power) {
+            if (dis < 32*planet.power) {
                 planet.damage(unit.alignment, unit.HP);
                 unit.HP = 0;
                 unit.active = false;
