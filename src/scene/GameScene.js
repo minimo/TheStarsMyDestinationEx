@@ -17,6 +17,7 @@ CTRL_UNIT = 3;
 CTRL_RATE = 4;
 CTRL_SCALE = 5;
 CTRL_ALLPLANETS = 6;
+CTRL_MENU = 7;
 CTRL_IGNORE = 99;
 
 //ゲームシーン
@@ -307,6 +308,16 @@ tm.define("tiger.GameScene", {
         var sy = this.startY = e.pointing.y;
         var wx = this.toWorldX(sx), wy = this.toWorldY(sy);
         var scale = this.world.scaleX;
+
+
+        //派兵レート変更
+        if (500 < sx && 600 < sy) {
+            this.control = CTRL_MENU;
+            //始点を記録
+            this.startX = sx;
+            this.startY = sy;
+            this.rateTemp = this.world.rate;
+        }
 
         //派兵レート変更
         if (500 < sx && 600 < sy) {
