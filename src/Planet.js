@@ -25,6 +25,9 @@ tm.define("tiger.Planet", {
     //戦力
     HP: 0,
 
+    //戦力上昇フレーム間隔
+    intervalHP: 30,
+
     //属性（0:中立 1:プレイヤー 2:エネミー）
     alignment: 0,
 
@@ -36,7 +39,7 @@ tm.define("tiger.Planet", {
 
     //経過フレーム数
     frame: 0,
-    
+
     //所属ワールド
     world: null,
 
@@ -52,6 +55,8 @@ tm.define("tiger.Planet", {
         this.HP = HP || 100;
         this.power = power || 1;
         this.type = type || 0;
+
+        this.intervalHP /= SPD;
 
         this.setFrameIndex(this.type, 64, 64);
         this.setScale(this.power);
@@ -105,10 +110,10 @@ tm.define("tiger.Planet", {
                     break;
             }
             if (that.select || that.mouseover) {
-                this.fontSize+=5;
+                this.fontSize+=5*SPD;
                 if (this.fontSize > 50)this.fontSize = 50;
             } else {
-                this.fontSize-=5;
+                this.fontSize-=5*SPD;
                 if (this.fontSize < 25)this.fontSize = 25;
             }
         };
@@ -120,7 +125,7 @@ tm.define("tiger.Planet", {
             if (this.alpha == TYPE_ENEMY) {
                 rev = this.world.handicap;
             }
-            if (this.frame % 30 == 0){
+            if (this.frame % this.intervalHP == 0){
                 this.HP += this.power * rev * 0.5;
             }
         }
