@@ -296,7 +296,7 @@ tm.define("tiger.World", {
             var dx = tx-fx, dy = ty-fy;
             this.rotation = Math.atan2(dy, dx)*toDeg+90;   //二点間の角度
             this.scaleY = Math.sqrt(dx*dx+dy*dy)/640;
-            this.alpha -= 0.1;
+            this.alpha -= 0.1*SPD;
             if (this.alpha < 0.0)this.remove();
         }
         laser.addChildTo(this);
@@ -306,6 +306,7 @@ tm.define("tiger.World", {
     enterBeam: function(from, to, length, speed) {
         length = length || 10;
         speed = speed || 5;
+        speed *= SPD;
 
         var fx = from.x, fy = from.y
         var tx = to.x, ty = to.y;
@@ -371,7 +372,7 @@ tm.define("tiger.World", {
         exp.age = 1;
         exp.rotation = rand(0, 360);
         exp.update = function() {
-            if (this.age % 3 == 0) {
+            if (this.age % ~~(3/SPD) == 0) {
                 this.setFrameIndex(this.frame, 64, 64);
                 this.frame++;
                 if (this.frame > 18)this.remove();

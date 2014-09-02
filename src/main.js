@@ -13,6 +13,10 @@ var mt = new MersenneTwister();
 //デバッグフラグ
 var DEBUG = false;
 
+//フレームレート
+FPS = 20;
+SPD = 60/FPS;
+
 //スクリーンサイズ
 SC_W = 640;
 SC_H = 640;

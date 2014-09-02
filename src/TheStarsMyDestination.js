@@ -31,6 +31,9 @@ tiger = {
 tm.define("tiger.CanvasApp", {
     superClass: tm.app.CanvasApp,
 
+    //フレームレート
+    fps: FPS,
+
     //オンライン対戦フラグ
     online: false,
 
@@ -56,7 +59,6 @@ tm.define("tiger.CanvasApp", {
 
         tiger.core = this;
         this.resize(SC_W, SC_H).fitWindow();
-        this.fps = 60;
         this.background = "rgba(0, 0, 0, 0)";
 
         this.detectEnvironment();

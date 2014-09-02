@@ -31,6 +31,9 @@ tm.define("tiger.GameScene", {
     //ポーズフラグ
     pause: false,
 
+    //ＣＰＵ思考間隔
+    intervalCPU: 600,
+
     //ワールド管理
     world: null,
     base: null,
@@ -82,7 +85,7 @@ tm.define("tiger.GameScene", {
     longpress: false,
 
     //長押しフレーム数
-    longPressFrame: 30,
+    longPressFrame: 30/SPD,
 
     //クリック情報等
     clickInterval: 0,   //間隔
@@ -115,6 +118,9 @@ tm.define("tiger.GameScene", {
 
         this.arrow = [];
         this.selectList = [];
+
+        //ＣＰＵ思考間隔をフレームレートに合わせる
+        this.intervalCPU /= SPD;
 
         var that = this;
         //派兵レートラベル
@@ -745,9 +751,11 @@ tm.define("tiger.GameScene", {
 
     //ＣＰＵ思考ルーチン
     thinkCPU: function() {
-        if (this.time < 300)return;
-        //１０秒に１回思考する
-        if (this.time % 600 != 0) return;
+        //最初の５秒は何もしない
+        if (this.time < (300/SPD))return;
+
+        //指定間隔に１回思考する
+        if (this.time % this.intervalCPU != 0) return;
 
         //領土に一番近い惑星で自分の６割程度なら艦隊を派遣
         var len = this.world.planets.length;

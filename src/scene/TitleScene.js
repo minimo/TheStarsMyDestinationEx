@@ -56,7 +56,7 @@ tm.define("tiger.TitleScene", {
     },
 
     update: function() {
-        this.bg.x -=0.5;
+        this.bg.x -=0.5*SPD;
         if (this.bg.x < -2000)this.bg.x = 0;
 
         this.time++;

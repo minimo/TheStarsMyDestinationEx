@@ -53,6 +53,7 @@ tm.define("tiger.Unit", {
         this.HP = HP || 1;
         this.power = power || 1;
         this.setFrameIndex(0, 64, 64);
+        this.speed *= SPD;
 
         var that = this;
         //選択カーソル
