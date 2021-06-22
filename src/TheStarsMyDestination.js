@@ -84,7 +84,8 @@ tm.define("tiger.CanvasApp", {
 
     exitApp: function() {
         this.stop();
-        tm.social.Nineleap.postRanking(this.highScore, "");
+        // tm.social.Nineleap.postRanking(this.highScore, "");
+        location.reload();
     },
 
     //実行環境取得
